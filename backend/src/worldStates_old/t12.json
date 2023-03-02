@@ -1,0 +1,19 @@
+{
+    "nodes": [
+        {
+            "id": 1,
+            "label": "Node 1"
+        },
+        {
+            "id": 2,
+            "label": "Node 2"
+        }
+    ],
+    "edges": [
+        {
+            "id": 1,
+            "from": 1,
+            "to": 2
+        }
+    ]
+}

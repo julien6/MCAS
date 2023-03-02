@@ -1,0 +1,956 @@
+{
+    "nodes": [
+        {
+            "id": "Website",
+            "label": "Website",
+            "data": {
+                "services": [
+                    {
+                        "name": "HTTPS",
+                        "allowedCredentials": [],
+                        "running": true
+                    },
+                    {
+                        "name": "SSH",
+                        "allowedCredentials": [
+                            "ReusedMySqlCred-web"
+                        ],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {
+                    "ScanPageContent": {
+                        "description": "LeakedGitHubProjectUrl: Website page content shows a link to GitHub repo",
+                        "type": "REMOTE",
+                        "outcome": {
+                            "LeakedNodesId": {
+                                "nodes": [
+                                    "GitHubProject"
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "WEBSITE page content has a link to github -> Github project discovered!"
+                    },
+                    "ScanPageSource": {
+                        "description": "Website page source contains refrence to browseable relative web directory",
+                        "type": "REMOTE",
+                        "outcome": {
+                            "LeakedNodesId": {
+                                "nodes": [
+                                    "Website.Directory"
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "Viewing the web page source reveals a URL to a .txt file and directory on the website"
+                    },
+                    "CredScanBashHistory": {
+                        "description": "bash history leaking creds - FLAG Stealing credentials for the monitoring user",
+                        "type": "LOCAL",
+                        "outcome": {
+                            "LeakedCredentials": {
+                                "credentials": [
+                                    {
+                                        "node": "Website[user=monitor]",
+                                        "port": "SSH",
+                                        "credential": "monitorBashCreds"
+                                    }
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "FLAG: SSH history revealed credentials for the monitoring user (monitor)"
+                    }
+                },
+                "value": 100,
+                "properties": [
+                    "MySql",
+                    "Ubuntu",
+                    "nginx/1.10.3"
+                ],
+                "firewall": {
+                    "outgoing": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "su",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "sudo",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ],
+                    "incoming": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "FLAG: Login using insecure SSH user/password",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "Website.Directory",
+            "label": "Website.Directory",
+            "data": {
+                "services": [
+                    {
+                        "name": "HTTPS",
+                        "allowedCredentials": [],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {
+                    "NavigateWebDirectoryFurther": {
+                        "description": "Discover MYSQL credentials MySql for user 'web' in (getting-started.txt)",
+                        "type": "REMOTE",
+                        "outcome": {
+                            "LeakedCredentials": {
+                                "credentials": [
+                                    {
+                                        "node": "Website",
+                                        "port": "MySQL",
+                                        "credential": "ReusedMySqlCred-web"
+                                    }
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "Discover browseable web directory: Navigating to parent URL revealed file `readme.txt`with secret data (aflag); and `getting-started.txt` with MYSQL credentials"
+                    },
+                    "NavigateWebDirectory": {
+                        "description": "Discover URL to external sharepoint website (in deprecation-checklist.txt)",
+                        "type": "REMOTE",
+                        "outcome": {
+                            "LeakedNodesId": {
+                                "nodes": [
+                                    "Sharepoint"
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "Navigating to parent URL revealed file `deprecation-checklist.txt` containinga URL to an external sharepoint website"
+                    }
+                },
+                "value": 50,
+                "properties": [
+                    "Ubuntu",
+                    "nginx/1.10.3",
+                    "CTFFLAG:Readme.txt-Discover secret data"
+                ],
+                "firewall": {
+                    "outgoing": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ],
+                    "incoming": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "Website[user=monitor]",
+            "label": "Website[user=monitor]",
+            "data": {
+                "services": [
+                    {
+                        "name": "SSH",
+                        "allowedCredentials": [],
+                        "running": true
+                    },
+                    {
+                        "name": "SSH-key",
+                        "allowedCredentials": [
+                            "unkownkey"
+                        ],
+                        "running": true
+                    },
+                    {
+                        "name": "su",
+                        "allowedCredentials": [
+                            "monitorBashCreds"
+                        ],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {
+                    "CredScan-HomeDirectory": {
+                        "description": "azurecredential.txt file in home directory",
+                        "type": "LOCAL",
+                        "outcome": {
+                            "LeakedCredentials": {
+                                "credentials": [
+                                    {
+                                        "node": "AzureResourceManager[user=monitor]",
+                                        "port": "HTTPS",
+                                        "credential": "azuread_user_credentials"
+                                    }
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "SSH: cat ~/azurecreds.txt (running as monitor) revealed Azure user credential!"
+                    }
+                },
+                "value": 100,
+                "properties": [
+                    "MySql",
+                    "Ubuntu",
+                    "nginx/1.10.3"
+                ],
+                "firewall": {
+                    "outgoing": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ],
+                    "incoming": [
+                        {
+                            "port": "SSH",
+                            "permission": "BLOCK",
+                            "reason": "password authentication disabled! SSH needs private key to authenticate."
+                        },
+                        {
+                            "port": "sudo",
+                            "permission": "BLOCK",
+                            "reason": "`sudo -u monitor` failed. User 'monitor' not sudoable.This warning will be reported!"
+                        },
+                        {
+                            "port": "su",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "FLAG User escalation by stealing credentials from bash history",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "GitHubProject",
+            "label": "GitHubProject",
+            "data": {
+                "services": [
+                    {
+                        "name": "GIT",
+                        "allowedCredentials": [],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {
+                    "CredScanGitHistory": {
+                        "description": "Some secure access token (SAS) leaked in a reverted git commit",
+                        "type": "REMOTE",
+                        "outcome": {
+                            "LeakedCredentials": {
+                                "credentials": [
+                                    {
+                                        "node": "AzureStorage",
+                                        "port": "HTTPS",
+                                        "credential": "SASTOKEN1"
+                                    }
+                                ]
+                            }
+                        },
+                        "precondition": "SasUrlInCommit&GitHub",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "CredScan success: Some secure access token (SAS) was leaked in a reverted git commit"
+                    }
+                },
+                "value": 10,
+                "properties": [
+                    "GitHub",
+                    "SasUrlInCommit"
+                ],
+                "firewall": {
+                    "outgoing": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ],
+                    "incoming": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "AzureStorage",
+            "label": "AzureStorage",
+            "data": {
+                "services": [
+                    {
+                        "name": "HTTPS",
+                        "allowedCredentials": [
+                            "SASTOKEN1"
+                        ],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {
+                    "AccessDataWithSASToken": {
+                        "description": "Stealing secrets using a publicly shared SAS token",
+                        "type": "REMOTE",
+                        "outcome": {
+                            "CustomerData": {}
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "Stole data using a publicly shared SAS token"
+                    }
+                },
+                "value": 50,
+                "properties": [
+                    "CTFFLAG:LeakedCustomerData"
+                ],
+                "firewall": {
+                    "outgoing": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ],
+                    "incoming": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "Sharepoint",
+            "label": "Sharepoint",
+            "data": {
+                "services": [
+                    {
+                        "name": "HTTPS",
+                        "allowedCredentials": [],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {
+                    "ScanSharepointParentDirectory": {
+                        "description": "Navigate to SharePoint site, browse parent directory",
+                        "type": "REMOTE",
+                        "outcome": {
+                            "LeakedCredentials": {
+                                "credentials": [
+                                    {
+                                        "node": "AzureResourceManager",
+                                        "port": "HTTPS",
+                                        "credential": "ADPrincipalCreds"
+                                    }
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "Navigating to the Sharepoint site revealed  AD Service Principal Credentials"
+                    }
+                },
+                "value": 100,
+                "properties": [
+                    "SharepointLeakingPassword"
+                ],
+                "firewall": {
+                    "outgoing": [],
+                    "incoming": [
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "AzureResourceManager",
+            "label": "AzureResourceManager",
+            "data": {
+                "services": [
+                    {
+                        "name": "HTTPS",
+                        "allowedCredentials": [
+                            "ADPrincipalCreds",
+                            "azuread_user_credentials"
+                        ],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {
+                    "ListAzureResources": {
+                        "description": "AzureVM info, including public IP address",
+                        "type": "REMOTE",
+                        "outcome": {
+                            "LeakedNodesId": {
+                                "nodes": [
+                                    "AzureVM"
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "Obtained Azure VM and public IP information"
+                    }
+                },
+                "value": 50,
+                "properties": [
+                    "CTFFLAG:LeakedCustomerData2"
+                ],
+                "firewall": {
+                    "outgoing": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ],
+                    "incoming": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "FLAG: Shared credentials with database user - Obtained secrets hidden in Azure Managed Resources",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "AzureResourceManager[user=monitor]",
+            "label": "AzureResourceManager[user=monitor]",
+            "data": {
+                "services": [
+                    {
+                        "name": "HTTPS",
+                        "allowedCredentials": [
+                            "azuread_user_credentials"
+                        ],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {},
+                "value": 50,
+                "properties": [],
+                "firewall": {
+                    "outgoing": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ],
+                    "incoming": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "More secrets stolen when logged as interactive `monitor` user in Azure with `az`",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "AzureVM",
+            "label": "AzureVM",
+            "data": {
+                "services": [
+                    {
+                        "name": "PING",
+                        "allowedCredentials": [],
+                        "running": true
+                    },
+                    {
+                        "name": "SSH",
+                        "allowedCredentials": [],
+                        "running": true
+                    }
+                ],
+                "vulnerabilities": {},
+                "value": 100,
+                "properties": [
+                    "CTFFLAG:VMPRIVATEINFO"
+                ],
+                "firewall": {
+                    "outgoing": [],
+                    "incoming": [
+                        {
+                            "port": "SSH",
+                            "permission": "BLOCK",
+                            "reason": "internet incoming traffic blocked on the VM by NSG firewall"
+                        }
+                    ]
+                },
+                "agent_installed": false,
+                "privilege_level": 0,
+                "reimagable": true,
+                "last_reimaging": null,
+                "owned_string": "",
+                "sla_weight": 1,
+                "description": ""
+            }
+        },
+        {
+            "id": "client",
+            "label": "client",
+            "data": {
+                "services": [],
+                "vulnerabilities": {
+                    "SearchEdgeHistory": {
+                        "description": "Search web history for list of accessed websites",
+                        "type": "LOCAL",
+                        "outcome": {
+                            "LeakedNodesId": {
+                                "nodes": [
+                                    "Website"
+                                ]
+                            }
+                        },
+                        "precondition": "1",
+                        "rates": {
+                            "probingDetectionRate": 0,
+                            "exploitDetectionRate": 0,
+                            "successRate": 1
+                        },
+                        "URL": "",
+                        "cost": 1,
+                        "reward_string": "Web browser history revealed website URL of interest"
+                    }
+                },
+                "value": 0,
+                "properties": [],
+                "firewall": {
+                    "outgoing": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ],
+                    "incoming": [
+                        {
+                            "port": "RDP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "SSH",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTPS",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        },
+                        {
+                            "port": "HTTP",
+                            "permission": "ALLOW",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "agent_installed": true,
+                "privilege_level": 0,
+                "reimagable": false,
+                "last_reimaging": null,
+                "owned_string": "",
+                "sla_weight": 1,
+                "description": ""
+            },
+            "color": {
+                "background": "#e39090",
+                "border": "red"
+            }
+        }
+    ],
+    "edges": []
+}

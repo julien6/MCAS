@@ -1,0 +1,310 @@
+{
+    "nodes": {
+        "PC1": {
+            "actions": {
+                "doNothing": {
+                    "actionID": "doNothing",
+                    "cost": 100,
+                    "description": "Do nothing",
+                    "function": "doNothing",
+                    "success_probability": 1
+                },
+                "discoverLink": {
+                    "actionID": "discoverLink",
+                    "cost": 15,
+                    "description": "Discover an ip adress to another node in a local file",
+                    "function": "discoverLink",
+                    "success_probability": 1
+                },
+                "scanPC2Ports": {
+                    "actionID": "scanPC2Ports",
+                    "cost": 15,
+                    "description": "Scan local and PC2 ports and discover an SSH open access communication",
+                    "function": "scanPC2Ports",
+                    "success_probability": 1
+                },
+                "moveToPC2WithSSH": {
+                    "actionID": "moveToPC2WithSSH",
+                    "cost": 15,
+                    "description": "Copying on PC2 with SSH",
+                    "function": "moveToPC2WithSSH",
+                    "success_probability": 1
+                },
+                "discoverLogsMalwareOnPC1": {
+                    "actionID": "discoverLogsMalwareOnPC1",
+                    "cost": 15,
+                    "description": "Discover potential malware nmap logs",
+                    "function": "discoverLogsMalwareOnPC1",
+                    "success_probability": 1
+                },
+                "sendMalwareWarningToSimpleDefender2": {
+                    "actionID": "sendMalwareWarningToSimpleDefender2",
+                    "cost": 15,
+                    "description": "Send potential warning to simpleDefender2 on PC2",
+                    "function": "sendMalwareWarningToSimpleDefender2",
+                    "success_probability": 1
+                }
+            },
+            "meta_data": {},
+            "properties": {
+                "accessible_nodes": [
+                    [
+                        "PC2",
+                        "SSH"
+                    ]
+                ],
+                "file_system": {
+                    "C:\\Users\\.private": {
+                        "file_name": "pwd.txt",
+                        "hash": "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12",
+                        "permission": "*",
+                        "type": "text_file"
+                    }
+                },
+                "firewall": {
+                    "incoming": [
+                        {
+                            "permission": "ALLOW",
+                            "port": "RDP",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "SSH",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "HTTP",
+                            "reason": ""
+                        }
+                    ],
+                    "outgoing": [
+                        {
+                            "permission": "ALLOW",
+                            "port": "RDP",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "sudo",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "SSH",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "HTTP",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "installed_operating_system": "Windows/12",
+                "installed_softwares": "MSOffice/2021",
+                "logs": [],
+                "other_properties": [],
+                "processes": {
+                    "agents": {
+                        "simpleAttacker": {
+                            "behaviour": "attackerBehaviour",
+                            "context": {
+                                "binary_file_location": "C:\\Users\\mwlr.exe",
+                                "knowledge": {},
+                                "possible_actions": []
+                            },
+                            "description": "A simple attacker",
+                            "name": "simpleAttacker",
+                            "running": true
+                        },
+                        "simpleDefender": {
+                            "behaviour": "defenderBehaviour1",
+                            "context": {
+                                "binary_file_location": "C:\\Users\\dfdr.exe",
+                                "knowledge": {},
+                                "possible_actions": []
+                            },
+                            "description": "A simple defender",
+                            "name": "simpleDefender",
+                            "running": true
+                        }
+                    },
+                    "other_processes": {
+                        "excel": {
+                            "description": "Excel application",
+                            "name": "Excel",
+                            "running": true
+                        }
+                    },
+                    "services": {
+                        "HTTPS": {
+                            "allowedCredentials": [],
+                            "description": "HTTPS Service",
+                            "name": "HTTPS",
+                            "running": true
+                        },
+                        "SSH": {
+                            "allowedCredentials": [
+                                "lambda/password123"
+                            ],
+                            "description": "SSH Service",
+                            "name": "SSH",
+                            "running": true
+                        }
+                    }
+                },
+                "reimagable": true,
+                "sla_weight": 0.7,
+                "value": 15
+            }
+        },
+        "PC2": {
+            "actions": {
+                "doNothing": {
+                    "actionID": "doNothing",
+                    "cost": 100,
+                    "description": "Do nothing",
+                    "function": "doNothing",
+                    "success_probability": 0.5
+                },
+                "gettingFlag": {
+                    "actionID": "gettingFlag",
+                    "cost": 15,
+                    "description": "Getting the flag",
+                    "function": "gettingFlag",
+                    "success_probability": 1
+                },
+                "discoverLogsMalwareOnPC2": {
+                    "actionID": "discoverLogsMalwareOnPC2",
+                    "cost": 15,
+                    "description": "Discover SSH logs on PC2",
+                    "function": "discoverLogsMalwareOnPC2",
+                    "success_probability": 1
+                },
+                "detectMalwareBinaryFile": {
+                    "actionID": "gettingFlag",
+                    "cost": 15,
+                    "description": "Find the malware binary file",
+                    "function": "detectMalwareBinaryFile",
+                    "success_probability": 1
+                },
+                "removeMalwareBinaryFile": {
+                    "actionID": "gettingFlag",
+                    "cost": 15,
+                    "description": "Removing the malware binary file",
+                    "function": "removeMalwareBinaryFile",
+                    "success_probability": 1
+                }
+            },
+            "meta_data": {},
+            "properties": {
+                "accessible_nodes": [
+                    [
+                        "PC1",
+                        "HTTP"
+                    ],
+                    [
+                        "PC1",
+                        "SSH"
+                    ]
+                ],
+                "file_system": {
+                    "C:\\Users\\.private": {
+                        "file_name": "pwd.txt",
+                        "hash": "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12",
+                        "permission": "*",
+                        "type": "text_file"
+                    }
+                },
+                "firewall": {
+                    "incoming": [
+                        {
+                            "permission": "ALLOW",
+                            "port": "RDP",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "SSH",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "HTTP",
+                            "reason": ""
+                        }
+                    ],
+                    "outgoing": [
+                        {
+                            "permission": "ALLOW",
+                            "port": "RDP",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "sudo",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "SSH",
+                            "reason": ""
+                        },
+                        {
+                            "permission": "ALLOW",
+                            "port": "HTTP",
+                            "reason": ""
+                        }
+                    ]
+                },
+                "installed_operating_system": "Windows/12",
+                "installed_softwares": "MSOffice/2021",
+                "other_properties": ["FlagReward"],
+                "logs": [],
+                "processes": {
+                    "agents": {
+                        "simpleDefender2": {
+                            "behaviour": "defenderBehaviour2",
+                            "context": {
+                                "binary_file_location": "C:\\Users\\dfdr.exe",
+                                "knowledge": {},
+                                "possible_actions": []
+                            },
+                            "description": "A simple defender",
+                            "name": "simpleDefender2",
+                            "running": true
+                        }
+                    },
+                    "other_processes": {
+                        "excel": {
+                            "description": "Excel application",
+                            "name": "Excel",
+                            "running": true
+                        }
+                    },
+                    "services": {
+                        "HTTPS": {
+                            "allowedCredentials": [],
+                            "description": "HTTPS Service",
+                            "name": "HTTPS",
+                            "running": true
+                        },
+                        "SSH": {
+                            "allowedCredentials": [
+                                "lambda/password123"
+                            ],
+                            "description": "SSH Service",
+                            "name": "SSH",
+                            "running": true
+                        }
+                    }
+                },
+                "reimagable": true,
+                "sla_weight": 0.7,
+                "value": 15
+            }
+        }
+    }
+}

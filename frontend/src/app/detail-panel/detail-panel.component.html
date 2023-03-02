@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="column-left">
+        <json-editor [options]="editorOptions" [data]="visualData" (change)="showJson($event)"></json-editor>
+    </div>
+    <div class="column-right">
+        <div class="row">
+
+            <mat-tab-group>
+                <mat-tab label="Graph visualization">
+                    <app-graph [detailData]="this.sharedData" [lastAgentPlayed]="this.lastAgent"></app-graph>
+                </mat-tab>
+                <mat-tab label="Charts visualization">
+                    <app-charts-visualization [lastMetrics]="this.lastMetrics"></app-charts-visualization>
+                </mat-tab>
+            </mat-tab-group>
+
+        </div>
+        <div style="position:fixed;bottom: 0" class="row">
+            <app-terminal [detailData]="this.sharedData"></app-terminal>
+        </div>
+    </div>
+</div>
