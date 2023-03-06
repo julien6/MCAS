@@ -23,21 +23,6 @@ metrics: Dict[str, List] = {}
 # environment = new Environment()
 
 
-def prepareEnvironmentForGraph(env: Dict):
-    return {
-        "nodes": [{"id": nodeID, "label": nodeID, "data": node} for nodeID, node in env["nodes"].items()],
-        "edges": []
-    }
-
-
-def prepareEnvironmentForBackend(env: Dict):
-    preparedEnv = {"nodes": {}}
-    for node in env["nodes"]:
-        if "data" in list(node.keys()):
-            preparedEnv["nodes"][node["id"]] = node["data"]
-    return preparedEnv
-
-
 @app.route("/")
 def hello_world():
     return "MCAS Backend"
@@ -49,7 +34,7 @@ def createExample():
     environmentPlayer = EnvironmentPlayer(network, iterationMax=1000)
     logs = "A new example environment was created"
     print(logs)
-    return {"environment": prepareEnvironmentForGraph(environmentPlayer.env.serialize()), "logs": logs}
+    return {"environment": environmentPlayer.env.serialize(), "logs": logs}
 
 
 @app.get("/metrics")
@@ -128,7 +113,7 @@ def getWorldState():
     except Exception as e:
         return [{"error": str(e)}]
 
-    return prepareEnvironmentForGraph(fileContent)
+    return fileContent
 
 
 @app.get("/worldStateList")
@@ -151,7 +136,7 @@ def getCurrentWorldState():
             "nodes": [],
             "edges": []
         }
-    return prepareEnvironmentForGraph(environmentPlayer.env.serialize())
+    return environmentPlayer.env.serialize()
 
 
 def extractMetricsFromCurrent() -> None:
@@ -168,7 +153,7 @@ def getNextWorldState():
     agentID, logs = environmentPlayer.next()
     extractMetricsFromCurrent()
     print(metrics)
-    return {"environment": prepareEnvironmentForGraph(environmentPlayer.env.serialize()), "logs": logs, "agentID": agentID,
+    return {"environment": environmentPlayer.env.serialize(), "logs": logs, "agentID": agentID,
             "metrics": metrics}
 
 
@@ -181,7 +166,7 @@ def getIteratedNextWorldState():
         lastAgent, logs = environmentPlayer.next()
         extractMetricsFromCurrent()
         logsAcc += [logs]
-    return {"environment": prepareEnvironmentForGraph(environmentPlayer.env.serialize()), "logs": logsAcc, "agentID": lastAgent, "metrics": metrics}
+    return {"environment": environmentPlayer.env.serialize(), "logs": logsAcc, "agentID": lastAgent, "metrics": metrics}
 
 
 @app.post('/saveWorldState')
@@ -194,8 +179,7 @@ def saveWorldState():
         data = request.json
     except Exception as e:
         raise e
-    print(data)
-    data = prepareEnvironmentForBackend(data)
+
     f = open("./" + worldStateFolder + "/" + path, "w+")
     f.write(json.dumps(data))
     f.close()

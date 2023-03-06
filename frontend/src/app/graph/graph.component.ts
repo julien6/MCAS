@@ -31,6 +31,19 @@ export class GraphComponent implements OnInit, OnChanges {
 
   }
 
+  public prepareEnvironmentForGraph() {
+    this.detailData = this.detailData["nodes"]
+    const res: any = {
+      "nodes": [],
+      "edges": []
+    }
+    const nodeNames = Object.keys(this.detailData)
+    for (const node in nodeNames) {
+      res["nodes"].push({ "label": nodeNames[node], "id": nodeNames[node], "data": this.detailData[nodeNames[node]] })
+    }
+    this.detailData = res
+  }
+
   public prepareDataForGraph() {
 
     function determineGoodOrBad(agentName: string) {
@@ -42,6 +55,8 @@ export class GraphComponent implements OnInit, OnChanges {
 
     if (this.network !== undefined) {
       if (this.detailData !== null || undefined) {
+
+        this.prepareEnvironmentForGraph()
 
         if ("nodes" in this.detailData) {
           for (let i = 0; i < (<Array<any>>this.detailData["nodes"]).length; i++) {
@@ -89,7 +104,7 @@ export class GraphComponent implements OnInit, OnChanges {
               for (const agentID in agents) {
                 const agent = agents[agentID]
 
-                if(agentID == this.lastAgentPlayed){
+                if (agentID == this.lastAgentPlayed) {
                   this.detailData["nodes"].push({
                     id: agentID + "_" + this.detailData["nodes"][i]["id"],
                     label: agent["name"],

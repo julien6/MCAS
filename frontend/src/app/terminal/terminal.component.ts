@@ -48,6 +48,7 @@ export class TerminalComponent implements AfterViewInit {
     );
   }
 
+
   ngAfterViewInit() {
 
     this.child.setRows(11);
