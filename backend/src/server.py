@@ -34,7 +34,7 @@ def createExample():
     environmentPlayer = EnvironmentPlayer(network, iterationMax=1000)
     logs = "A new example environment was created"
     print(logs)
-    return {"environment": environmentPlayer.env.serialize(), "logs": logs}
+    return {"environment": environmentPlayer.envSupport.serialize(), "logs": logs}
 
 
 @app.get("/metrics")
@@ -56,8 +56,9 @@ def getWorldState():
         global environmentPlayer
 
         if (environmentPlayer != None):
+
             environmentPlayer = EnvironmentPlayer(
-                env=deserialize(
+                envSupport=deserialize(
                     fileContent,
                     {
                         "switchOnReimagable": switchOnReimagable,
@@ -85,8 +86,9 @@ def getWorldState():
                 fileName=environmentPlayer.fileName,
                 iterationMax=environmentPlayer.iterationMax)
         else:
+
             environmentPlayer = EnvironmentPlayer(
-                env=deserialize(
+                envSupport=deserialize(
                     fileContent,
                     {
                         "switchOnReimagable": switchOnReimagable,
@@ -136,12 +138,12 @@ def getCurrentWorldState():
             "nodes": [],
             "edges": []
         }
-    return environmentPlayer.env.serialize()
+    return environmentPlayer.envSupport.serialize()
 
 
 def extractMetricsFromCurrent() -> None:
     totalValue = 0
-    for nodedID, node in environmentPlayer.env.nodes.items():
+    for nodedID, node in environmentPlayer.envSupport.nodes.items():
         totalValue += node.properties.value
     if (not "value" in list(metrics.keys())):
         metrics["value"] = []
@@ -153,7 +155,7 @@ def getNextWorldState():
     agentID, logs = environmentPlayer.next()
     extractMetricsFromCurrent()
     print(metrics)
-    return {"environment": environmentPlayer.env.serialize(), "logs": logs, "agentID": agentID,
+    return {"environment": environmentPlayer.envSupport.serialize(), "logs": logs, "agentID": agentID,
             "metrics": metrics}
 
 
@@ -166,7 +168,7 @@ def getIteratedNextWorldState():
         lastAgent, logs = environmentPlayer.next()
         extractMetricsFromCurrent()
         logsAcc += [logs]
-    return {"environment": environmentPlayer.env.serialize(), "logs": logsAcc, "agentID": lastAgent, "metrics": metrics}
+    return {"environment": environmentPlayer.envSupport.serialize(), "logs": logsAcc, "agentID": lastAgent, "metrics": metrics}
 
 
 @app.post('/saveWorldState')

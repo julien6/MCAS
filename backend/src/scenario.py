@@ -264,4 +264,4 @@ if __name__ == '__main__':
 
     print(environmentPlayer.next())
 
-    print(environmentPlayer.env)
+    print(environmentPlayer.envSupport)
