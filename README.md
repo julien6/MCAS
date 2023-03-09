@@ -1,3 +1,5 @@
+### **WARNING : this projet is a work in progress, onging changes are likely to break some of the functionalities**
+
 # Multi Cyber Agent Simulator
 **Multi Cyber Agent Simulator (MCAS)** is intended to implement the Dec-POMDP model of an environment made up from node network on which attack and defender agents are interacting each other and modifying the same environment.
 
