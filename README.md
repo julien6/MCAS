@@ -23,4 +23,20 @@ Then, in "frontend", type "npm run start"
 Open a webpage at http://localhost:4200/
 The user interface should be displayed
 
-## Basic usage
+## Basic interface usage
+
+When using terminal, avaialbe command lines are
+
+- ls : list avaialbe environment scenarios
+- load [environment_file.json]
+
+![alt text](https://github.com/julien6/MCAS/blob/main/blop/basics.gif?raw=true)
+
+- next : so next agent plays to interact with environment / other agents
+
+![alt text](https://github.com/julien6/MCAS/blob/main/blop/next.gif?raw=true)
+
+- iterate_over [number of iteration] : so several iteration can occur in a single command
+
+![alt text](https://github.com/julien6/MCAS/blob/main/blop/iterate_over.gif?raw=true)
+
