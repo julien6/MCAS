@@ -3,12 +3,8 @@ from flask_cors import CORS
 import os
 import json
 from typing import Dict, List
-# from scenario import network, switchOnReimagable, switchOffReimagable,\
-#     dumbBehaviour, doNothing, dumbBehaviourAttacker, dumbBehaviourDefender, observeReimagable, \
-#     discoverLink, scanPC2Ports, moveToPC2WithSSH, gettingFlag, attackerBehaviour, \
-#     defenderBehaviour1, defenderBehaviour2, discoverLogsMalwareOnPC1, sendMalwareWarningToSimpleDefender2, \
-#     discoverLogsMalwareOnPC2, detectMalwareBinaryFile, removeMalwareBinaryFile
-from environment import deserialize, EnvironmentPlayer
+from env import EnvironmentPlayer, McasEnvironment, env, loadFile
+from environmentModel import environmentTest
 
 app = Flask(__name__)
 CORS(app)
@@ -28,10 +24,12 @@ def hello_world():
 @app.get("/createExample")
 def createExample():
     global environmentPlayer
-    environmentPlayer = EnvironmentPlayer(network, iterationMax=1000)
+    e: McasEnvironment = env(environment=environmentTest, render_mode="human")
+    environmentPlayer = EnvironmentPlayer(env=e)
+
     logs = "A new example environment was created"
     print(logs)
-    return {"environment": environmentPlayer.env.serialize(), "logs": logs}
+    return {"environment": environmentPlayer.dictEnvironment(), "logs": logs}
 
 
 @app.get("/metrics")
@@ -43,74 +41,15 @@ def getMetrics():
 def getWorldState():
     filePath = request.args.get("filePath")
     if filePath == None:
-        filePath = ""
-    fileContent = {}
+        return {}
     try:
-        if (filePath.split(".")[-1] == "json"):
-            fileContent = json.load(
-                open("./" + worldStateFolder + "/" + filePath, "r"))
-
         global environmentPlayer
-
-        if (environmentPlayer != None):
-            environmentPlayer = EnvironmentPlayer(
-                env=deserialize(
-                    fileContent,
-                    {
-                        "switchOnReimagable": switchOnReimagable,
-                        "switchOffReimagable": switchOffReimagable,
-                        "dumbBehaviour": dumbBehaviour,
-                        "doNothing": doNothing,
-                        "dumbBehaviourAttacker": dumbBehaviourAttacker,
-                        "dumbBehaviourDefender": dumbBehaviourDefender,
-                        "observeReimagable": observeReimagable,
-                        "discoverLink": discoverLink,
-                        "scanPC2Ports": scanPC2Ports,
-                        "moveToPC2WithSSH": moveToPC2WithSSH,
-                        "gettingFlag": gettingFlag,
-                        "attackerBehaviour": attackerBehaviour,
-                        "defenderBehaviour1": defenderBehaviour1,
-                        "defenderBehaviour2": defenderBehaviour2,
-                        "discoverLogsMalwareOnPC1": discoverLogsMalwareOnPC1,
-                        "sendMalwareWarningToSimpleDefender2": sendMalwareWarningToSimpleDefender2,
-                        "discoverLogsMalwareOnPC2": discoverLogsMalwareOnPC2,
-                        "detectMalwareBinaryFile": detectMalwareBinaryFile,
-                        "removeMalwareBinaryFile": removeMalwareBinaryFile
-
-
-                    }),
-                fileName=environmentPlayer.fileName,
-                iterationMax=environmentPlayer.iterationMax)
-        else:
-            environmentPlayer = EnvironmentPlayer(
-                env=deserialize(
-                    fileContent,
-                    {
-                        "switchOnReimagable": switchOnReimagable,
-                        "switchOffReimagable": switchOffReimagable,
-                        "dumbBehaviour": dumbBehaviour,
-                        "doNothing": doNothing,
-                        "dumbBehaviourAttacker": dumbBehaviourAttacker,
-                        "dumbBehaviourDefender": dumbBehaviourDefender,
-                        "observeReimagable": observeReimagable,
-                        "discoverLink": discoverLink,
-                        "scanPC2Ports": scanPC2Ports,
-                        "moveToPC2WithSSH": moveToPC2WithSSH,
-                        "gettingFlag": gettingFlag,
-                        "attackerBehaviour": attackerBehaviour,
-                        "defenderBehaviour1": defenderBehaviour1,
-                        "defenderBehaviour2": defenderBehaviour2,
-                        "discoverLogsMalwareOnPC1": discoverLogsMalwareOnPC1,
-                        "sendMalwareWarningToSimpleDefender2": sendMalwareWarningToSimpleDefender2,
-                        "discoverLogsMalwareOnPC2": discoverLogsMalwareOnPC2,
-                        "detectMalwareBinaryFile": detectMalwareBinaryFile,
-                        "removeMalwareBinaryFile": removeMalwareBinaryFile
-                    }), iterationMax=1000)
-
+        if (filePath.split(".")[-1] == "json"):
+            environmentPlayer = loadFile(
+                "./" + worldStateFolder + "/" + filePath)
     except Exception as e:
         return [{"error": str(e)}]
-
-    return fileContent
+    return environmentPlayer.dictEnvironment()
 
 
 @app.get("/worldStateList")
@@ -128,18 +67,17 @@ def getWorldStateList():
 
 @app.get("/currentWorldState")
 def getCurrentWorldState():
+    global environmentPlayer
     if environmentPlayer == None:
-        return {
-            "nodes": [],
-            "edges": []
-        }
-    return environmentPlayer.env.serialize()
+        return {}
+    return environmentPlayer.dictEnvironment()
 
 
 def extractMetricsFromCurrent() -> None:
     totalValue = 0
-    for nodedID, node in environmentPlayer.env.nodes.items():
-        totalValue += node.properties.value
+    global environmentPlayer
+    for nodedID, node in environmentPlayer.dictEnvironment().items():
+        totalValue += node["properties"]["value"]
     if (not "value" in list(metrics.keys())):
         metrics["value"] = []
     metrics["value"] += [totalValue]
@@ -147,10 +85,10 @@ def extractMetricsFromCurrent() -> None:
 
 @app.get("/nextWorldState")
 def getNextWorldState():
+    global environmentPlayer
     agentID, logs = environmentPlayer.next()
     extractMetricsFromCurrent()
-    print(metrics)
-    return {"environment": environmentPlayer.env.serialize(), "logs": logs, "agentID": agentID,
+    return {"environment": environmentPlayer.dictEnvironment(), "logs": logs, "agentID": agentID.split("']['")[-1][:-2],
             "metrics": metrics}
 
 
@@ -159,11 +97,12 @@ def getIteratedNextWorldState():
     maxIteration = int(request.args.get("maxIteration"))
     logsAcc = []
     lastAgent = ""
+    global environmentPlayer
     for i in range(0, maxIteration):
         lastAgent, logs = environmentPlayer.next()
         extractMetricsFromCurrent()
         logsAcc += [logs]
-    return {"environment": environmentPlayer.env.serialize(), "logs": logsAcc, "agentID": lastAgent, "metrics": metrics}
+    return {"environment": environmentPlayer.dictEnvironment(), "logs": logsAcc, "agentID": lastAgent.split("']['")[-1][:-2], "metrics": metrics}
 
 
 @app.post('/saveWorldState')
@@ -176,7 +115,6 @@ def saveWorldState():
         data = request.json
     except Exception as e:
         raise e
-
     f = open("./" + worldStateFolder + "/" + path, "w+")
     f.write(json.dumps(data))
     f.close()

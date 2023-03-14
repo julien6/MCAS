@@ -32,7 +32,6 @@ export class GraphComponent implements OnInit, OnChanges {
   }
 
   public prepareEnvironmentForGraph() {
-    this.detailData = this.detailData["nodes"]
     const res: any = {
       "nodes": [],
       "edges": []
@@ -58,6 +57,7 @@ export class GraphComponent implements OnInit, OnChanges {
 
         this.prepareEnvironmentForGraph()
 
+
         if ("nodes" in this.detailData) {
           for (let i = 0; i < (<Array<any>>this.detailData["nodes"]).length; i++) {
             if ("data" in this.detailData["nodes"][i]) {
@@ -67,7 +67,6 @@ export class GraphComponent implements OnInit, OnChanges {
                   size: 30
                 }
               })
-
               const accessibleNodes = this.detailData["nodes"][i]["data"]["properties"]["accessible_nodes"]
 
               for (let j = 0; j < accessibleNodes.length; j++) {

@@ -9,14 +9,14 @@ from copy import copy
 from pettingzoo import AECEnv
 from pettingzoo.utils import agent_selector, wrappers
 
-from typing import Dict, List, Any, Callable, Tuple
+from typing import Dict, List, Any, Callable, Tuple, Union
 import random
 import json
 from environment import EnvironmentMngr
 from environmentModel import Environment, environmentTest
 
 
-def env(environment: Environment, render_mode=None):
+def env(environment: Union[Environment, Any], render_mode=None):
 
     internal_render_mode = render_mode if render_mode != "ansi" else "human"
     env = McasEnvironment(node_environment=environment,
@@ -38,7 +38,7 @@ class McasEnvironment(AECEnv):
 
     envMngr: EnvironmentMngr
 
-    def __init__(self, node_environment: Environment, render_mode=None):
+    def __init__(self, node_environment: Union[Environment, Any], render_mode=None):
 
         self.envMngr = EnvironmentMngr(nodeEnvironment=node_environment)
 
@@ -171,48 +171,66 @@ class EnvironmentPlayer:
     iteration: int
     iterationMax: int
     fileName: str
+    itera: Any
 
-    def saveFile(self):
-        f = open("./worldStates/{}".format(self.fileName), "w+")
-        json.dump(self.env, f)
+    def saveFile(self, filePath: str):
+        f = open(self.fileName, "w+")
+        json.dump(self.env.envMngr.environment, f)
 
-    def __init__(self, env: McasEnvironment, fileName: str = "defaultExample.json", iterationMax=2 ** 63) -> None:
+    def dumpEnvironment(self) -> str:
+        return json.dumps(self.env.envMngr.environment)
+
+    def dictEnvironment(self) -> Any:
+        return self.env.envMngr.environment
+
+    def __init__(self, env: McasEnvironment, iterationMax=2 ** 63) -> None:
         self.env = env
         self.iteration = 0
         self.iterationMax = iterationMax
-        self.fileName = fileName
+
+        self.env.reset()
+        self.itera = self.env.agent_iter().__iter__()
 
     def next(self) -> Tuple[str, str]:
         if self.iteration >= self.iterationMax:
             print("Reached maxIteration !")
             return ""
 
-        itera = self.env.agent_iter().__iter__()
-
         # return the next agent to play
-        agent = itera.__next__()
-        observation, reward, termination, truncation, info = e.last()
+        agent = self.itera.__next__()
+        observation, reward, termination, truncation, info = self.env.last()
         print("===============================")
         prettyAgentName = copy(agent)
         prettyAgentName = prettyAgentName.replace("\"", "'")
-        print(json.dumps({"agent": prettyAgentName, "observation": observation, "reward": reward,
-                        "termination": termination, "truncation": truncation, "info": info}, indent=4))
-        action = e.envMngr.getActGymID(agent, "helloWorld")
-        e.step(action)
+
+        action = self.env.envMngr.getActGymID(agent, "helloWorld")
+
+        actionPropName = self.env.envMngr.getActPropID(agent, action)
+
+        self.env.step(action)
+        lastValues = {"agent": prettyAgentName, "observation": observation, "reward": reward,
+                                 "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
+        print(json.dumps(lastValues, indent=2))
 
         self.iteration += 1
-        logs = self.env.runAgentOnNode(agentID, nodeID)
-        logs = "Iteration {}: ".format(self.iteration) + logs
-        self.saveFile()
-        return (agentID, logs)
+        logs = "Iteration {}: {}".format(self.iteration, json.dumps(lastValues))
+        # self.saveFile()
+        return (prettyAgentName, logs)
+
+
+def loadFile(filePath: str):
+    newDictEnv = json.load(open(filePath, "r"))
+    return EnvironmentPlayer(McasEnvironment(
+        node_environment={"nodes": newDictEnv}, render_mode="human"))
 
 
 if __name__ == '__main__':
 
-    # TODO : avoir des actions qui ne soient pas propres à un noeud mais génériques
-
     e: McasEnvironment = env(environment=environmentTest, render_mode="human")
+
     e.reset()
+
+    # TODO : avoir des actions qui ne soient pas propres à un noeud mais génériques
 
     # i = 1
 

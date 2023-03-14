@@ -228,6 +228,9 @@ class EnvironmentMngr:
     def getActGymID(self, agent, actionPropID):        
         return list(self.fromActPropIDToActGym({agent: actionPropID}).values())[0]
 
+    def getActPropID(self, agent, actionGymID):
+        return list(self.fromActGymToActPropID({agent: actionGymID}).values())[0]
+
     def applyAction(self, actionGymID: int, agentPropID: str):
         actionName, action = list(self.fromActGymToActProp(
             {agentPropID: actionGymID}).values())[0]
