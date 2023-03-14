@@ -1,376 +1,313 @@
-from typing import Any, Callable, Dict, Union, List, Tuple
-from dataclasses import dataclass
-import dataclasses
+from collections import OrderedDict
+from functools import reduce
+import gymnasium
+import numpy as np
+from gymnasium import spaces
+from pettingzoo.test import api_test
+import re
+
+from pettingzoo import AECEnv
+from pettingzoo.utils import agent_selector, wrappers
+
+from typing import Dict, List, Any, Callable, Union, Tuple
 import json
-from dataclasses_serialization.json import JSONSerializer
-# from actionLibrary import ActionLibrary
-# from behaviourLibrary import BehaviourLibrary
+from environmentModel import Environment
+
+from flatten_json import flatten, unflatten
+import dataclasses
+from environmentModel import environmentTest, Property
+from environmentModel import Agent
+from copy import copy
+from pyeda.boolalg.expr import exprvar, expr
+from pyeda.boolalg.table import expr2truthtable
 
 
-@dataclass
-class Process:
-    name: str
-    running: bool
-    description: str
+# not usefull for the moment
+def remakeList(jsonEntry: Dict[str, Dict[str, Any]]) -> Any:
+    if all((key.isdigit() and isinstance(key, str)) for key in list(jsonEntry.keys())):
+        indexes = list(jsonEntry.keys())
+        l = [None] * len(indexes)
+        for index in indexes:
+            l[int(index)] = None
+            l[int(index)] = jsonEntry[index]
+        return l
+    else:
+        jsonRes = copy(jsonEntry)
+        for key in jsonEntry:
+            if isinstance(jsonEntry[key], dict):
+                jsonRes[key] = remakeList(jsonEntry[key])
+        return jsonRes
 
 
-@dataclass
-class ListeningService (Process):
-    allowedCredentials: List[str]
+class EnhancedJSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if dataclasses.is_dataclass(o):
+            return dataclasses.asdict(o)
+        return super().default(o)
 
 
-@dataclass
-class AgentContext:
-    binary_file_location: str
-    possible_actions: List[Callable]
-    knowledge: Any
+class EnvironmentMngr:
 
+    # the current environment model instance (dict of Nodes), such as:
+    # {
+    #    "node1": {
+    #        "properties": {
+    #           ...#current_properties...
+    #        },
+    #        "actions": {
+    #           ...
+    #           "action1": {
+    #               "precondition": #boolean_property_expression,
+    #               "effects": [#potential_effect_properties]
+    #           }
+    #           ...
+    #       }
+    #       ...
+    #    }
+    # }
+    # it is to be modified only by actions
+    environment: Any
 
-@dataclass
-class Action:
-    actionID: str
-    description: str
-    success_probability: float
-    function: Callable
-    cost: int
+    # initial environment used for reseting
+    initialEnvironment: Any
 
+    # all gathered possibles properties to be observed (i.e all possible actions effects properties), such as:
+    # [("propertyName1", "propertyValue1"), ("propertyName2", "propertyValue2"), ...]
+    obsPropSpace: Dict
 
-@dataclass
-class Agent(Process):
-    context: AgentContext
-    behaviour: Callable[[str, AgentContext,
-                         Dict[str, Action]], Callable[[str, Any], None]]
+    # gym space used to describe any observation in the same format:
+    # for instance, if obsPropSpace = [property1, property2],
+    # then, observation can be:
+    #   - [None, None]
+    #   - [None, property2]
+    #   - [property1, None]
+    #   - [property1, property2]
+    # Coding with 0 = None and 1 = property, we have either [0,0] or [0,1] or [1,0] or [1,1]
+    # so an observation is like [boolValue, boolValue] which is given by MultiBinary(2)
+    obsGymSpace: spaces.Dict
 
+    # all gathered possibles actions to be played, such as
+    # [
+    #   ("doNothing", {"description": "Do nothing", "success_probability": 1, "precondition": "True", "effects": {}, "cost": 100}),
+    #   ("helloWorld", { "description": "Hello world", "success_probability": 1, "precondition": "True", "effects":
+    #               { "[#AgentID][\"knowledge\"][\"message\"]": "Hello World"},"cost": 100},),
+    #   ...
+    # ]
+    actPropSpace: OrderedDict
 
-@dataclass
-class File:
-    file_name: str
-    permission: str
-    type: str
-    hash: str
+    # gym space used to describe any action in the same format:
+    # for instance, if actPropSpace = [action1, action2, action3],
+    # then, an action can be either action1 or action2 or action3
+    # Coding with 0 = action1, 1 = action2 and 2 = action3, we have either 0 or 1 or 2
+    # so an action is like x with x in {0,1,2} which is given by Discrete(3)
+    actGymSpace: spaces.Dict
 
+    # the list of all possible agents names (with full name path)
+    agtPropSpace: List[str]
 
-@dataclass
-class Processes:
-    agents: Dict[str, Agent]
-    services: Dict[str, ListeningService]
-    other_processes: Dict[str, Process]
+    def __init__(self, nodeEnvironment: Union[Environment, Any]) -> None:
 
+        self.environment = json.loads(json.dumps(
+            nodeEnvironment, cls=EnhancedJSONEncoder))["nodes"]
 
-@dataclass
-class FirewallRule:
-    port: str
-    permission: str
-    reason: str
+        self.initialEnvironment = copy(self.environment)
 
+        # getting all observable properties, all possible action, all possible agent
+        self.obsPropSpace, self.actPropSpace, self.agtPropSpace = self.getPropSpaces()
 
-@dataclass
-class Firewall:
-    outgoing: List[FirewallRule]
-    incoming: List[FirewallRule]
+        # # getting observation and aciton spaces as Gym spaces as a vector and a finite number interval
+        self.obsGymSpace = spaces.Dict({agentName: spaces.MultiBinary(len(
+            agentObsPropSpace)) for agentName, agentObsPropSpace in self.obsPropSpace.items()})
+        self.actGymSpace = spaces.Dict({agentName: spaces.Discrete(len(
+            agentActPropSpace)) for agentName, agentActPropSpace in self.actPropSpace.items()})
 
+    def reset(self):
+        self.environment = self.initialEnvironment
 
-@dataclass
-class Properties:
-    processes: Processes
-    file_system: Dict[str, File]
-    firewall: Firewall
-    installed_softwares: List[str]
-    installed_operating_system: str
-    reimagable: bool
-    value: int
-    sla_weight: float
-    accessible_nodes: List[Tuple[str, str]]
-    other_properties: List[str]
-    logs: List[str]
+    def getValueFromJsonPath(self, jsonEntry, jsonPath):
+        obj = jsonEntry
+        for jsonKey in jsonPath[1:-1].split("]["):
+            obj = obj.get(jsonKey[1:-1], None)
+            if obj == None:
+                return obj
+        return obj
 
+    def delValueFromJsonPath(self, jsonEntry, jsonPath):
+        def _delValueFromJsonPath(jsonEntry, jsonKeys):
+            if len(jsonKeys) == 1:
+                del jsonEntry[jsonKeys[0]]
+            else:
+                key = jsonKeys.pop()
+                _delValueFromJsonPath(jsonEntry[key], jsonKeys)
+                return
+        jsonKeys = [jsonKey[1:-1] for jsonKey in jsonPath[1:-1].split("][")]
+        jsonKeys.reverse()
+        return _delValueFromJsonPath(jsonEntry, jsonKeys)
 
-@dataclass
-class Node:
-    meta_data: any
-    properties: Properties
-    actions: Dict[str, Action]
+    def setValueFromJsonPath(self, jsonEntry, jsonPath, value):
+        def _setValueFromJsonPath(jsonEntry, jsonKeys):
+            key = jsonKeys.pop()
+            if (not key in jsonEntry.keys()):
+                jsonEntry[key] = {}
+            if len(jsonKeys) == 0:
+                jsonEntry[key] = value
+                return
+            else:
+                if type(jsonEntry[key]) == str:
+                    jsonEntry[key] = {}
+                _setValueFromJsonPath(jsonEntry[key], jsonKeys)
 
+        jsonKeys = [jsonKey[1:-1] for jsonKey in jsonPath[1:-1].split("][")]
+        jsonKeys.reverse()
+        return _setValueFromJsonPath(jsonEntry, jsonKeys)
 
-class Environment:
-    nodes: Dict[str, Node]
+    def getPropSpaces(self) -> Tuple:
+        agtPropSpace = []
+        actPropSpace = {}
+        extendedEffectsProperties = []
+        for nodeID, node in self.environment.items():
+            agentsOnNode = ['["{}"]["properties"]["processes"]["agents"]["{}"]'.format(nodeID, agentName) for agentName in list(
+                node["properties"]["processes"]["agents"].keys())]
 
-    def __init__(self, nodes: Dict[str, Node] = {}) -> None:
-        self.nodes = nodes
+            for agentOnNode in agentsOnNode:
+                actPropSpace[agentOnNode] = []
 
-    def __str__(self) -> str:
-        return str(self.serialize())
+            agtPropSpace += agentsOnNode
+            for actionName, action in node["actions"].items():
+                effectProperties = list(action["effects"].items())
+                for effectPropertyName, effectPropertyValue in effectProperties:
+                    extendedPropertyName = effectPropertyName
+                    extendedPropertyValue = effectPropertyValue
+                    if "#[" in str(extendedPropertyValue):
+                        for match in re.compile(r"#(\[.*?\])[^\[]").finditer(" " + extendedPropertyValue + " "):
+                            propertyName = match.groups(0)[0]
+                            prop = self.getValueFromJsonPath(
+                                self.environment, propertyName)
+                            extendedPropertyValue = extendedPropertyValue.replace(
+                                "#" + propertyName, str(prop))
+                    if "[#AgentID]" in effectPropertyName:
+                        effectProperties.remove(
+                            (effectPropertyName, effectPropertyValue))
+                        for agentOnNode in agentsOnNode:
+                            extendedPropertyName = effectPropertyName.replace(
+                                "[#AgentID]", agentOnNode)
+                            effectProperties += [(extendedPropertyName,
+                                                  extendedPropertyValue)]
 
-    def getAgentIDandNode(self) -> List[str]:
-        agentIDs = []
-        for nodeID, node in self.nodes.items():
-            agentIDs += [(agentID, nodeID)
-                         for agentID in list(node.properties.processes.agents.keys())]
-        return agentIDs
+                extendedEffectsProperties += effectProperties
 
-    def getAgentByID(self, agentID: str) -> Tuple[Agent, str]:
-        for nodeID, node in self.nodes:
-            if agentID in list(node.properties.processes.agents.keys()):
-                return (node.properties.processes.agents[agentID], nodeID)
+                for agentOnNode in agentsOnNode:
+                    actPropSpace[agentOnNode] += [(actionName, action)]
 
-    def getAgentByIDonNode(self, agentID: str, nodeID: str) -> Agent:
-        if (not agentID in list(self.nodes[nodeID].properties.processes.agents.keys())):
-            return None
-        return self.nodes[nodeID].properties.processes.agents[agentID]
+        allObsPropSpace = [prop for prop in list([(prop[0], prop[1])
+                                                  for prop in extendedEffectsProperties]) if "knowledge" in prop[0]]
 
-    def runAgentOnNode(self, agentID: str, agentNodeID: str) -> str:
-        agent = self.getAgentByIDonNode(agentID, agentNodeID)
-        if agent == None:
-            return ""
+        obsPropSpace = {
+            agentName: [obProp for obProp in allObsPropSpace if agentName in obProp[0]] for agentName in agtPropSpace
+        }
+        return (obsPropSpace, actPropSpace, agtPropSpace)
 
-        chosenAction: Callable[[str, Environment],
-                               None] = agent.behaviour(agentID, agent.context, self.nodes[agentNodeID].actions)
-        log: str = "Agent {} located on node {} is playing action {} ({})".format(
-            agent.name, agentNodeID, chosenAction.__name__, self.nodes[agentNodeID].actions[chosenAction.__name__].description)
-        chosenAction(agentID, self)
-        print(log)
-        return log
+    def fromActGymToActProp(self, actionGymDict):
+        return {agentName: self.actPropSpace[agentName][actGymID] for agentName, actGymID in actionGymDict.items()}
 
-    def serialize(self) -> Dict:
-        class EnhancedJSONEncoder(json.JSONEncoder):
-            def default(self, o):
-                if isinstance(o, Callable):
-                    return o.__name__
-                if isinstance(o, Environment):
-                    return {"nodes": o.nodes}
-                if isinstance(o, type):
-                    return o.__name__
-                if dataclasses.is_dataclass(o):
-                    return dataclasses.asdict(o)
-                return super().default(o)
-        return json.loads(json.dumps(self, cls=EnhancedJSONEncoder))
+    def fromActGymToActPropID(self, actionGymDict):
+        return {agentName: self.actPropSpace[agentName][actGymID][0] for agentName, actGymID in actionGymDict.items()}
 
+    def fromActPropToActGym(self, actionPropDict):
+        return {agentName: int(self.actPropSpace[agentName].index(actProp)) for agentName, actProp in actionPropDict.items()}
 
-def deserialize(jsonDict: Dict, functions: Dict = {}) -> Environment:
+    def fromActPropIDToActGym(self, actionPropDict):
+        return {agentName: int([actProp[0] for actProp in self.actPropSpace[agentName]].index(actPropID)) for agentName, actPropID in actionPropDict.items()}
 
-    def deserializeAgent(agent: Dict) -> Agent:
-        context = agent["context"]
+    def fromObsGymToObsProp(self, observationGymDict):
+        return {agentName: [self.obsPropSpace[agentName][observationGymIndex] for observationGymIndex in range(0, len(observationGymVector)) if observationGymVector[observationGymIndex] == 1] for agentName, observationGymVector in observationGymDict.items()}
 
-        return Agent(
-            name=agent["name"],
-            running=agent["running"],
-            description=agent["description"],
-            context=AgentContext(
-                binary_file_location=context["binary_file_location"],
-                possible_actions=[eval(possibleAction, functions)
-                                  for possibleAction in context["possible_actions"]],
-                knowledge=context["knowledge"]
-            ),
-            behaviour=eval(agent["behaviour"], functions)
-        )
+    def fromObsPropToObsGym(self, observationPropDict):
+        return {agentName: [(1 if (observationProp in observationPropVector) else 0) for observationProp in self.obsPropSpace[agentName]] for agentName, observationPropVector in observationPropDict.items()}
 
-    def deserializeAgents(agents: Dict) -> Dict[str, Agent]:
-        return {agentID: deserializeAgent(agent) for agentID, agent in agents.items()}
+    def getActGymID(self, agent, actionPropID):        
+        return list(self.fromActPropIDToActGym({agent: actionPropID}).values())[0]
 
-    def deserializeService(service: Dict) -> ListeningService:
-        return ListeningService(
-            name=service["name"],
-            running=service["running"],
-            description=service["description"],
-            allowedCredentials=service["allowedCredentials"]
-        )
+    def applyAction(self, actionGymID: int, agentPropID: str):
+        actionName, action = list(self.fromActGymToActProp(
+            {agentPropID: actionGymID}).values())[0]
+        print("\t -> Action {} is being played by {}".format(actionName, agentPropID))
+        precondition: str = action["precondition"]
+        booleanExpression = precondition
+        areAllPropertiesPresent = True
+        for match in re.compile(r"(\[.*?\])[^\[]").finditer(" " + precondition + " "):
+            initialConditionProperty = match.groups(0)[0]
+            conditionProperty = initialConditionProperty.replace(
+                "[#AgentID]", agentPropID)
 
-    def deserializeServices(services: Dict) -> Dict[str, ListeningService]:
-        return {serviceID: deserializeService(service) for serviceID, service in services.items()}
+            conditionPropertyValue = str(self.getValueFromJsonPath(
+                self.environment, conditionProperty))
+            if conditionPropertyValue == None:
+                areAllPropertiesPresent = False
+                print("error: property {} is not present".format(conditionProperty))
+                break
+            booleanExpression = booleanExpression.replace(
+                initialConditionProperty, conditionPropertyValue)
 
-    def deserializeProcess(process: Dict) -> Process:
-        return Process(
-            name=process["name"],
-            running=process["running"],
-            description=process["description"]
-        )
+        if (areAllPropertiesPresent):
+            observations: List[Property] = []
+            agentObservation: Dict = {agent: {} for agent in self.agtPropSpace}
+            expression = expr(booleanExpression)
+            expression = str(expression).replace(
+                "False", "0").replace("True", "1")
+            preconditionSatisfied = True if int(
+                expr2truthtable(expr(expression))) == 1 else False
+            if (not preconditionSatisfied):
+                print("error: precondition not meet : {}".format(precondition))
+            for propName, propValue in action["effects"].items():
+                if ("[#AgentID]" in propName):
+                    propName = propName.replace("[#AgentID]", agentPropID)
+                # first remove all properties in current state that have the same propName as
+                # the properties we want to add
+                lastValue = self.getValueFromJsonPath(
+                    self.environment, propName)
+                if lastValue != None:
+                    self.delValueFromJsonPath(self.environment, propName)
+                # then adding new properties and their values
+                if propValue != None:
+                    if ("#[" in str(propValue)):
+                        for match in re.compile(r"#(\[.*\])").finditer(" " + propValue + " "):
+                            propValue = propValue.replace(
+                                "#" + match.groups(0)[0], str(self.getValueFromJsonPath(self.environment, match.groups(0)[0])))
+                    for match in re.compile(r'^(\[\".*?\"\]\[\"properties\"\]\[\"processes\"\]\[\"agents\"\]\[\".*?\"\])\[\"knowledge\"\]').finditer(propName):
+                        agentKnowledgeName = match.groups(0)[0]
+                        print("\t -> new agent {} knowledge property: ({}, {})".format( agentKnowledgeName, propName, propValue))
+                        extendedPropName = copy(propName)
+                        extendedPropName = extendedPropName.replace('{}["knowledge"]'.format(agentKnowledgeName), "")[2:-2]
+                        agentObservation[agentKnowledgeName][extendedPropName] = propValue
+                    # adding new properties in environment (whether in agents knowledge or not)
+                    self.setValueFromJsonPath(
+                        self.environment, propName, propValue)
 
-    def deserializeOtherProcesses(otherProcesses: Dict) -> Dict[str, Process]:
-        return {processID: deserializeProcess(process) for processID, process in otherProcesses.items()}
-
-    def deserializeFileSystem(fileSystem: Dict) -> Dict[str, File]:
-        return {path: JSONSerializer.deserialize(File, file) for path, file in fileSystem.items()}
-
-    def deserializeFirewall(firewall: Dict) -> Firewall:
-        return JSONSerializer.deserialize(Firewall, firewall)
-
-    def deserializeProperties(properties: Dict) -> Properties:
-        return Properties(
-            processes=Processes(
-                agents=deserializeAgents(properties["processes"]["agents"]),
-                services=deserializeServices(
-                    properties["processes"]["services"]),
-                other_processes=deserializeOtherProcesses(
-                    properties["processes"]["other_processes"])
-            ),
-            file_system=deserializeFileSystem(properties["file_system"]),
-            firewall=deserializeFirewall(properties["firewall"]),
-            installed_softwares=properties["installed_softwares"],
-            installed_operating_system=properties["installed_operating_system"],
-            reimagable=properties["reimagable"],
-            value=properties["value"],
-            sla_weight=properties["sla_weight"],
-            accessible_nodes=properties["accessible_nodes"],
-            logs=properties["logs"],
-            other_properties=properties["other_properties"])
-
-    def deserializeAction(action: Dict):
-        return Action(
-            actionID=action["actionID"],
-            description=action["description"],
-            success_probability=action["success_probability"],
-            cost=action["cost"],
-            function=eval(action["function"], functions)
-        )
-
-    def deserializeActions(actions: Dict) -> Dict[str, Action]:
-        return {actionID: deserializeAction(action) for actionID, action in actions.items()}
-
-    def deserializeNode(node: Dict) -> Node:
-        return Node(
-            meta_data=node["meta_data"],
-            properties=deserializeProperties(node["properties"]),
-            actions=deserializeActions(node["actions"])
-        )
-
-    nodes: Dict[str, Node] = {}
-    for nodeID, node in jsonDict["nodes"].items():
-        nodes[nodeID] = deserializeNode(node)
-
-    return Environment(nodes=nodes)
-
-
-class EnvironmentPlayer:
-    env: Environment
-    iteration: int
-    iterationMax: int
-    agentID: List[str]
-    fileName: str
-
-    def saveFile(self):
-        f = open("./worldStates/{}".format(self.fileName), "w+")
-        json.dump(self.env.serialize(), f)
-
-    def __init__(self, env: Environment, fileName: str = "defaultExample.json", iterationMax=10) -> None:
-        self.env = env
-        self.iteration = 0
-        self.iterationMax = iterationMax
-        self.agentOnNodeIDs = env.getAgentIDandNode()
-        self.totalAgentNumber = len(self.agentOnNodeIDs)
-        self.fileName = fileName
-        self.saveFile()
-
-    def next(self) -> Tuple[str, str]:
-
-        self.agentOnNodeIDs = self.env.getAgentIDandNode()
-        self.totalAgentNumber = len(self.agentOnNodeIDs)
-
-        if self.iteration >= self.iterationMax:
-            print("Reached maxIteration !")
-            return ""
-        multipliedAgentOnNodesIDs = []
-        nbActionPerTurn = 1
-        for agentOnNodeID in self.agentOnNodeIDs:
-            for i in range(0, nbActionPerTurn):
-                multipliedAgentOnNodesIDs += [agentOnNodeID]
-
-        (agentID,
-         nodeID) = multipliedAgentOnNodesIDs[self.iteration % (self.totalAgentNumber * nbActionPerTurn)]
-        self.iteration += 1
-        logs = self.env.runAgentOnNode(agentID, nodeID)
-        logs = "Iteration {}: ".format(self.iteration) + logs
-        self.saveFile()
-        return (agentID, logs)
+        return agentObservation
 
 
 if __name__ == '__main__':
+    # new envMng from a predefined two nodes state
+    envMngr = EnvironmentMngr(nodeEnvironment=environmentTest)
 
-    #  Some action functions
-    def switchOnReimagable(agentID: str, envRef: Environment) -> None:
-        envRef.nodes["PC"].properties.reimagable = True
+    gymSpace = envMngr.obsGymSpace  # geting the gym observation space
+    obsGymSample = gymSpace.sample()  # to a sample (as an agent would)
 
-    def switchOffReimagable(agentID: str, envRef: Environment) -> None:
-        envRef.nodes["PC"].properties.reimagable = False
+    #  an agent is choosing an action in actGymSpace[agent]
+    actGym = envMngr.fromActPropIDToActGym(
+        {'["PC1"]["properties"]["processes"]["agents"]["attacker1"]': "observeReimagableOnNodePC1"})
+    actGym = [x[1] for x in actGym.items()][0]
 
-    # Some behaviour functions
-    # def dumbBehaviour(agentID: str, context: AgentContext, actionDict: Dict[str, Action]) -> Callable[[str, Environment], None]:
-    #     return context.possible_actions[0]
+    obsProp = envMngr.applyAction(actGym,
+                              '["PC1"]["properties"]["processes"]["agents"]["attacker1"]')
 
-    # Some behaviour functions
-    def dumbBehaviour(agentID: str, context: AgentContext, actionDict: Dict[str, Action]) -> Callable[[str, Environment], None]:
-        return actionDict["switchOffReimagable"].function
+    print(obsProp, "\n\n\n")
 
-    network: Environment = Environment(nodes={
-        "PC": Node(
-            meta_data={},
-            properties=Properties(
-                processes=Processes(
-                    agents={
-                        "attacker1": Agent(name="simpleAttacker",
-                                           running=True, description="A simple attacker",
-                                           context=AgentContext(
-                                               binary_file_location="C:\\Users\mwlr.exe",
-                                               possible_actions=[
-                                                   switchOffReimagable],
-                                               knowledge={}),
-                                           behaviour=dumbBehaviour),
-                        "defender1": Agent(name="simpleDefender",
-                                           running=True,
-                                           description="A simple defender",
-                                           context=AgentContext(
-                                               binary_file_location="C:\\Users\dfdr.exe",
-                                               possible_actions=[
-                                                   switchOnReimagable],
-                                               knowledge={}),
-                                           behaviour=dumbBehaviour)
-                    },
-                    services={
-                        "HTTPS": ListeningService("HTTPS", True, "HTTPS Service", []),
-                        "SSH": ListeningService("SSH", True, "SSH Service", ["lambda/password123"])
-                    },
-                    other_processes={
-                        "excel": Process("Excel", True, "Excel application")
-                    }),
-                file_system={
-                    "C:\\Users\\.private": File("pwd.txt", "*", "text_file", "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12")
-                },
-                firewall=Firewall(
-                    outgoing=[FirewallRule("RDP", "ALLOW", ""), FirewallRule("sudo", "ALLOW", ""), FirewallRule(
-                        "SSH", "ALLOW", ""), FirewallRule("HTTP", "ALLOW", "")],
-                    incoming=[FirewallRule("RDP", "ALLOW", ""), FirewallRule(
-                        "SSH", "ALLOW", ""), FirewallRule("HTTP", "ALLOW", "")]
-                ),
-                installed_operating_system="Windows/12",
-                installed_softwares="MSOffice/2021",
-                accessible_nodes=[],
-                other_properties=[],
-                logs=[],
-                reimagable=True,
-                sla_weight=0.7,
-                value=15,
-            ),
-            actions={
-                "switchOnReimagable": Action(
-                    actionID="switchOnReimagable",
-                    description="Make the node reimagable",
-                    success_probability=1,
-                    function=switchOnReimagable,
-                    cost=100),
-                "switchOffReimagable": Action(
-                    actionID="switchOfReimagable",
-                    description="Make the node not reimagable",
-                    cost=15,
-                    function=switchOffReimagable,
-                    success_probability=1)
-            }
-        )})
+    obsGym = envMngr.fromObsPropToObsGym(obsProp)
 
-    player = EnvironmentPlayer(network, iterationMax=10)
+    print(obsGym)
 
-    print(player.env)
+    obsProp2 = envMngr.fromObsGymToObsProp(obsGym)
 
-    print("\n\n")
-    player.next()
-    print("\n\n")
-
-    print(player.env)
+    print(obsProp2)

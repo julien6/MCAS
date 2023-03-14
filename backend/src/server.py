@@ -3,11 +3,11 @@ from flask_cors import CORS
 import os
 import json
 from typing import Dict, List
-from scenario import network, switchOnReimagable, switchOffReimagable,\
-    dumbBehaviour, doNothing, dumbBehaviourAttacker, dumbBehaviourDefender, observeReimagable, \
-    discoverLink, scanPC2Ports, moveToPC2WithSSH, gettingFlag, attackerBehaviour, \
-    defenderBehaviour1, defenderBehaviour2, discoverLogsMalwareOnPC1, sendMalwareWarningToSimpleDefender2, \
-    discoverLogsMalwareOnPC2, detectMalwareBinaryFile, removeMalwareBinaryFile
+# from scenario import network, switchOnReimagable, switchOffReimagable,\
+#     dumbBehaviour, doNothing, dumbBehaviourAttacker, dumbBehaviourDefender, observeReimagable, \
+#     discoverLink, scanPC2Ports, moveToPC2WithSSH, gettingFlag, attackerBehaviour, \
+#     defenderBehaviour1, defenderBehaviour2, discoverLogsMalwareOnPC1, sendMalwareWarningToSimpleDefender2, \
+#     discoverLogsMalwareOnPC2, detectMalwareBinaryFile, removeMalwareBinaryFile
 from environment import deserialize, EnvironmentPlayer
 
 app = Flask(__name__)
@@ -18,9 +18,6 @@ environmentPlayer: EnvironmentPlayer = None
 worldStateFolder = "worldStates"
 
 metrics: Dict[str, List] = {}
-
-# our common environment object to play with
-# environment = new Environment()
 
 
 @app.route("/")
