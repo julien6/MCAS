@@ -209,11 +209,12 @@ class EnvironmentPlayer:
 
         self.env.step(action)
         lastValues = {"agent": prettyAgentName, "observation": observation, "reward": reward,
-                                 "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
+                      "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
         print(json.dumps(lastValues, indent=2))
 
         self.iteration += 1
-        logs = "Iteration {}: {}".format(self.iteration, json.dumps(lastValues))
+        logs = "Iteration {}: {}".format(
+            self.iteration, json.dumps(lastValues))
         # self.saveFile()
         return (prettyAgentName, logs)
 

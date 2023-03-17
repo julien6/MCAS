@@ -13,7 +13,6 @@ from typing import Dict, List, Any, Callable, Union, Tuple
 import json
 from environmentModel import Environment
 
-from flatten_json import flatten, unflatten
 import dataclasses
 from environmentModel import environmentTest, Property
 from environmentModel import Agent
