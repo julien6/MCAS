@@ -191,6 +191,36 @@ class EnvironmentPlayer:
         self.env.reset()
         self.itera = self.env.agent_iter().__iter__()
 
+        # ====================
+        # TODO: avoir les actions implémentées dans le code mais les afficher dans le json lors de la serialization sous forme de {...precondition... effects...}
+        # TODO: avoir des classes de comportement dans le code bien organisées avec les actions dans plusieurs fichiers
+        # TODO: avoir une fonction envAfterEffect qui agit après chaque execution d'une action par un agent pour faire appliquer les éventuels after-effects
+        # TODO : décoreller les identifiants des jsons avec les identifiants attachés aux agents (peu importe sur quel noeud ils se trouvent)
+        # ====================
+        def attacker1Behaviour(observation: any):
+            if observation.get("nodeLocation", None) == "PC2":
+                return "gettingFlag"
+            if observation.get("foundNode", None) == "PC2Link":
+                return "moveToPC2"
+            else:
+                if (observation.get("foundNode", None) == None):
+                    return "findPC2Link"
+                else:
+                    return "nmap"
+            
+        def defender1Behaviour(observation: any):
+            return "doNothing"
+
+        def defender2Behaviour(observation: any):
+            return "doNothing"
+
+        self.agentBehaviours = {
+            "attacker1": attacker1Behaviour,
+            "defender1": defender1Behaviour,
+            "defender2": defender2Behaviour
+        }
+
+
     def next(self) -> Tuple[str, str]:
         if self.iteration >= self.iterationMax:
             print("Reached maxIteration !")
@@ -203,17 +233,20 @@ class EnvironmentPlayer:
         prettyAgentName = copy(agent)
         prettyAgentName = prettyAgentName.replace("\"", "'")
 
-        action = self.env.envMngr.getActGymID(agent, "helloWorld")
+        actionPropName = self.agentBehaviours[agent.split("\"][\"")[-1][:-2]](observation)
 
-        actionPropName = self.env.envMngr.getActPropID(agent, action)
+        action = self.env.envMngr.getActGymID(agent, actionPropName)
+
+        # actionPropName = self.env.envMngr.getActPropID(agent, action)
 
         self.env.step(action)
         lastValues = {"agent": prettyAgentName, "observation": observation, "reward": reward,
-                                 "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
+                      "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
         print(json.dumps(lastValues, indent=2))
 
         self.iteration += 1
-        logs = "Iteration {}: {}".format(self.iteration, json.dumps(lastValues))
+        logs = "Iteration {}: {}".format(
+            self.iteration, json.dumps(lastValues))
         # self.saveFile()
         return (prettyAgentName, logs)
 
@@ -228,7 +261,46 @@ if __name__ == '__main__':
 
     e: McasEnvironment = env(environment=environmentTest, render_mode="human")
 
-    e.reset()
+    envPlayer: EnvironmentPlayer = loadFile("worldStates/t1.json")
+
+    res = envPlayer.next()
+
+    print(res)
+
+    res = envPlayer.next()
+
+    print(res)
+
+    res = envPlayer.next()
+
+    print(res)
+
+    res = envPlayer.next()
+
+    print(res)
+
+    res = envPlayer.next()
+
+    print(res)
+
+    res = envPlayer.next()
+
+    print(res)
+
+    res = envPlayer.next()
+
+    print(res)
+
+    res = envPlayer.next()
+
+    print(res)
+
+    res = envPlayer.next()
+
+    print(res)
+
+
+    # e.reset()
 
     # TODO : avoir des actions qui ne soient pas propres à un noeud mais génériques
 
@@ -248,26 +320,26 @@ if __name__ == '__main__':
     #     print("")
     #     i += 1
 
-    itera = e.agent_iter().__iter__()
+    # itera = e.agent_iter().__iter__()
 
-    # return the next agent to play
-    agent = itera.__next__()
-    observation, reward, termination, truncation, info = e.last()
-    print("===============================")
-    prettyAgentName = copy(agent)
-    prettyAgentName = prettyAgentName.replace("\"", "'")
-    print(json.dumps({"agent": prettyAgentName, "observation": observation, "reward": reward,
-                      "termination": termination, "truncation": truncation, "info": info}, indent=4))
-    action = e.envMngr.getActGymID(agent, "helloWorld")
-    e.step(action)
+    # # return the next agent to play
+    # agent = itera.__next__()
+    # observation, reward, termination, truncation, info = e.last()
+    # print("===============================")
+    # prettyAgentName = copy(agent)
+    # prettyAgentName = prettyAgentName.replace("\"", "'")
+    # print(json.dumps({"agent": prettyAgentName, "observation": observation, "reward": reward,
+    #                   "termination": termination, "truncation": truncation, "info": info}, indent=4))
+    # action = e.envMngr.getActGymID(agent, "helloWorld")
+    # e.step(action)
 
-    # return the next agent to play
-    agent = itera.__next__()
-    observation, reward, termination, truncation, info = e.last()
-    print("===============================")
-    prettyAgentName = copy(agent)
-    prettyAgentName = prettyAgentName.replace("\"", "'")
-    print(json.dumps({"agent": prettyAgentName, "observation": observation, "reward": reward,
-                      "termination": termination, "truncation": truncation, "info": info}, indent=4))
-    action = e.envMngr.getActGymID(agent, "helloWorld")
-    e.step(action)
+    # # return the next agent to play
+    # agent = itera.__next__()
+    # observation, reward, termination, truncation, info = e.last()
+    # print("===============================")
+    # prettyAgentName = copy(agent)
+    # prettyAgentName = prettyAgentName.replace("\"", "'")
+    # print(json.dumps({"agent": prettyAgentName, "observation": observation, "reward": reward,
+    #                   "termination": termination, "truncation": truncation, "info": info}, indent=4))
+    # action = e.envMngr.getActGymID(agent, "helloWorld")
+    # e.step(action)

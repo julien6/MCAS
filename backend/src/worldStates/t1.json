@@ -1,11 +1,45 @@
 {
     "PC1": {
         "actions": {
-            "discoverNodePC2": {
+            "findPC2Link": {
                 "cost": 15,
-                "description": "Discover the node PC2",
+                "description": "Discover a file containing an IP adress in local node",
+                "effects": {
+                    "[#AgentID][\"knowledge\"][\"foundNode\"]": "PC2Link"
+                },
+                "precondition": "[#AgentID][\"running\"]",
+                "success_probability": 1
+            },
+            "nmap": {
+                "cost": 15,
+                "description": "Discover the node PC2 via SSH",
                 "effects": {
                     "[#AgentID][\"knowledge\"][\"knowNeighbours\"]": "PC2"
+                },
+                "precondition": "[#AgentID][\"running\"]&([#AgentID][\"knowledge\"][\"knowNeighbours\"]==\"PC2\")",
+                "success_probability": 1
+            },
+            "moveToPC2": {
+                "cost": 15,
+                "description": "Lateral move agent to PC2 using SSH",
+                "effects": {
+                    "[\"PC2\"][\"properties\"][\"processes\"][\"agents\"][\"attacker1\"][\"binary_file_location\"]": "C:\\Users\\mwlr.exe",
+                    "[\"PC2\"][\"properties\"][\"processes\"][\"agents\"][\"attacker1\"][\"knowledge\"][\"hasRootPrivilege\"]": true,
+                    "[\"PC2\"][\"properties\"][\"processes\"][\"agents\"][\"attacker1\"][\"knowledge\"][\"knowHowToSwitchOnReimagablePC1\"]": true,
+                    "[\"PC2\"][\"properties\"][\"processes\"][\"agents\"][\"attacker1\"][\"name\"]": "simpleAttacker",
+                    "[\"PC2\"][\"properties\"][\"processes\"][\"agents\"][\"attacker1\"][\"running\"]": true,
+                    "[\"PC2\"][\"properties\"][\"processes\"][\"agents\"][\"attacker1\"][\"knowledge\"][\"nodeLocation\"]": "PC2",
+                    "[\"PC1\"][\"properties\"][\"processes\"][\"agents\"][\"attacker1\"]": null,
+                    "[\"PC1\"][\"properties\"][\"logs\"][\"agentMoved\"]": "[#AgentID] moved to PC2 via SSH"
+                },
+                "precondition": "[#AgentID][\"running\"]",
+                "success_probability": 1
+            },
+            "gettingFlag": {
+                "cost": 15,
+                "description": "Getting flag",
+                "effects": {
+                    "[#AgentID][\"knowledge\"][\"foundPassword\"]": "abc"
                 },
                 "precondition": "[#AgentID][\"running\"]",
                 "success_probability": 1
@@ -266,12 +300,6 @@
             "other_properties": {},
             "processes": {
                 "agents": {
-                    "attacker2": {
-                        "binary_file_location": "C:\\Users\\mwlr.exe",
-                        "knowledge": {},
-                        "name": "simpleAttacker2",
-                        "running": true
-                    },
                     "defender2": {
                         "binary_file_location": "C:\\Users\\dfdr.exe",
                         "knowledge": {},
