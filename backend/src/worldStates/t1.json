@@ -16,7 +16,7 @@
                 "effects": {
                     "[#AgentID][\"knowledge\"][\"knowNeighbours\"]": "PC2"
                 },
-                "precondition": "[#AgentID][\"running\"]&([#AgentID][\"knowledge\"][\"knowNeighbours\"]==\"PC2\")",
+                "precondition": "[#AgentID][\"running\"]&([#AgentID][\"knowledge\"][\"knowNeighbours\"]=\"PC2\")",
                 "success_probability": 1
             },
             "moveToPC2": {
@@ -32,7 +32,7 @@
                     "[\"PC1\"][\"properties\"][\"processes\"][\"agents\"][\"attacker1\"]": null,
                     "[\"PC1\"][\"properties\"][\"logs\"][\"agentMoved\"]": "[#AgentID] moved to PC2 via SSH"
                 },
-                "precondition": "[#AgentID][\"running\"]",
+                "precondition": "[#AgentID][\"running\"]&([#AgentID][\"knowledge\"][\"foundNode\"]=\"PC2Link\")",
                 "success_probability": 1
             },
             "gettingFlag": {
@@ -41,7 +41,7 @@
                 "effects": {
                     "[#AgentID][\"knowledge\"][\"foundPassword\"]": "abc"
                 },
-                "precondition": "[#AgentID][\"running\"]",
+                "precondition": "[#AgentID][\"running\"]&[#AgentID][\"knowledge\"][\"nodeLocation\"]=\"PC2\"",
                 "success_probability": 1
             },
             "doNothing": {

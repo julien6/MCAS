@@ -123,6 +123,11 @@ class EnvironmentMngr:
     def reset(self):
         self.environment = self.initialEnvironment
 
+    def getNodeIDPropFromAgtID(self, agentName: str) -> str:
+        for nodeID, node in self.environment.items():
+            if agentName in list(node["properties"]["processes"]["agents"].keys()):
+                return nodeID
+
     def getValueFromJsonPath(self, jsonEntry, jsonPath):
         obj = jsonEntry
         for jsonKey in jsonPath[1:-1].split("]["):
@@ -165,11 +170,18 @@ class EnvironmentMngr:
         actPropSpace = {}
         extendedEffectsProperties = []
         for nodeID, node in self.environment.items():
-            agentsOnNode = ['["{}"]["properties"]["processes"]["agents"]["{}"]'.format(nodeID, agentName) for agentName in list(
-                node["properties"]["processes"]["agents"].keys())]
+
+            agentsOnNode = list(
+                node["properties"]["processes"]["agents"].keys())
 
             for agentOnNode in agentsOnNode:
                 actPropSpace[agentOnNode] = []
+
+                # retrieving initial knowledge
+                for propertyName, property in node["properties"]["processes"]["agents"][agentOnNode]["knowledge"].items():
+                    extendedEffectsProperties += [
+                        ('["{}"]["properties"]["processes"]["agents"]["{}"]["knowledge"]["{}"]'
+                         .format(nodeID, agentOnNode, propertyName), property)]
 
             agtPropSpace += agentsOnNode
             for actionName, action in node["actions"].items():
@@ -189,7 +201,7 @@ class EnvironmentMngr:
                             (effectPropertyName, effectPropertyValue))
                         for agentOnNode in agentsOnNode:
                             extendedPropertyName = effectPropertyName.replace(
-                                "[#AgentID]", agentOnNode)
+                                "[#AgentID]", '["{}"]["properties"]["processes"]["agents"]["{}"]'.format(nodeID, agentOnNode))
                             effectProperties += [(extendedPropertyName,
                                                   extendedPropertyValue)]
 
@@ -224,7 +236,7 @@ class EnvironmentMngr:
     def fromObsPropToObsGym(self, observationPropDict):
         return {agentName: [(1 if (observationProp in observationPropVector) else 0) for observationProp in self.obsPropSpace[agentName]] for agentName, observationPropVector in observationPropDict.items()}
 
-    def getActGymID(self, agent, actionPropID):        
+    def getActGymID(self, agent, actionPropID):
         return list(self.fromActPropIDToActGym({agent: actionPropID}).values())[0]
 
     def getActPropID(self, agent, actionGymID):
@@ -233,27 +245,33 @@ class EnvironmentMngr:
     def applyAction(self, actionGymID: int, agentPropID: str):
         actionName, action = list(self.fromActGymToActProp(
             {agentPropID: actionGymID}).values())[0]
-        print("\t -> Action {} is being played by {}".format(actionName, agentPropID))
         precondition: str = action["precondition"]
         booleanExpression = precondition
         areAllPropertiesPresent = True
+        agentObservation: Dict = {agent: {} for agent in self.agtPropSpace}
+
         for match in re.compile(r"(\[.*?\])[^\[]").finditer(" " + precondition + " "):
             initialConditionProperty = match.groups(0)[0]
             conditionProperty = initialConditionProperty.replace(
-                "[#AgentID]", agentPropID)
+                "[#AgentID]", '["{}"]["properties"]["processes"]["agents"]["{}"]'
+                .format(self.getNodeIDPropFromAgtID(agentPropID), agentPropID))
 
-            conditionPropertyValue = str(self.getValueFromJsonPath(
-                self.environment, conditionProperty))
+            conditionPropertyValue = self.getValueFromJsonPath(
+                self.environment, conditionProperty)
             if conditionPropertyValue == None:
                 areAllPropertiesPresent = False
-                print("error: property {} is not present".format(conditionProperty))
+                # print("error: property {} is not present".format(conditionProperty))
                 break
+            if type(conditionPropertyValue) == str:
+                conditionPropertyValue = '"{}"'.format(conditionPropertyValue)
+            else:
+                conditionPropertyValue = str(conditionPropertyValue)
             booleanExpression = booleanExpression.replace(
                 initialConditionProperty, conditionPropertyValue)
 
         if (areAllPropertiesPresent):
-            observations: List[Property] = []
-            agentObservation: Dict = {agent: {} for agent in self.agtPropSpace}
+            booleanExpression = booleanExpression.replace('"', '').replace("=","<=>")
+            # print("EXPRESSION  ", booleanExpression)
             expression = expr(booleanExpression)
             expression = str(expression).replace(
                 "False", "0").replace("True", "1")
@@ -261,9 +279,13 @@ class EnvironmentMngr:
                 expr2truthtable(expr(expression))) == 1 else False
             if (not preconditionSatisfied):
                 print("error: precondition not meet : {}".format(precondition))
+
+            # print("\t -> Action {} is being played by {}".format(actionName, agentPropID))
+
             for propName, propValue in action["effects"].items():
                 if ("[#AgentID]" in propName):
-                    propName = propName.replace("[#AgentID]", agentPropID)
+                    propName = propName.replace("[#AgentID]", '["{}"]["properties"]["processes"]["agents"]["{}"]'
+                                                .format(self.getNodeIDPropFromAgtID(agentPropID), agentPropID))
                 # first remove all properties in current state that have the same propName as
                 # the properties we want to add
                 lastValue = self.getValueFromJsonPath(
@@ -276,17 +298,57 @@ class EnvironmentMngr:
                         for match in re.compile(r"#(\[.*\])").finditer(" " + propValue + " "):
                             propValue = propValue.replace(
                                 "#" + match.groups(0)[0], str(self.getValueFromJsonPath(self.environment, match.groups(0)[0])))
-                    for match in re.compile(r'^(\[\".*?\"\]\[\"properties\"\]\[\"processes\"\]\[\"agents\"\]\[\".*?\"\])\[\"knowledge\"\]').finditer(propName):
-                        agentKnowledgeName = match.groups(0)[0]
-                        print("\t -> new agent {} knowledge property: ({}, {})".format( agentKnowledgeName, propName, propValue))
-                        extendedPropName = copy(propName)
-                        extendedPropName = extendedPropName.replace('{}["knowledge"]'.format(agentKnowledgeName), "")[2:-2]
-                        agentObservation[agentKnowledgeName][extendedPropName] = propValue
+
                     # adding new properties in environment (whether in agents knowledge or not)
                     self.setValueFromJsonPath(
                         self.environment, propName, propValue)
 
-        return agentObservation
+                    for match in re.compile(r'^(\[\".*?\"\]\[\"properties\"\]\[\"processes\"\]\[\"agents\"\]\[\".*?\"\])\[\"knowledge\"\]').finditer(propName):
+                        agentKnowledgeName = match.groups(0)[0]
+                        # print("\t -> new agent {} knowledge property: ({}, {})".format(
+                        #     agentKnowledgeName, propName, propValue))
+                        extendedPropName = copy(propName)
+                        # extendedPropName = extendedPropName.replace(
+                        #     '{}["knowledge"]'.format(agentKnowledgeName), "")[2:-2]
+                        agentObservation[agentKnowledgeName.split(
+                            '"]["')[-1][:-2]][extendedPropName] = propValue
+
+        return self.fromObsPropToObsGym({agent: list(OrderedDict(obs).items()) for agent, obs in agentObservation.items()})
+
+    def getReward(self, agent, observations) -> float:
+
+        # it can use the environment instead of the using only observations of the current agent
+        rwds = {
+            "attacker1": {
+                "foundNode": {
+                    "PC2Link": 10
+                },
+                "nodeLocation": {
+                    "PC2": 100
+                },
+                "foundPassword": {
+                    "abc": 200
+                }
+            },
+            "defender1": {
+
+            },
+            "defender2": {
+
+            }
+        }
+
+        reward: float = -1
+
+        for obsProp in self.fromObsGymToObsProp({agent: observations[agent]})[agent]:
+            obsPropName = obsProp[0].split("[\"knowledge\"]")[-1][2:-2]
+            obsPropValue = obsProp[1]
+            for rewObsPropName in list(rwds[agent].keys()):
+                if rewObsPropName == obsPropName:
+                    if obsPropValue == list(rwds[agent][rewObsPropName].keys())[0]:
+                        reward += list(rwds[agent][rewObsPropName].values())[0]
+
+        return reward
 
 
 if __name__ == '__main__':
@@ -302,7 +364,7 @@ if __name__ == '__main__':
     actGym = [x[1] for x in actGym.items()][0]
 
     obsProp = envMngr.applyAction(actGym,
-                              '["PC1"]["properties"]["processes"]["agents"]["attacker1"]')
+                                  '["PC1"]["properties"]["processes"]["agents"]["attacker1"]')
 
     print(obsProp, "\n\n\n")
 

@@ -13,7 +13,7 @@ from typing import Dict, List, Any, Callable, Tuple, Union
 import random
 import json
 from environment import EnvironmentMngr
-from environmentModel import Environment, environmentTest
+from environmentModel import Environment
 
 
 def env(environment: Union[Environment, Any], render_mode=None):
@@ -31,6 +31,12 @@ def env(environment: Union[Environment, Any], render_mode=None):
     # env = wrappers.OrderEnforcingWrapper(env)
     return env
 
+## For MARL
+alpha = 0.1
+gamma = 0.6
+epsilon = 0.1
+qTable = {}
+
 
 class McasEnvironment(AECEnv):
 
@@ -44,8 +50,14 @@ class McasEnvironment(AECEnv):
 
         self.possible_agents = self.envMngr.agtPropSpace
 
+        # ====================
         # TODO: voir ce qu'un agent peut observer réellement sur un SI
         # TODO : l'espace d'observation est seulement l'union de toutes les propriétés des "effect actions"
+        # TODO: avoir les actions implémentées dans le code mais les afficher dans le json lors de la serialization sous forme de {...precondition... effects...}
+        # TODO: avoir des classes de comportement dans le code bien organisées avec les actions dans plusieurs fichiers
+        # TODO: avoir une fonction envAfterEffect qui agit après chaque execution d'une action par un agent pour faire appliquer les éventuels after-effects
+        # TODO : décoreller les identifiants des jsons avec les identifiants attachés aux agents (peu importe sur quel noeud ils se trouvent)
+        # ====================
         self.observation_spaces = self.envMngr.obsGymSpace
 
         self.action_spaces = self.envMngr.actGymSpace
@@ -111,11 +123,16 @@ class McasEnvironment(AECEnv):
         self.truncations = {agent: False for agent in self.agents}
         self.infos = {agent: {} for agent in self.agents}
         self.state = self.envMngr.initialEnvironment
-        self.observations = {agent: self.envMngr.getValueFromJsonPath(
-            self.envMngr.environment, '{}["knowledge"]'.format(agent)) for agent in self.agents}
-        """
-        Our agent_selector utility allows easy cyclic stepping through the agents list.
-        """
+        
+        obser = {agent: self.envMngr.getValueFromJsonPath(
+            self.envMngr.environment, '["{}"]["properties"]["processes"]["agents"]["{}"]["knowledge"]'
+            .format(self.envMngr.getNodeIDPropFromAgtID(agent), agent)) for agent in self.agents}
+        
+        obser = {agent: { '["{}"]["properties"]["processes"]["agents"]["{}"]["knowledge"]["{}"]'
+            .format(self.envMngr.getNodeIDPropFromAgtID(agent), agent, propName): propValue for propName, propValue in properties.items()} for agent, properties in obser.items()}
+
+        self.observations = self.envMngr.fromObsPropToObsGym({agent: list(OrderedDict(obs).items()) for agent, obs in obser.items()})
+
         self._agent_selector = agent_selector(self.agents)
         self.agent_selection = self._agent_selector.next()
 
@@ -143,17 +160,26 @@ class McasEnvironment(AECEnv):
 
         currentAgent = self.agent_selection
 
-        # the agent which stepped last had its _cumulative_rewards accounted for
-        # (because it was returned by last()), so the _cumulative_rewards for this
-        # agent should start again at 0
-        self._cumulative_rewards[currentAgent] = 0
-
-        # rewards for all agents are placed in the rewards dictionary
-        # fake rewards for the moment
-        for agent in self.agents:
-            self.rewards[agent] = 0
-
         obs = self.envMngr.applyAction(action, currentAgent)
+
+        reward = self.envMngr.getReward(currentAgent, obs)
+        if(currentAgent=="attacker1"):
+            print("REWARD:", reward)
+        self.rewards[currentAgent] = reward
+
+        self._cumulative_rewards[currentAgent] += reward
+
+        ################# For Q-Learning ###############
+        state = "".join([str(x) for x in self.observations[currentAgent]])
+        next_state = "".join([str(x) for x in obs])
+        reward = self.rewards[currentAgent]
+        
+        old_value = 0 if qTable.get(state, {}).get(action, None) == None else qTable[state][action]
+        next_max = max(list(qTable.get(next_state, {"k": 0}).values()))
+        
+        new_value = (1 - alpha) * old_value + alpha * (reward + gamma * next_max)
+        qTable.setdefault(state, {action: new_value})
+        ################################################
 
         self.observations[currentAgent] = obs[currentAgent]
 
@@ -173,6 +199,59 @@ class EnvironmentPlayer:
     fileName: str
     itera: Any
 
+    ######## Q-Learning ########
+    def attacker1MARL(self, agent, observation: any, reward):
+        observedState = "".join(list([str(gymProp) for gymProp in observation]))
+        if random.uniform(0, 1) < epsilon:
+            action = self.env.envMngr.actGymSpace[agent].sample() # Explore action space
+        else:
+            if (qTable.get(observedState, None) == None):
+                action = self.env.envMngr.actGymSpace[agent].sample()
+            else:
+                print(qTable.get(observedState))
+                qTable.get(observedState)
+
+                # print(self.env.envMngr.fromActGymToActPropID({agent: list(qTable.get(observedState).keys())[0]}))
+
+                availableQValues = list(OrderedDict(qTable.get(observedState)).values())
+                maxActionQValueForCurrentState = max(availableQValues)
+                maxActionQValueForCurrentStateGymID = [action for action, QValue in qTable.get(observedState).items() if QValue==maxActionQValueForCurrentState][0]
+                print("for state ", observedState, " available QValues are ", qTable.get(observedState))
+                action = maxActionQValueForCurrentStateGymID # Exploit learned values
+        return action
+    ############################
+
+    ######## Decision Tree #########
+    def attacker1Behaviour(self, agent, observation: any, reward):
+        def _attacker1Behaviour(observation: any):
+            prettyObs = {propName.split('[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
+            if prettyObs.get("nodeLocation", None) == "PC2":
+                return "gettingFlag"
+            if prettyObs.get("foundNode", None) == "PC2Link":
+                return "moveToPC2"
+            else:
+                if (prettyObs.get("foundNode", None) == None):
+                    return "findPC2Link"
+                else:
+                    return "nmap"
+        return self.env.envMngr.getActGymID(agent, _attacker1Behaviour(dict(OrderedDict(self.env.envMngr
+                                                                       .fromObsGymToObsProp({agent: observation})[agent]))))
+
+    def defender1Behaviour(self, agent, observation: any, reward):
+        def _defender1Behaviour(observation: any):
+            prettyObs = {propName.split('[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
+            return "doNothing"
+        return self.env.envMngr.getActGymID(agent, _defender1Behaviour(dict(OrderedDict(self.env.envMngr
+                                                                       .fromObsGymToObsProp({agent: observation})[agent]))))
+
+    def defender2Behaviour(self, agent, observation: any, reward):
+        def _defender2Behaviour(observation: any):
+            prettyObs = {propName.split('[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
+            return "doNothing"
+        return self.env.envMngr.getActGymID(agent, _defender2Behaviour(dict(OrderedDict(self.env.envMngr
+                                                                       .fromObsGymToObsProp({agent: observation})[agent]))))
+    ###############
+
     def saveFile(self, filePath: str):
         f = open(self.fileName, "w+")
         json.dump(self.env.envMngr.environment, f)
@@ -188,38 +267,25 @@ class EnvironmentPlayer:
         self.iteration = 0
         self.iterationMax = iterationMax
 
+        #################
+        self.decisionTree: Any = {
+            "attacker1": self.attacker1Behaviour,
+            "defender1": self.defender1Behaviour,
+            "defender2": self.defender2Behaviour
+        }
+        
+        self.marl: Any = {
+            "attacker1": self.attacker1MARL,
+            "defender1": self.defender1Behaviour,
+            "defender2": self.defender2Behaviour
+        }
+        self.qTable = {}
+
+        self.random: Any = {}
+        #################
+
         self.env.reset()
         self.itera = self.env.agent_iter().__iter__()
-
-        # ====================
-        # TODO: avoir les actions implémentées dans le code mais les afficher dans le json lors de la serialization sous forme de {...precondition... effects...}
-        # TODO: avoir des classes de comportement dans le code bien organisées avec les actions dans plusieurs fichiers
-        # TODO: avoir une fonction envAfterEffect qui agit après chaque execution d'une action par un agent pour faire appliquer les éventuels after-effects
-        # TODO : décoreller les identifiants des jsons avec les identifiants attachés aux agents (peu importe sur quel noeud ils se trouvent)
-        # ====================
-        def attacker1Behaviour(observation: any):
-            if observation.get("nodeLocation", None) == "PC2":
-                return "gettingFlag"
-            if observation.get("foundNode", None) == "PC2Link":
-                return "moveToPC2"
-            else:
-                if (observation.get("foundNode", None) == None):
-                    return "findPC2Link"
-                else:
-                    return "nmap"
-            
-        def defender1Behaviour(observation: any):
-            return "doNothing"
-
-        def defender2Behaviour(observation: any):
-            return "doNothing"
-
-        self.agentBehaviours = {
-            "attacker1": attacker1Behaviour,
-            "defender1": defender1Behaviour,
-            "defender2": defender2Behaviour
-        }
-
 
     def next(self) -> Tuple[str, str]:
         if self.iteration >= self.iterationMax:
@@ -228,27 +294,36 @@ class EnvironmentPlayer:
 
         # return the next agent to play
         agent = self.itera.__next__()
+        
+        # print("Agent: ", agent)
+
         observation, reward, termination, truncation, info = self.env.last()
-        print("===============================")
-        prettyAgentName = copy(agent)
-        prettyAgentName = prettyAgentName.replace("\"", "'")
 
-        actionPropName = self.agentBehaviours[agent.split("\"][\"")[-1][:-2]](observation)
+        observationProp = self.env.envMngr.fromObsGymToObsProp(
+            {agent: observation})
 
-        action = self.env.envMngr.getActGymID(agent, actionPropName)
+        # print("last:{}".format(json.dumps({"observation": observationProp, "reward": reward,
+        #                                 "termination": termination, "truncation": truncation, "info": info})))
+
+        # action = self.decisionTree[agent](agent, observation)
+        action = self.marl[agent](agent, observation, reward)
+
+        actionPropName = self.env.envMngr.getActPropID(agent, action)
+
+        if(agent=="attacker1"):
+            print("chosen action: {}".format(actionPropName))
 
         # actionPropName = self.env.envMngr.getActPropID(agent, action)
 
         self.env.step(action)
-        lastValues = {"agent": prettyAgentName, "observation": observation, "reward": reward,
+        lastValues = {"agent": agent, "observation": observationProp, "reward": reward,
                       "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
-        print(json.dumps(lastValues, indent=2))
 
         self.iteration += 1
         logs = "Iteration {}: {}".format(
             self.iteration, json.dumps(lastValues))
         # self.saveFile()
-        return (prettyAgentName, logs)
+        return (agent, logs)
 
 
 def loadFile(filePath: str):
@@ -259,87 +334,15 @@ def loadFile(filePath: str):
 
 if __name__ == '__main__':
 
-    e: McasEnvironment = env(environment=environmentTest, render_mode="human")
-
     envPlayer: EnvironmentPlayer = loadFile("worldStates/t1.json")
 
-    res = envPlayer.next()
 
-    print(res)
-
-    res = envPlayer.next()
-
-    print(res)
-
-    res = envPlayer.next()
-
-    print(res)
-
-    res = envPlayer.next()
-
-    print(res)
-
-    res = envPlayer.next()
-
-    print(res)
-
-    res = envPlayer.next()
-
-    print(res)
-
-    res = envPlayer.next()
-
-    print(res)
-
-    res = envPlayer.next()
-
-    print(res)
-
-    res = envPlayer.next()
-
-    print(res)
-
-
-    # e.reset()
-
-    # TODO : avoir des actions qui ne soient pas propres à un noeud mais génériques
-
-    # i = 1
-
-    # for agent in e.agent_iter(max_iter=7):
-    #     observation, reward, termination, truncation, info = e.last()
-    #     print("===============================")
-    #     print("======== Iteration {} ==========".format(str(i)))
-    #     prettyAgentName = copy(agent)
-    #     prettyAgentName = prettyAgentName.replace("\"", "'")
-    #     print(json.dumps({"agent": prettyAgentName, "observation": observation, "reward": reward,
-    #                       "termination": termination, "truncation": truncation, "info": info}, indent=4))
-    #     action = e.envMngr.getActGymID(agent, "helloWorld")
-    #     print("")
-    #     e.step(action)
-    #     print("")
-    #     i += 1
-
-    # itera = e.agent_iter().__iter__()
-
-    # # return the next agent to play
-    # agent = itera.__next__()
-    # observation, reward, termination, truncation, info = e.last()
-    # print("===============================")
-    # prettyAgentName = copy(agent)
-    # prettyAgentName = prettyAgentName.replace("\"", "'")
-    # print(json.dumps({"agent": prettyAgentName, "observation": observation, "reward": reward,
-    #                   "termination": termination, "truncation": truncation, "info": info}, indent=4))
-    # action = e.envMngr.getActGymID(agent, "helloWorld")
-    # e.step(action)
-
-    # # return the next agent to play
-    # agent = itera.__next__()
-    # observation, reward, termination, truncation, info = e.last()
-    # print("===============================")
-    # prettyAgentName = copy(agent)
-    # prettyAgentName = prettyAgentName.replace("\"", "'")
-    # print(json.dumps({"agent": prettyAgentName, "observation": observation, "reward": reward,
-    #                   "termination": termination, "truncation": truncation, "info": info}, indent=4))
-    # action = e.envMngr.getActGymID(agent, "helloWorld")
-    # e.step(action)
+    for k in range(0,5):
+        print("============= Episode {} ===================".format(str(k)))
+        print(envPlayer.qTable)
+        for i in range(0, 30):
+            print("---- Epoch {} ----".format(str(i)))
+            envPlayer.next()
+            print("")
+        envPlayer.env.reset()
+        print("\n\n")
