@@ -16,7 +16,7 @@ from environmentModel import Environment
 import dataclasses
 from environmentModel import environmentTest, Property
 from environmentModel import Agent
-from copy import copy
+from copy import deepcopy, copy
 from pyeda.boolalg.expr import exprvar, expr
 from pyeda.boolalg.table import expr2truthtable
 
@@ -109,7 +109,7 @@ class EnvironmentMngr:
         self.environment = json.loads(json.dumps(
             nodeEnvironment, cls=EnhancedJSONEncoder))["nodes"]
 
-        self.initialEnvironment = copy(self.environment)
+        self.initialEnvironment = deepcopy(self.environment)
 
         # getting all observable properties, all possible action, all possible agent
         self.obsPropSpace, self.actPropSpace, self.agtPropSpace = self.getPropSpaces()
@@ -121,7 +121,7 @@ class EnvironmentMngr:
             agentActPropSpace)) for agentName, agentActPropSpace in self.actPropSpace.items()})
 
     def reset(self):
-        self.environment = self.initialEnvironment
+        self.environment = deepcopy(self.initialEnvironment)
 
     def getNodeIDPropFromAgtID(self, agentName: str) -> str:
         for nodeID, node in self.environment.items():
@@ -270,7 +270,8 @@ class EnvironmentMngr:
                 initialConditionProperty, conditionPropertyValue)
 
         if (areAllPropertiesPresent):
-            booleanExpression = booleanExpression.replace('"', '').replace("=","<=>")
+            booleanExpression = booleanExpression.replace(
+                '"', '').replace("=", "<=>")
             # print("EXPRESSION  ", booleanExpression)
             expression = expr(booleanExpression)
             expression = str(expression).replace(
@@ -313,10 +314,26 @@ class EnvironmentMngr:
                         agentObservation[agentKnowledgeName.split(
                             '"]["')[-1][:-2]][extendedPropName] = propValue
 
+        agentObservation00 = {}
+        for agent in self.agtPropSpace:
+            agentNode = self.getNodeIDPropFromAgtID(agent)
+            agentObservation0 = self.environment[agentNode]["properties"]["processes"]["agents"][agent]["knowledge"]
+            agentObservation00[agent] = {'["{}"]["properties"]["processes"]["agents"]["{}"]["knowledge"]["{}"]'.format(agentNode, agent, propName): propValue
+                                         for propName, propValue in agentObservation0.items()}
+
+        agentObservation = agentObservation00
+
         return self.fromObsPropToObsGym({agent: list(OrderedDict(obs).items()) for agent, obs in agentObservation.items()})
 
-    def getReward(self, agent, observations) -> float:
+    def getReward(self, agent, observations, oldObservations) -> float:
 
+        print("BBB: ", oldObservations)
+        print("AAA: ", observations)
+
+        new_observations = [0] * len(oldObservations[agent])
+        for i in range(0, len(oldObservations[agent])):
+            new_observations[i] = 1 if((oldObservations[agent][i] == 0) and (observations[agent][i] == 1)) else 0
+        
         # it can use the environment instead of the using only observations of the current agent
         rwds = {
             "attacker1": {
@@ -340,7 +357,7 @@ class EnvironmentMngr:
 
         reward: float = -1
 
-        for obsProp in self.fromObsGymToObsProp({agent: observations[agent]})[agent]:
+        for obsProp in self.fromObsGymToObsProp({agent: new_observations})[agent]:
             obsPropName = obsProp[0].split("[\"knowledge\"]")[-1][2:-2]
             obsPropValue = obsProp[1]
             for rewObsPropName in list(rwds[agent].keys()):
