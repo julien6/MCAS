@@ -174,26 +174,29 @@ class McasEnvironment(AECEnv):
         if(currentAgent == "attacker1"):
             print("Updating the QTable")
             state = "".join([str(x) for x in self.observations[currentAgent]])
-            print("state: ", state, " ; ", self.envMngr.fromObsGymToObsProp(self.observations)[currentAgent])
+            # print("state: ", state, " ; ", self.envMngr.fromObsGymToObsProp(self.observations)[currentAgent])
             next_state = "".join([str(x) for x in obs[currentAgent]])
             print("next_state: ", next_state, " ; ", self.envMngr.fromObsGymToObsProp(obs)[currentAgent])
             reward = self.rewards[currentAgent]
-            print("reward: ", reward)
+            # print("reward: ", reward)
             
             old_value = 0 if qTable.get(state, {}).get(action, None) == None else qTable[state][action]
-            print("old_value: ", old_value)
+            # print("old_value: ", old_value)
             next_max = max(list(qTable.get(next_state, {"k": 0}).values()))
-            print("next_max: ", next_max)
+            # print("next_max: ", next_max)
 
             new_value = (1 - alpha) * old_value + alpha * (reward + gamma * next_max)
 
-            print("new_value: ", new_value)
+            # print("new_value: ", new_value)
             qTable.setdefault(state, {})
             qTable[state][action] = new_value
-            print("QTable", qTable)
+            # print("QTable", qTable)
         ################################################
 
         self.observations[currentAgent] = obs[currentAgent]
+
+        if reward == 200:
+            self.terminations[currentAgent] = True
 
         self.state = self.envMngr.environment
 
@@ -223,7 +226,8 @@ class EnvironmentPlayer:
                 action = self.env.envMngr.actGymSpace[agent].sample()
             else:
                 print("Using the QValues")
-                print("For state ", observedState, " 'action -> reward' QValues are ", qTable[observedState])
+                # print("For state ", observedState, " 'action -> reward' QValues are ", qTable[observedState])
+                print("For state ", self.env.envMngr.fromObsGymToObsProp({agent: observation})[agent], " 'action -> reward' QValues are ", {self.env.envMngr.fromActGymToActPropID({agent: actGym})[agent]: qValue for actGym, qValue in qTable[observedState].items()})
                 
                 # print(self.env.envMngr.fromActGymToActPropID({agent: list(qTable.get(observedState).keys())[0]}))
 
@@ -332,7 +336,7 @@ class EnvironmentPlayer:
         actionPropName = self.env.envMngr.getActPropID(agent, action)
 
         if(agent=="attacker1"):
-            print("chosen action: {} ({})".format(actionPropName, action))
+            print("\t\tchosen action: {} ({})".format(actionPropName, action))
 
         # actionPropName = self.env.envMngr.getActPropID(agent, action)
 
@@ -358,9 +362,9 @@ if __name__ == '__main__':
     envPlayer: EnvironmentPlayer = loadFile("worldStates/t1.json")
 
 
-    for k in range(0,5):
+    for k in range(0,50):
         print("============= Episode {} ===================".format(str(k)))
-        for i in range(0, 30):
+        for i in range(0, 15):
             print("---- Epoch {} ----".format(str(i)))
             envPlayer.next()
             print("")
