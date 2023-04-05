@@ -274,7 +274,7 @@ class EnvironmentMngr:
         if (areAllPropertiesPresent):
             booleanExpression = booleanExpression.replace(
                 '"', '').replace("=", "<=>")
-            print("EXPRESSION  ", booleanExpression)
+            # print("EXPRESSION  ", booleanExpression)
             expression = expr(booleanExpression)
             expression = str(expression).replace(
                 "False", "0").replace("True", "1")
@@ -327,13 +327,13 @@ class EnvironmentMngr:
             agentObservation[agent] = {'["{}"]["properties"]["processes"]["agents"]["{}"]["knowledge"]["{}"]'.format(agentNode, agent, propName): propValue
                                         for propName, propValue in agentObservation0.items()}
 
-        if actionName == "gettingFlag":
-            print("--0---> ", agentObservation[agentPropID])
-            print("propSpace: ", self.obsPropSpace[agentPropID])
-            t = self.fromObsPropToObsGym({agent: list(OrderedDict(obs).items()) for agent, obs in agentObservation.items()})
-            print("--1--> ", t[agentPropID])
-            u = self.fromObsGymToObsProp(t)
-            print("--2-->", u[agentPropID])
+        # if actionName == "gettingFlag":
+        #     print("--0---> ", agentObservation[agentPropID])
+        #     print("propSpace: ", self.obsPropSpace[agentPropID])
+        #     t = self.fromObsPropToObsGym({agent: list(OrderedDict(obs).items()) for agent, obs in agentObservation.items()})
+        #     print("--1--> ", t[agentPropID])
+        #     u = self.fromObsGymToObsProp(t)
+        #     print("--2-->", u[agentPropID])
 
         return self.fromObsPropToObsGym({agent: list(OrderedDict(obs).items()) for agent, obs in agentObservation.items()})
 
@@ -353,7 +353,8 @@ class EnvironmentMngr:
                     "PC2": 100
                 },
                 "foundPassword": {
-                    "abc": 200
+                    "abc": 200,
+                    "END": True
                 }
             },
             "defender1": {
@@ -365,6 +366,7 @@ class EnvironmentMngr:
         }
 
         reward: float = -1
+        end = False
 
         for obsProp in self.fromObsGymToObsProp({agent: new_observations})[agent]:
             obsPropName = obsProp[0].split("[\"knowledge\"]")[-1][2:-2]
@@ -373,8 +375,10 @@ class EnvironmentMngr:
                 if rewObsPropName == obsPropName:
                     if obsPropValue == list(rwds[agent][rewObsPropName].keys())[0]:
                         reward += list(rwds[agent][rewObsPropName].values())[0]
+                        if "END" in list(rwds[agent][rewObsPropName].keys()):
+                            end = True
 
-        return reward
+        return reward, end
 
 
 if __name__ == '__main__':

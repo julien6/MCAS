@@ -162,7 +162,7 @@ class McasEnvironment(AECEnv):
 
         obs = self.envMngr.applyAction(action, currentAgent)
 
-        reward = self.envMngr.getReward(currentAgent, obs, self.observations)
+        reward, end = self.envMngr.getReward(currentAgent, obs, self.observations)
 
         if(currentAgent=="attacker1"):
             print("REWARD:", reward)
@@ -176,7 +176,7 @@ class McasEnvironment(AECEnv):
             state = "".join([str(x) for x in self.observations[currentAgent]])
             # print("state: ", state, " ; ", self.envMngr.fromObsGymToObsProp(self.observations)[currentAgent])
             next_state = "".join([str(x) for x in obs[currentAgent]])
-            print("next_state: ", next_state, " ; ", self.envMngr.fromObsGymToObsProp(obs)[currentAgent])
+            # print("next_state: ", next_state, " ; ", self.envMngr.fromObsGymToObsProp(obs)[currentAgent])
             reward = self.rewards[currentAgent]
             # print("reward: ", reward)
             
@@ -195,13 +195,15 @@ class McasEnvironment(AECEnv):
 
         self.observations[currentAgent] = obs[currentAgent]
 
-        if reward == 200:
-            self.terminations[currentAgent] = True
-
         self.state = self.envMngr.environment
 
         if self.render_mode == "human":
             self.render()
+
+        if(end):
+            print("Agent {} finished".format(currentAgent))
+
+        self.terminations[currentAgent] = end
 
         # selects the next agent.
         self.agent_selection = self._agent_selector.next()
@@ -327,22 +329,28 @@ class EnvironmentPlayer:
         observationProp = self.env.envMngr.fromObsGymToObsProp(
             {agent: observation})
 
-        # print("last:{}".format(json.dumps({"observation": observationProp, "reward": reward,
-        #                                 "termination": termination, "truncation": truncation, "info": info})))
+        action = None
+        lastValues = None
+        if not termination:
+            # print("last:{}".format(json.dumps({"observation": observationProp, "reward": reward,
+            #                                 "termination": termination, "truncation": truncation, "info": info})))
 
-        # action = self.decisionTree[agent](agent, observation)
-        action = self.marl[agent](agent, observation, reward)
+            # action = self.decisionTree[agent](agent, observation)
+            action = self.marl[agent](agent, observation, reward)
 
-        actionPropName = self.env.envMngr.getActPropID(agent, action)
+            actionPropName = self.env.envMngr.getActPropID(agent, action)
 
-        if(agent=="attacker1"):
-            print("\t\tchosen action: {} ({})".format(actionPropName, action))
+            if(agent=="attacker1"):
+                print("\t\tchosen action: {} ({})".format(actionPropName, action))
 
-        # actionPropName = self.env.envMngr.getActPropID(agent, action)
+            # actionPropName = self.env.envMngr.getActPropID(agent, action)
 
-        self.env.step(action)
+            self.env.step(action)
+            lastValues = {"agent": agent, "observation": observationProp, "reward": reward,
+                        "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
+
         lastValues = {"agent": agent, "observation": observationProp, "reward": reward,
-                      "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
+                    "termination": termination, "truncation": truncation, "info": info, "nextAction": None}
 
         self.iteration += 1
         logs = "Iteration {}: {}".format(
