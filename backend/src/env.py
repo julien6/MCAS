@@ -15,6 +15,8 @@ import json
 from environment import EnvironmentMngr
 from environmentModel import Environment
 from random import shuffle
+from os import remove, path
+
 
 def env(environment: Union[Environment, Any], render_mode=None):
 
@@ -31,7 +33,8 @@ def env(environment: Union[Environment, Any], render_mode=None):
     # env = wrappers.OrderEnforcingWrapper(env)
     return env
 
-## For MARL
+
+# For MARL
 alpha = 0.1
 gamma = 0.6
 epsilon = 0.1
@@ -123,15 +126,16 @@ class McasEnvironment(AECEnv):
         self.truncations = {agent: False for agent in self.agents}
         self.infos = {agent: {} for agent in self.agents}
         self.state = self.envMngr.initialEnvironment
-        
+
         obser0 = {agent: self.envMngr.getValueFromJsonPath(
             self.envMngr.environment, '["{}"]["properties"]["processes"]["agents"]["{}"]["knowledge"]'
             .format(self.envMngr.getNodeIDPropFromAgtID(agent), agent)) for agent in self.agents}
-        
-        obser = {agent: { '["{}"]["properties"]["processes"]["agents"]["{}"]["knowledge"]["{}"]'
-            .format(self.envMngr.getNodeIDPropFromAgtID(agent), agent, propName): propValue for propName, propValue in properties.items()} for agent, properties in obser0.items()}
 
-        self.observations = self.envMngr.fromObsPropToObsGym({agent: list(OrderedDict(obs).items()) for agent, obs in obser.items()})
+        obser = {agent: {'["{}"]["properties"]["processes"]["agents"]["{}"]["knowledge"]["{}"]'
+                         .format(self.envMngr.getNodeIDPropFromAgtID(agent), agent, propName): propValue for propName, propValue in properties.items()} for agent, properties in obser0.items()}
+
+        self.observations = self.envMngr.fromObsPropToObsGym(
+            {agent: list(OrderedDict(obs).items()) for agent, obs in obser.items()})
 
         self._agent_selector = agent_selector(self.agents)
         self.agent_selection = self._agent_selector.next()
@@ -162,16 +166,17 @@ class McasEnvironment(AECEnv):
 
         obs = self.envMngr.applyAction(action, currentAgent)
 
-        reward, end = self.envMngr.getReward(currentAgent, obs, self.observations)
+        reward, end = self.envMngr.getReward(
+            currentAgent, obs, self.observations)
 
-        if(currentAgent=="attacker1"):
+        if (currentAgent == "attacker1"):
             print("REWARD:", reward)
         self.rewards[currentAgent] = reward
 
         self._cumulative_rewards[currentAgent] += reward
 
         ################# For Q-Learning ###############
-        if(currentAgent == "attacker1"):
+        if (currentAgent == "attacker1"):
             print("Updating the QTable")
             state = "".join([str(x) for x in self.observations[currentAgent]])
             # print("state: ", state, " ; ", self.envMngr.fromObsGymToObsProp(self.observations)[currentAgent])
@@ -179,13 +184,15 @@ class McasEnvironment(AECEnv):
             # print("next_state: ", next_state, " ; ", self.envMngr.fromObsGymToObsProp(obs)[currentAgent])
             reward = self.rewards[currentAgent]
             # print("reward: ", reward)
-            
-            old_value = 0 if qTable.get(state, {}).get(action, None) == None else qTable[state][action]
+
+            old_value = 0 if qTable.get(state, {}).get(
+                action, None) == None else qTable[state][action]
             # print("old_value: ", old_value)
             next_max = max(list(qTable.get(next_state, {"k": 0}).values()))
             # print("next_max: ", next_max)
 
-            new_value = (1 - alpha) * old_value + alpha * (reward + gamma * next_max)
+            new_value = (1 - alpha) * old_value + alpha * \
+                (reward + gamma * next_max)
 
             # print("new_value: ", new_value)
             qTable.setdefault(state, {})
@@ -200,7 +207,7 @@ class McasEnvironment(AECEnv):
         if self.render_mode == "human":
             self.render()
 
-        if(end):
+        if (end):
             print("Agent {} finished".format(currentAgent))
 
         self.terminations[currentAgent] = end
@@ -215,43 +222,55 @@ class EnvironmentPlayer:
     iterationMax: int
     fileName: str
     itera: Any
+    rewardsStatsFile: str
+    rewardsAveragePerEpisodeFile: str
+    av: int
 
     ######## Q-Learning ########
     def attacker1MARL(self, agent, observation: any, reward):
-        observedState = "".join(list([str(gymProp) for gymProp in observation]))
+        observedState = "".join(list([str(gymProp)
+                                for gymProp in observation]))
         if random.uniform(0, 1) < epsilon:
-            print("Exploring the space to know which reward is associated with an action in a given state")
-            action = self.env.envMngr.actGymSpace[agent].sample() # Explore action space
+            print(
+                "Exploring the space to know which reward is associated with an action in a given state")
+            # Explore action space
+            action = self.env.envMngr.actGymSpace[agent].sample()
         else:
             if (qTable.get(observedState, None) == None):
-                print("Exploring the space to know which reward is associated with an action in a given state")
+                print(
+                    "Exploring the space to know which reward is associated with an action in a given state")
                 action = self.env.envMngr.actGymSpace[agent].sample()
             else:
                 print("Using the QValues")
                 # print("For state ", observedState, " 'action -> reward' QValues are ", qTable[observedState])
-                print("For state ", self.env.envMngr.fromObsGymToObsProp({agent: observation})[agent], " 'action -> reward' QValues are ", {self.env.envMngr.fromActGymToActPropID({agent: actGym})[agent]: qValue for actGym, qValue in qTable[observedState].items()})
-                
+                print("For state ", self.env.envMngr.fromObsGymToObsProp({agent: observation})[agent], " 'action -> reward' QValues are ", {
+                      self.env.envMngr.fromActGymToActPropID({agent: actGym})[agent]: qValue for actGym, qValue in qTable[observedState].items()})
+
                 # print(self.env.envMngr.fromActGymToActPropID({agent: list(qTable.get(observedState).keys())[0]}))
 
-                availableQValues = list(OrderedDict(qTable.get(observedState)).values())
+                availableQValues = list(OrderedDict(
+                    qTable.get(observedState)).values())
                 maxActionQValueForCurrentState = max(availableQValues)
 
                 if len(availableQValues) < len(list(self.env.envMngr.actPropSpace[agent])):
                     if maxActionQValueForCurrentState < 0:
-                        otherActions = [actionGym for actionGym in range(0,len(list(self.env.envMngr.actPropSpace[agent]))) if actionGym not in list(OrderedDict(qTable.get(observedState)).keys())]
+                        otherActions = [actionGym for actionGym in range(0, len(list(
+                            self.env.envMngr.actPropSpace[agent]))) if actionGym not in list(OrderedDict(qTable.get(observedState)).keys())]
                         shuffle(otherActions)
                         return otherActions[0]
 
-                maxActionQValueForCurrentStateGymID = [action for action, qValue in qTable.get(observedState).items() if qValue==maxActionQValueForCurrentState][0]
+                maxActionQValueForCurrentStateGymID = [action for action, qValue in qTable.get(
+                    observedState).items() if qValue == maxActionQValueForCurrentState][0]
                 # print("for state ", observedState, " available QValues are ", qTable.get(observedState))
-                action = maxActionQValueForCurrentStateGymID # Exploit learned values
+                action = maxActionQValueForCurrentStateGymID  # Exploit learned values
         return action
     ############################
 
     ######## Decision Tree #########
     def attacker1Behaviour(self, agent, observation: any, reward):
         def _attacker1Behaviour(observation: any):
-            prettyObs = {propName.split('[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
+            prettyObs = {propName.split(
+                '[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
             if prettyObs.get("nodeLocation", None) == "PC2":
                 return "gettingFlag"
             if prettyObs.get("foundNode", None) == "PC2Link":
@@ -266,14 +285,16 @@ class EnvironmentPlayer:
 
     def defender1Behaviour(self, agent, observation: any, reward):
         def _defender1Behaviour(observation: any):
-            prettyObs = {propName.split('[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
+            prettyObs = {propName.split(
+                '[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
             return "doNothing"
         return self.env.envMngr.getActGymID(agent, _defender1Behaviour(dict(OrderedDict(self.env.envMngr
                                                                        .fromObsGymToObsProp({agent: observation})[agent]))))
 
     def defender2Behaviour(self, agent, observation: any, reward):
         def _defender2Behaviour(observation: any):
-            prettyObs = {propName.split('[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
+            prettyObs = {propName.split(
+                '[\"knowledge\"]')[-1][2:-2]: prop for propName, prop in observation.items()}
             return "doNothing"
         return self.env.envMngr.getActGymID(agent, _defender2Behaviour(dict(OrderedDict(self.env.envMngr
                                                                        .fromObsGymToObsProp({agent: observation})[agent]))))
@@ -289,10 +310,26 @@ class EnvironmentPlayer:
     def dictEnvironment(self) -> Any:
         return self.env.envMngr.environment
 
+    def writeStats(self, statsFile: str, logs: str) -> None:
+        f = open(statsFile, "a+")
+        f.write(logs + "\n")
+        f.close()
+
     def __init__(self, env: McasEnvironment, iterationMax=2 ** 63) -> None:
         self.env = env
         self.iteration = 0
         self.iterationMax = iterationMax
+        self.rewardsStatsFile = "rewards.csv"
+        self.rewardsAveragePerEpisodeFile = "rewardsAveragePerEpisode.csv"
+        self.av = 0
+
+        if(path.exists(self.rewardsStatsFile)):
+            remove(self.rewardsStatsFile)
+        self.writeStats(self.rewardsStatsFile, "epoch;episode;reward")
+
+        if(path.exists(self.rewardsAveragePerEpisodeFile)):
+            remove(self.rewardsAveragePerEpisodeFile)
+        self.writeStats(self.rewardsAveragePerEpisodeFile, "episode;averageReward")
 
         #################
         self.decisionTree: Any = {
@@ -300,7 +337,7 @@ class EnvironmentPlayer:
             "defender1": self.defender1Behaviour,
             "defender2": self.defender2Behaviour
         }
-        
+
         self.marl: Any = {
             "attacker1": self.attacker1MARL,
             "defender1": self.defender1Behaviour,
@@ -321,10 +358,18 @@ class EnvironmentPlayer:
 
         # return the next agent to play
         agent = self.itera.__next__()
-        
+
         # print("Agent: ", agent)
 
         observation, reward, termination, truncation, info = self.env.last()
+
+        if (agent == "attacker1"):
+            self.av += int(reward)
+            self.writeStats(self.rewardsStatsFile, "{};{};{}".format(
+                str(self.iteration%15), str(int(self.iteration/15)), str(reward)))
+            if(self.iteration%15==0):
+                self.writeStats(self.rewardsAveragePerEpisodeFile, "{};{}".format(str(int(self.iteration/15)), str(float(self.av/5))))
+                self.av = 0
 
         observationProp = self.env.envMngr.fromObsGymToObsProp(
             {agent: observation})
@@ -340,17 +385,18 @@ class EnvironmentPlayer:
 
             actionPropName = self.env.envMngr.getActPropID(agent, action)
 
-            if(agent=="attacker1"):
-                print("\t\tchosen action: {} ({})".format(actionPropName, action))
+            if (agent == "attacker1"):
+                print("\t\tchosen action: {} ({})".format(
+                    actionPropName, action))
 
             # actionPropName = self.env.envMngr.getActPropID(agent, action)
 
             self.env.step(action)
             lastValues = {"agent": agent, "observation": observationProp, "reward": reward,
-                        "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
+                          "termination": termination, "truncation": truncation, "info": info, "nextAction": actionPropName}
 
         lastValues = {"agent": agent, "observation": observationProp, "reward": reward,
-                    "termination": termination, "truncation": truncation, "info": info, "nextAction": None}
+                      "termination": termination, "truncation": truncation, "info": info, "nextAction": None}
 
         self.iteration += 1
         logs = "Iteration {}: {}".format(
@@ -369,8 +415,7 @@ if __name__ == '__main__':
 
     envPlayer: EnvironmentPlayer = loadFile("worldStates/t1.json")
 
-
-    for k in range(0,50):
+    for k in range(0, 50):
         print("============= Episode {} ===================".format(str(k)))
         for i in range(0, 15):
             print("---- Epoch {} ----".format(str(i)))
