@@ -55,6 +55,7 @@ class McasEnvironment(AECEnv):
 
         # ====================
         # TODO: voir ce qu'un agent peut observer réellement sur un SI
+        # TODO: ajouter et integrer des precondition_script et postcondition_script
         # TODO : l'espace d'observation est seulement l'union de toutes les propriétés des "effect actions"
         # TODO: avoir les actions implémentées dans le code mais les afficher dans le json lors de la serialization sous forme de {...precondition... effects...}
         # TODO: avoir des classes de comportement dans le code bien organisées avec les actions dans plusieurs fichiers
