@@ -61,7 +61,7 @@
                     "attacker1": {
                         "binary_file_location": "C:\\Users\\mwlr.exe",
                         "behaviour": "idle",
-                        "knowledge": {
+                        "observations": {
                             "hasRootPrivilege": true,
                             "knowHowToSwitchOnReimagablePC1": true
                         },
@@ -71,7 +71,7 @@
                     "defender1": {
                         "binary_file_location": "C:\\Users\\dfdr.exe",
                         "behaviour": "idle",
-                        "knowledge": {
+                        "observations": {
                             "hasRootPrivilege": true,
                             "knowHowToSwitchOnReimagablePC1": true
                         },
@@ -103,108 +103,38 @@
             "reimagable": true,
             "sla_weight": 0.7,
             "value": 15
-        },
-        "PC2": {
-            "properties": {
-                "accessible_nodes": {},
-                "file_system": {
-                    "C:\\Users\\.private": {
-                        "file_name": "pwd.txt",
-                        "hash": "2fd4e1c67a2d28fced849ee1bb76e7391b93eb12",
-                        "permission": "*",
-                        "type": "text_file"
-                    }
-                },
-                "firewall": {
-                    "incoming": {
-                        "HTTP": {
-                            "permission": "ALLOW",
-                            "port": "HTTP",
-                            "reason": ""
-                        },
-                        "RDP": {
-                            "permission": "ALLOW",
-                            "port": "RDP",
-                            "reason": ""
-                        },
-                        "SSH": {
-                            "permission": "ALLOW",
-                            "port": "SSH",
-                            "reason": ""
-                        }
-                    },
-                    "outgoing": {
-                        "HTTP": {
-                            "permission": "ALLOW",
-                            "port": "HTTP",
-                            "reason": ""
-                        },
-                        "RDP": {
-                            "permission": "ALLOW",
-                            "port": "RDP",
-                            "reason": ""
-                        },
-                        "SSH": {
-                            "permission": "ALLOW",
-                            "port": "SSH",
-                            "reason": ""
-                        },
-                        "sudo": {
-                            "permission": "ALLOW",
-                            "port": "sudo",
-                            "reason": ""
-                        }
-                    }
-                },
-                "installed_operating_system": "Windows/12",
-                "installed_softwares": "MSOffice/2021",
-                "logs": {},
-                "other_properties": {},
-                "processes": {
-                    "agents": {
-                        "defender2": {
-                            "behaviour": "idle",
-                            "binary_file_location": "C:\\Users\\dfdr.exe",
-                            "knowledge": {},
-                            "name": "simpleDefender2",
-                            "running": true
-                        }
-                    },
-                    "other_processes": {
-                        "excel": {
-                            "name": "Excel",
-                            "running": true
-                        }
-                    },
-                    "services": {
-                        "HTTPS": {
-                            "allowedCredentials": {},
-                            "name": "HTTPS",
-                            "running": true
-                        },
-                        "SSH": {
-                            "allowedCredentials": {
-                                "lambda": "lambda/password123"
-                            },
-                            "name": "SSH",
-                            "running": true
-                        }
-                    }
-                },
-                "reimagable": true,
-                "sla_weight": 0.7,
-                "value": 15
-            }
         }
     },
     "actions": {
-        "example_Action": {
-            "cost": 15,
-            "description": "Example action description",
-            "precondition": "({{agent}}.property_id1.property_id1_1 == 'v1' and {{node}}.id2 == 'v2) or {{include(precondition_file)}}",
+        "action1": {
+            "description": "Action 1",
+            "precondition": "True",
             "postcondition": {
-                "{{agent}}.knowledge.reimagable": "{{node}}.reimagable",
-                "{{node}}.logs.{{last_index}}": "'{{agent}} observed \"reimagable\" of {{node}} at {{current_time}}'"
+                "{{agent}}.knowledge.action1_results": "action1_results"
+            },
+            "success_probability": 1
+        },
+        "action2": {
+            "description": "Action 2",
+            "precondition": "{{agent}}.knowledge.action1_results == 'action1_results'",
+            "postcondition": {
+                "{{agent}}.knowledge.action2_results": "action2_results"
+            },
+            "success_probability": 1
+        },
+        "action3": {
+            "description": "Action 3",
+            "precondition": "{{agent}}.knowledge.action2_results == 'action2_results'",
+            "postcondition": {
+                "{{agent}}.knowledge.action3_results": "action3_results"
+            },
+            "success_probability": 1
+        },
+        "action4": {
+            "description": "Action 4",
+            "precondition": "{{agent}}.knowledge.action3_results == 'action3_results'",
+            "postcondition": {
+                "{{agent}}.knowledge.action3_results": "action3_results"
             },
             "success_probability": 1
         }
