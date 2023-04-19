@@ -11,31 +11,14 @@ from pettingzoo.utils import agent_selector, wrappers
 
 from typing import Dict, List, Any, Callable, Union, Tuple, Set
 import json
-from environmentModel import Environment
+from backend.src.older.environmentModel import Environment
 
 import dataclasses
-from environmentModel import environmentTest, Property
-from environmentModel import Agent
+from backend.src.older.environmentModel import environmentTest, Property
+from backend.src.older.environmentModel import Agent
 from copy import copy
 from pyeda.boolalg.expr import exprvar, expr
 from pyeda.boolalg.table import expr2truthtable
-
-
-# not usefull for the moment
-def remakeList(jsonEntry: Dict[str, Dict[str, Any]]) -> Any:
-    if all((key.isdigit() and isinstance(key, str)) for key in list(jsonEntry.keys())):
-        indexes = list(jsonEntry.keys())
-        l = [None] * len(indexes)
-        for index in indexes:
-            l[int(index)] = None
-            l[int(index)] = jsonEntry[index]
-        return l
-    else:
-        jsonRes = copy(jsonEntry)
-        for key in jsonEntry:
-            if isinstance(jsonEntry[key], dict):
-                jsonRes[key] = remakeList(jsonEntry[key])
-        return jsonRes
 
 
 class EnhancedJSONEncoder(json.JSONEncoder):
@@ -107,14 +90,14 @@ class EnvironmentMngr:
     def __init__(self, nodeEnvironment: Union[Environment, Any]) -> None:
 
         self.environment = json.loads(json.dumps(
-            nodeEnvironment, cls=EnhancedJSONEncoder))["nodes"]
+            nodeEnvironment, cls=EnhancedJSONEncoder))
 
         self.initialEnvironment = copy(self.environment)
 
         # getting all observable properties, all possible action, all possible agent
         self.obsPropSpace, self.actPropSpace, self.agtPropSpace = self.getPropSpaces()
 
-        # # getting observation and aciton spaces as Gym spaces as a vector and a finite number interval
+        # getting observation and aciton spaces as Gym spaces as a vector and a finite number interval
         self.obsGymSpace = spaces.Dict({agentName: spaces.MultiBinary(len(
             agentObsPropSpace)) for agentName, agentObsPropSpace in self.obsPropSpace.items()})
         self.actGymSpace = spaces.Dict({agentName: spaces.Discrete(len(
@@ -127,6 +110,14 @@ class EnvironmentMngr:
         for nodeID, node in self.environment["nodes"].items():
             if agentName in list(node["processes"]["agents"].keys()):
                 return nodeID
+
+    def getAgentBehaviour(self, agent: str) -> str:
+        nodeID = self.getNodeIDPropFromAgtID(agent)
+        return self.environment["nodes"][nodeID]["processes"]["agents"][agent]["behaviour"]
+
+    def getAgentObservations(self, agent):
+        nodeID = self.getNodeIDPropFromAgtID(agent)
+        return [(propID, propVal) for propID, propVal in list(self.environment["nodes"][nodeID]["processes"]["agents"][agent]["observations"].items())]
 
     def getValueFromJsonPath(self, jsonEntry, jsonPath):
         obj = jsonEntry
@@ -168,7 +159,7 @@ class EnvironmentMngr:
     def getPropSpaces(self) -> Tuple:
         agtPropSpace: List[str] = []
         actPropSpace: List[Tuple[str, Dict]] = []
-        obsPropSpace: Dict[str, List] = {}
+        obsPropSpace: Dict[str, Set] = {}
         agentsOnNodes = {}
 
         # Retrieving all agents on the node with their initial observations
@@ -176,12 +167,12 @@ class EnvironmentMngr:
             agentsOnNodes[nodeID] = list(
                 node["processes"]["agents"].keys())
             agtPropSpace += agentsOnNodes[nodeID]
-            for agent in agentsOnNodes:
-                obsPropSpace[agent] = [("{}.processes.agents.{}.observations.{}".format(nodeID, agent, propID), propValue)
-                                       for propID, propValue in list(node["processes"]["agents"][agent]["observations"].items())]
+            for agent in agentsOnNodes[nodeID]:
+                obsPropSpace[agent] = {(propID, propValue) for propID, propValue in list(
+                    node["processes"]["agents"][agent]["observations"].items())}
 
-        actPropSpace = [(actionID, action) for actionID,
-                        action in list(self.environment["actions"].items())]
+        actPropSpace = {agent: [(actionID, action) for actionID,
+                        action in list(self.environment["actions"].items())] for agent in agtPropSpace}
 
         # Once we got all the agents, we can infer all of their potential observations
         for actionID, action in self.environment["actions"].items():
@@ -190,25 +181,20 @@ class EnvironmentMngr:
             actionPostcondition = action["postcondition"]
             for propID, propValue in actionPostcondition.items():
 
-                # as any agent can be on any node, we must infer the potential effects for {{node}} and {{agent}} shortcuts
-                for nodeID in self.environment["nodes"].keys():
-                    for agent in agtPropSpace:
+                if ".observations" in propID:
 
-                        # we replace variable shortcuts with all possible values for nodes and agents
-                        inferedPropID = propID.replace(
-                            "\{\{agent\}\}", "{}.processes.agents.{}".format(nodeID, agent))
-                        inferedPropID = propValue.replace(
-                            "\{\{node\}\}", nodeID)
-                        inferedPropValue = propValue.replace(
-                            "\{\{agent\}\}", "{}.processes.agents.{}".format(nodeID, agent))
-                        inferedPropValue = propValue.replace(
-                            "\{\{node\}\}", nodeID)
+                    simplePropID = propID.split("observations.")[-1]
 
-                        # the infered property for the agent is inserted in the possible observable properties set
-                        obsPropSpace[agent].add(
-                            (inferedPropID, inferedPropValue))
+                    if "{{agent}}" in propID:
+                        # as any agent can be on any node, we must infer the potential effects for {{agent}} shortcut
+                        for agent in agtPropSpace:
+                            obsPropSpace[agent].add((simplePropID, propValue))
+                    else:
+                        agent = propID.split(
+                            "processes.agents.")[-1].split(".observations")[0]
+                        obsPropSpace[agent].add((simplePropID, propValue))
 
-        return (obsPropSpace, actPropSpace, agtPropSpace)
+        return ({agent: list(obsProp) for agent, obsProp in obsPropSpace.items()}, actPropSpace, agtPropSpace)
 
     def fromActGymToActProp(self, actionGymDict):
         return {agentName: self.actPropSpace[agentName][actGymID] for agentName, actGymID in actionGymDict.items()}
@@ -245,29 +231,32 @@ class EnvironmentMngr:
             {agentPropID: actionGymID}).values())[0]
         precondition: str = action["precondition"]
 
-        # We first infer the shortcut values for {{agent}} and {{node}} 
+        # We first infer the shortcut values for {{agent}} and {{node}}
         precondition = precondition.replace(
-            "\{\{agent\}\}", "{}.processes.agents.{}".format(agentNodeID, agentPropID))
-        precondition = precondition.replace("\{\{node\}\}", agentNodeID)
+            "{{agent}}", "{}.processes.agents.{}".format(agentNodeID, agentPropID))
+        precondition = precondition.replace("{{node}}", agentNodeID)
 
         # Then, we want to replace the json path with the json environment value
         areAllPropertiesPresent = True
         for match in re.compile(r"([a-zA-Z0-9_]*\.[a-zA-Z0-9_]*)").finditer(" " + precondition + " "):
             conditionComponent = match.groups(0)[0]
-            valuedConditionComponent = self.getValueFromJsonPath(self.environment, ["nodes"] + conditionComponent)
+            valuedConditionComponent = self.getValueFromJsonPath(
+                self.environment, '["nodes"]' + "".join(['["{}"]'.format(pathID) for pathID in conditionComponent.split(".")]))
             if (valuedConditionComponent == None):
                 areAllPropertiesPresent = False
                 break
             if type(valuedConditionComponent) == str:
-                valuedConditionComponent = '"{}"'.format(valuedConditionComponent)
+                valuedConditionComponent = '"{}"'.format(
+                    valuedConditionComponent)
             else:
                 valuedConditionComponent = str(valuedConditionComponent)
-            precondition = precondition.replace(conditionComponent, valuedConditionComponent)
+            precondition = precondition.replace(
+                conditionComponent, valuedConditionComponent)
 
         if (areAllPropertiesPresent):
             precondition = precondition.replace(
                 '"', '').replace("=", "<=>")
-            # print("EXPRESSION  ", booleanExpression)
+            # print("EXPRESSION  ", precondition)
             expression = expr(precondition)
             expression = str(expression).replace(
                 "False", "0").replace("True", "1")
@@ -281,37 +270,24 @@ class EnvironmentMngr:
                 actionPostcondition = action["postcondition"]
                 for propID, propValue in actionPostcondition.items():
 
-                    # infering shortcut values
-                    inferedPropID = propID.replace(
-                    "\{\{agent\}\}", "{}.processes.agents.{}".format(agentNodeID, agentPropID))
-                    inferedPropID = propValue.replace(
-                    "\{\{node\}\}", agentNodeID)
-                    inferedPropValue = propValue.replace(
-                    "\{\{agent\}\}", "{}.processes.agents.{}".format(agentNodeID, agentPropID))
-                    inferedPropValue = propValue.replace(
-                    "\{\{node\}\}", agentNodeID)
+                    inferedPropID = propID
 
-                    # valuation of the json path with real value for the value part of the action
-                    for match in re.compile(r"([a-zA-Z0-9_]*\.[a-zA-Z0-9_]*)").finditer(" " + inferedPropValue + " "):
-                        valueComponent = match.groups(0)[0]
-                        valuedValueComponent = self.getValueFromJsonPath(self.environment, '["nodes"]' + valueComponent)
-                        if (valuedValueComponent == None):
-                            print("error: no matching value for {}".format(valueComponent))
-                            valuedValueComponent = "None"
-                        if type(valuedValueComponent) == str:
-                            valuedValueComponent = '"{}"'.format(valuedValueComponent)
-                        else:
-                            valuedValueComponent = str(valuedValueComponent)
-                        inferedPropValue = inferedPropValue.replace(valueComponent, valuedValueComponent)
+                    # infering shortcut values for ID part of the property
+                    inferedPropID = inferedPropID.replace(
+                        "{{agent}}", "{}.processes.agents.{}".format(agentNodeID, agentPropID))
+                    inferedPropID = inferedPropID.replace(
+                        "{{node}}", agentNodeID)
 
                     # updating the environment
-                    self.setValueFromJsonPath(self.environment, '["nodes"]' + inferedPropID, inferedPropValue)
+                    self.setValueFromJsonPath(
+                        self.environment, '["nodes"]' + "".join(['["{}"]'.format(pathID)
+                                                                 for pathID in inferedPropID.split(".")]), propValue)
 
             # retrieving the observations and taking into account the fact the agent might have moved to another node
-            agentNodeID = self.getNodeIDPropFromAgtID(agentPropID)
-            agentObservation = self.environment["nodes"][agentNodeID]["processes"]["agents"][agentPropID]["observations"]
+            agentObservation = {agent: self.getAgentObservations(
+                agent) for agent in self.agtPropSpace}
 
-        return self.fromObsPropToObsGym({agent: list(OrderedDict(obs).items()) for agent, obs in agentObservation.items()})
+        return self.fromObsPropToObsGym(agentObservation)
 
     def getReward(self, agent, observations) -> float:
 
@@ -351,25 +327,29 @@ class EnvironmentMngr:
 
 if __name__ == '__main__':
     # new envMng from a predefined two nodes state
-    envMngr = EnvironmentMngr(nodeEnvironment=environmentTest)
+    # envMngr = EnvironmentMngr(nodeEnvironment=environmentTest)
+    envMngr = EnvironmentMngr(nodeEnvironment=json.load(
+        open("worldStates/t1.json", "r")))
 
-    gymSpace = envMngr.obsGymSpace  # geting the gym observation space
-    obsGymSample = gymSpace.sample()  # to a sample (as an agent would)
+    # gymSpace = envMngr.obsGymSpace  # geting the gym observation space
+    # obsGymSample = gymSpace.sample()  # to a sample (as an agent would)
+    # print({agent: list(obs)
+    #       for agent, obs in dict(OrderedDict(obsGymSample)).items()})
+    # obsProp = envMngr.fromObsGymToObsProp(obsGymSample)
+    # obsGym = envMngr.fromObsPropToObsGym(obsProp)
+    # print(obsGym)
 
-    #  an agent is choosing an action in actGymSpace[agent]
-    actGym = envMngr.fromActPropIDToActGym(
-        {'["PC1"]["properties"]["processes"]["agents"]["attacker1"]': "observeReimagableOnNodePC1"})
-    actGym = [x[1] for x in actGym.items()][0]
+    # actGymSpace = envMngr.actGymSpace
+    # actGymSample = actGymSpace.sample()
+    # print({agent: act for agent, act in dict(OrderedDict(actGymSample)).items()})
+    # actProp = envMngr.fromActGymToActPropID(actGymSample)
+    # actGym = envMngr.fromActPropIDToActGym(actProp)
+    # print(actGym)
 
-    obsProp = envMngr.applyAction(actGym,
-                                  '["PC1"]["properties"]["processes"]["agents"]["attacker1"]')
+    # actGym = envMngr.fromActPropIDToActGym({"attacker1": "action1"})
 
-    print(obsProp, "\n\n\n")
+    # print({agent: envMngr.getAgentObservations(agent) for agent in envMngr.agtPropSpace})
 
-    obsGym = envMngr.fromObsPropToObsGym(obsProp)
+    # obsProp = envMngr.applyAction(actGym["attacker1"], "attacker1")
 
-    print(obsGym)
-
-    obsProp2 = envMngr.fromObsGymToObsProp(obsGym)
-
-    print(obsProp2)
+    # print(envMngr.fromObsGymToObsProp(obsProp))

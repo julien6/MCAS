@@ -4,7 +4,7 @@ import os
 import json
 from typing import Dict, List
 from env import EnvironmentPlayer, McasEnvironment, env, loadFile
-from environmentModel import environmentTest
+from backend.src.older.environmentModel import environmentTest
 
 app = Flask(__name__)
 CORS(app)
