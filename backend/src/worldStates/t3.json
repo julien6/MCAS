@@ -118,7 +118,7 @@
         },
         "action2": {
             "description": "Action 2",
-            "precondition": "True",
+            "precondition": "{{node}}.v1 != None",
             "postcondition": {
                 "{{node}}.v2": 2,
                 "{{agent}}.observations.action2_results": "action2_results"
@@ -127,59 +127,10 @@
         },
         "action3": {
             "description": "Action 3",
-            "precondition": "{{node}}.v2 != None and {{node}}.v1 != None",
+            "precondition": "{{node}}.v2 != None",
             "postcondition": {
                 "{{node}}.v3": 3,
                 "{{agent}}.observations.action3_results": "action3_results"
-            },
-            "success_probability": 1
-        },
-        "action4": {
-            "description": "Action 4",
-            "precondition": "True",
-            "postcondition": {
-            },
-            "success_probability": 1
-        },
-        "action5": {
-            "description": "Action 5",
-            "precondition": "True",
-            "postcondition": {
-            },
-            "success_probability": 1
-        },
-        "action6": {
-            "description": "Action 6",
-            "precondition": "True",
-            "postcondition": {
-            },
-            "success_probability": 1
-        },
-        "action7": {
-            "description": "Action 7",
-            "precondition": "True",
-            "postcondition": {
-            },
-            "success_probability": 1
-        },
-        "action8": {
-            "description": "Action 8",
-            "precondition": "True",
-            "postcondition": {
-            },
-            "success_probability": 1
-        },
-        "action9": {
-            "description": "Action 9",
-            "precondition": "True",
-            "postcondition": {
-            },
-            "success_probability": 1
-        },
-        "action10": {
-            "description": "Action 10",
-            "precondition": "True",
-            "postcondition": {
             },
             "success_probability": 1
         },

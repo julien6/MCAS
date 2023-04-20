@@ -1,11 +1,13 @@
 import functools
 import json
+import numpy as np
 
 from pettingzoo import AECEnv
 from pettingzoo.utils import agent_selector, wrappers
 from typing import Dict, List, Any, Tuple, Union
 from agents import Agent, DecisionTreeAgent, LazyAgent, MARLAgent, RandomAgent
 from environment import EnvironmentMngr
+import matplotlib.pyplot as plt
 
 
 def env(environment: Any, render_mode=None):
@@ -139,7 +141,7 @@ class McasEnvironment(AECEnv):
         reward, end = self.envMngr.getReward(
             currentAgent, self.observations, obs)
 
-        print(reward)
+        print("reward: ", reward)
 
         self.rewards[currentAgent] = reward
 
@@ -153,7 +155,7 @@ class McasEnvironment(AECEnv):
             self.render()
 
         if (end):
-            print("Agent {} finished".format(currentAgent))
+            print("Agent {} reached the ultimate state".format(currentAgent))
 
         self.terminations[currentAgent] = False  # end
 
@@ -241,9 +243,19 @@ class EnvironmentPlayer:
         lastValues = {"agent": agent, "observation": observationProp, "reward": reward,
                       "termination": termination, "truncation": truncation, "info": info, "nextAction": action}
 
+        class NpEncoder(json.JSONEncoder):
+            def default(self, obj):
+                if isinstance(obj, np.integer):
+                    return int(obj)
+                if isinstance(obj, np.floating):
+                    return float(obj)
+                if isinstance(obj, np.ndarray):
+                    return obj.tolist()
+                return super(NpEncoder, self).default(obj)
+
         self.iteration += 1
         logs = "Iteration {}: {}".format(
-            self.iteration, json.dumps(lastValues))
+            self.iteration, json.dumps(lastValues, cls=NpEncoder))
         return (agent, logs)
 
     def dumpEnvironment(self) -> str:
@@ -267,11 +279,45 @@ if __name__ == '__main__':
     #     envPlayer.next()
     #     print("\n\n")
 
-    for k in range(0, 5):
-        print("============= Episode {} ===================".format(str(k)))
-        for i in range(0, 20):
-            print("---- Epoch {} ----".format(str(i)))
-            envPlayer.next()
-            print("")
-        envPlayer.env.reset()
-        print("\n\n")
+    executionNumber = 10
+    episodeNumber = 100
+    epochNumberPerEpisode = 20
+
+    averageCumulativeRewardsList: Dict[str, List[float]] = {
+        agent: [0] * episodeNumber for agent in envPlayer.env.envMngr.agtPropSpace}
+
+    for executionIndex in range(0, executionNumber):
+
+        cumulativeRewardsList: Dict[str, List[float]] = {
+        agent: [] for agent in envPlayer.env.envMngr.agtPropSpace}
+
+        for k in range(0, episodeNumber):
+            print("============= Episode {} ===================".format(str(k)))
+            for i in range(0, epochNumberPerEpisode):
+                print("---- Epoch {} ----".format(str(i)))
+                envPlayer.next()
+                print("")
+            print(" ===> Cumulative reward at the end oft the espisode: ",
+                  envPlayer.env._cumulative_rewards)
+
+            cumulativeRewardsList = {agent: cumulativeRewardsList[agent] + [
+                envPlayer.env._cumulative_rewards[agent]] for agent in envPlayer.env.envMngr.agtPropSpace}
+
+            envPlayer.env.reset()
+            print("\n\n")
+        
+        for agent, cumulativeRewards in cumulativeRewardsList.items():
+            averageCumulativeRewardsList[agent] = [sum(i) for i in zip(
+                averageCumulativeRewardsList[agent], cumulativeRewards)]
+
+    for agent, averageCumulativeRewards in averageCumulativeRewardsList.items():
+        averageCumulativeRewardsList[agent] = [
+            float(i/executionNumber) for i in averageCumulativeRewards]
+
+    x = [int(episodeIndex) for episodeIndex in range(0, episodeNumber)]
+    
+    for agent, averageCumulativeRewards in averageCumulativeRewardsList.items():
+        if agent == "attacker1":
+            plt.scatter(x, averageCumulativeRewards)
+
+    plt.show()

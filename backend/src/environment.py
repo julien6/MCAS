@@ -222,8 +222,6 @@ class EnvironmentMngr:
             "{{agent}}", "{}.processes.agents.{}".format(agentNodeID, agentPropID))
         precondition = precondition.replace("{{node}}", agentNodeID)
 
-        print("preconditon: ", precondition)
-
         # Then, we want to replace the json path with the json environment value
         areAllPropertiesPresent = True
         for match in re.compile(r"([[a-zA-Z0-9_.]*)").finditer(" " + precondition + " "):
@@ -244,9 +242,8 @@ class EnvironmentMngr:
                     conditionComponent, valuedConditionComponent)
 
         if (areAllPropertiesPresent):
-            print("EXPRESSION: ", precondition)
+            # print("EXPRESSION: ", precondition)
             preconditionSatisfied = eval(precondition)
-            print("EXPRESSION RESULT", preconditionSatisfied)
             if (not preconditionSatisfied):
                 print("error: precondition not meet : {}".format(precondition))
             else:
@@ -284,13 +281,16 @@ class EnvironmentMngr:
             prop for prop in obsPropState if not prop in previousObsPropState]
 
         if "action1_results" in OrderedDict(newProps).keys():
-            return 10, False
+            return 90, False
 
         if "action2_results" in OrderedDict(newProps).keys():
-            return 100, False
+            return 90, False
 
+        if "action3_results" in OrderedDict(newProps).keys():
+            return 100, True
+        
         if "action3_results" in OrderedDict(obsPropState).keys():
-            return 1000, True
+            return 1, True
 
         return -1, False
 

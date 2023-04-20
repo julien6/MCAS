@@ -65,7 +65,6 @@ class MARLAgent(Agent):
                 (reward + self.gamma * next_max)
 
             self.qTable.setdefault(previous_state, {})
-            print("--> ", last_action)
             self.qTable[previous_state][last_action] = new_value
 
             action = None
@@ -103,6 +102,8 @@ class MARLAgent(Agent):
 
                     if len(availableQValues) < len(list(self.envMngr.actPropSpace[self.agentID])):
                         if (maxActionQValueForCurrentState <= 0):
+                            print(
+                                "Exploring the space to know which reward is associated with an action in a given state")
                             otherActions = [actionGym for actionGym in range(0, len(list(
                                 self.envMngr.actPropSpace[self.agentID]))) if
                                 actionGym not in list(OrderedDict(self.qTable.get(state)).keys())]
