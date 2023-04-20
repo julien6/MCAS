@@ -1,25 +1,14 @@
-from collections import OrderedDict
 import functools
+import json
 
-import gymnasium
-import numpy as np
-from gymnasium import spaces
-from pettingzoo.test import api_test
-from copy import copy
 from pettingzoo import AECEnv
 from pettingzoo.utils import agent_selector, wrappers
-
-from typing import Dict, List, Any, Callable, Tuple, Union
-import random
-import json
-from backend.src.agents import Agent, DecisionTreeAgent, IdleAgent, LazyAgent, MARLAgent, RandomAgent
+from typing import Dict, List, Any, Tuple, Union
+from agents import Agent, DecisionTreeAgent, LazyAgent, MARLAgent, RandomAgent
 from environment import EnvironmentMngr
-from backend.src.older.environmentModel import Environment
-from random import shuffle
-from os import remove, path
 
 
-def env(environment: Union[Environment, Any], render_mode=None):
+def env(environment: Any, render_mode=None):
 
     internal_render_mode = render_mode if render_mode != "ansi" else "human"
     env = McasEnvironment(node_environment=environment,
@@ -41,7 +30,7 @@ class McasEnvironment(AECEnv):
 
     envMngr: EnvironmentMngr
 
-    def __init__(self, node_environment: Union[Environment, Any], render_mode=None):
+    def __init__(self, node_environment: Any, render_mode=None):
 
         self.envMngr = EnvironmentMngr(nodeEnvironment=node_environment)
 
@@ -140,11 +129,7 @@ class McasEnvironment(AECEnv):
         - agent_selection (to the next agent)
         And any internal state used by observe() or render()
         """
-        if (
-            self.terminations[self.agent_selection]
-            or self.truncations[self.agent_selection]
-        ):
-            self._was_dead_step(action)
+        if (self.terminations[self.agent_selection] or self.truncations[self.agent_selection]):
             return
 
         currentAgent = self.agent_selection
@@ -152,7 +137,9 @@ class McasEnvironment(AECEnv):
         obs = self.envMngr.applyAction(action, currentAgent)
 
         reward, end = self.envMngr.getReward(
-            currentAgent, obs, self.observations)
+            currentAgent, self.observations, obs)
+
+        print(reward)
 
         self.rewards[currentAgent] = reward
 
@@ -168,7 +155,7 @@ class McasEnvironment(AECEnv):
         if (end):
             print("Agent {} finished".format(currentAgent))
 
-        self.terminations[currentAgent] = end
+        self.terminations[currentAgent] = False  # end
 
         # selects the next agent.
         self.agent_selection = self._agent_selector.next()
@@ -187,37 +174,44 @@ class EnvironmentPlayer:
         self.iterationMax = iterationMax
         self.env.reset()
         self.iterator = self.env.agent_iter().__iter__()
+        self.agents = {}
+        self.init_agent_behaviours()
 
     def init_agent_behaviours(self):
 
-        singleAttackerDT: Dict[str, int]
-        singleDefenderDT: Dict[str, int]
+        singleAttackerDT: List[int] = ["action1", "action2", "action3"]
+        singleDefenderDT: List[int] = []
 
-        attacker1DT: Dict[str, int]
-        attacker2DT: Dict[str, int]
+        attacker1DT: List[int] = ["action1", "action3"]
+        attacker2DT: List[int] = ["action2"]
 
-        defender1DT: Dict[str, int]
-        defender2DT: Dict[str, int]
+        defender1DT: List[int] = []
+        defender2DT: List[int] = []
 
-        agent: Agent
         for agent in self.env.envMngr.agtPropSpace:
             behaviour = self.env.envMngr.getAgentBehaviour(agent)
-            if behaviour == "idle":
+            if behaviour == "lazy":
                 self.agents[agent] = LazyAgent(self.env.envMngr, agent)
             if behaviour == "random":
                 self.agents[agent] = RandomAgent(self.env.envMngr, agent)
             if behaviour == "singleAttackerDT":
-                self.agents[agent] = DecisionTreeAgent(self.env.envMngr, agent, singleAttackerDT)
+                self.agents[agent] = DecisionTreeAgent(
+                    self.env.envMngr, agent, singleAttackerDT)
             if behaviour == "singleDefenderDT":
-                self.agents[agent] = DecisionTreeAgent(self.env.envMngr, agent, singleDefenderDT)
+                self.agents[agent] = DecisionTreeAgent(
+                    self.env.envMngr, agent, singleDefenderDT)
             if behaviour == "attacker1DT":
-                self.agents[agent] = DecisionTreeAgent(self.env.envMngr, agent, attacker1DT)
+                self.agents[agent] = DecisionTreeAgent(
+                    self.env.envMngr, agent, attacker1DT)
             if behaviour == "attacker2DT":
-                self.agents[agent] = DecisionTreeAgent(self.env.envMngr, agent, attacker2DT)
+                self.agents[agent] = DecisionTreeAgent(
+                    self.env.envMngr, agent, attacker2DT)
             if behaviour == "defender1DT":
-                self.agents[agent] = DecisionTreeAgent(self.env.envMngr, agent, defender1DT)
+                self.agents[agent] = DecisionTreeAgent(
+                    self.env.envMngr, agent, defender1DT)
             if behaviour == "defender2DT":
-                self.agents[agent] = DecisionTreeAgent(self.env.envMngr, agent, defender2DT)
+                self.agents[agent] = DecisionTreeAgent(
+                    self.env.envMngr, agent, defender2DT)
             if behaviour == "marl":
                 self.agents[agent] = MARLAgent(self.env.envMngr, agent)
 
@@ -225,7 +219,7 @@ class EnvironmentPlayer:
 
         if self.iteration >= self.iterationMax:
             print("Reached maxIteration !")
-            return ""
+            return
 
         # return the next agent to play
         agent = self.iterator.__next__()
@@ -235,17 +229,12 @@ class EnvironmentPlayer:
         observationProp = self.env.envMngr.fromObsGymToObsProp(
             {agent: observation})
 
-        ####
-        action1 = self.env.envMngr.fromActPropToActGym("action1")
-        action2 = self.env.envMngr.fromActPropToActGym("action2")
-        action3 = self.env.envMngr.fromActPropToActGym("action3")
-        ####
-
         action = None
         if not termination:
-            action = self.agents[agent].nextAction(observation[agent], reward)
+            action = self.agents[agent].nextAction(observation, reward)
             actionPropName = self.env.envMngr.getActPropID(agent, action)
-            print("\t\tchosen action: {} ({})".format(actionPropName, action))
+            print("{} has chosen action: {} ({})".format(
+                agent, actionPropName, action))
 
         self.env.step(action)
 
@@ -274,11 +263,15 @@ if __name__ == '__main__':
 
     envPlayer: EnvironmentPlayer = loadFile("worldStates/t1.json")
 
-    # for k in range(0, 50):
-    #     print("============= Episode {} ===================".format(str(k)))
-    #     for i in range(0, 15):
-    #         print("---- Epoch {} ----".format(str(i)))
-    #         envPlayer.next()
-    #         print("")
-    #     envPlayer.env.reset()
+    # for k in range(0, 20):
+    #     envPlayer.next()
     #     print("\n\n")
+
+    for k in range(0, 5):
+        print("============= Episode {} ===================".format(str(k)))
+        for i in range(0, 20):
+            print("---- Epoch {} ----".format(str(i)))
+            envPlayer.next()
+            print("")
+        envPlayer.env.reset()
+        print("\n\n")

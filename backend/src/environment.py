@@ -1,24 +1,11 @@
-from collections import OrderedDict
-from functools import reduce
-import gymnasium
-import numpy as np
-from gymnasium import spaces
-from pettingzoo.test import api_test
-import re
-
-from pettingzoo import AECEnv
-from pettingzoo.utils import agent_selector, wrappers
-
-from typing import Dict, List, Any, Callable, Union, Tuple, Set
-import json
-from backend.src.older.environmentModel import Environment
-
 import dataclasses
-from backend.src.older.environmentModel import environmentTest, Property
-from backend.src.older.environmentModel import Agent
-from copy import copy
-from pyeda.boolalg.expr import exprvar, expr
-from pyeda.boolalg.table import expr2truthtable
+import re
+import json
+
+from collections import OrderedDict
+from gymnasium import spaces
+from typing import Dict, List, Any, Tuple, Set
+from copy import copy, deepcopy
 
 
 class EnhancedJSONEncoder(json.JSONEncoder):
@@ -87,12 +74,11 @@ class EnvironmentMngr:
     # the list of all possible agents names (with full name path)
     agtPropSpace: List[str]
 
-    def __init__(self, nodeEnvironment: Union[Environment, Any]) -> None:
+    def __init__(self, nodeEnvironment: Any) -> None:
 
-        self.environment = json.loads(json.dumps(
-            nodeEnvironment, cls=EnhancedJSONEncoder))
+        self.environment = nodeEnvironment
 
-        self.initialEnvironment = copy(self.environment)
+        self.initialEnvironment = deepcopy(self.environment)
 
         # getting all observable properties, all possible action, all possible agent
         self.obsPropSpace, self.actPropSpace, self.agtPropSpace = self.getPropSpaces()
@@ -104,7 +90,7 @@ class EnvironmentMngr:
             agentActPropSpace)) for agentName, agentActPropSpace in self.actPropSpace.items()})
 
     def reset(self):
-        self.environment = self.initialEnvironment
+        self.environment = deepcopy(self.initialEnvironment)
 
     def getNodeIDPropFromAgtID(self, agentName: str) -> str:
         for nodeID, node in self.environment["nodes"].items():
@@ -236,32 +222,31 @@ class EnvironmentMngr:
             "{{agent}}", "{}.processes.agents.{}".format(agentNodeID, agentPropID))
         precondition = precondition.replace("{{node}}", agentNodeID)
 
+        print("preconditon: ", precondition)
+
         # Then, we want to replace the json path with the json environment value
         areAllPropertiesPresent = True
-        for match in re.compile(r"([a-zA-Z0-9_]*\.[a-zA-Z0-9_]*)").finditer(" " + precondition + " "):
-            conditionComponent = match.groups(0)[0]
-            valuedConditionComponent = self.getValueFromJsonPath(
-                self.environment, '["nodes"]' + "".join(['["{}"]'.format(pathID) for pathID in conditionComponent.split(".")]))
-            if (valuedConditionComponent == None):
-                areAllPropertiesPresent = False
-                break
-            if type(valuedConditionComponent) == str:
-                valuedConditionComponent = '"{}"'.format(
-                    valuedConditionComponent)
-            else:
-                valuedConditionComponent = str(valuedConditionComponent)
-            precondition = precondition.replace(
-                conditionComponent, valuedConditionComponent)
+        for match in re.compile(r"([[a-zA-Z0-9_.]*)").finditer(" " + precondition + " "):
+            if "." in match.groups(0)[0]:
+                conditionComponent = match.groups(0)[0]
+                valuedConditionComponent = self.getValueFromJsonPath(
+                    self.environment, '["nodes"]' + "".join(['["{}"]'.format(pathID) for pathID in conditionComponent.split(".")]))
+                if (valuedConditionComponent == None):
+                    print("{} not present".format(conditionComponent))
+                    areAllPropertiesPresent = False
+                    break
+                if type(valuedConditionComponent) == str:
+                    valuedConditionComponent = '"{}"'.format(
+                        valuedConditionComponent)
+                else:
+                    valuedConditionComponent = str(valuedConditionComponent)
+                precondition = precondition.replace(
+                    conditionComponent, valuedConditionComponent)
 
         if (areAllPropertiesPresent):
-            precondition = precondition.replace(
-                '"', '').replace("=", "<=>")
-            # print("EXPRESSION  ", precondition)
-            expression = expr(precondition)
-            expression = str(expression).replace(
-                "False", "0").replace("True", "1")
-            preconditionSatisfied = True if int(
-                expr2truthtable(expr(expression))) == 1 else False
+            print("EXPRESSION: ", precondition)
+            preconditionSatisfied = eval(precondition)
+            print("EXPRESSION RESULT", preconditionSatisfied)
             if (not preconditionSatisfied):
                 print("error: precondition not meet : {}".format(precondition))
             else:
@@ -283,46 +268,31 @@ class EnvironmentMngr:
                         self.environment, '["nodes"]' + "".join(['["{}"]'.format(pathID)
                                                                  for pathID in inferedPropID.split(".")]), propValue)
 
-            # retrieving the observations and taking into account the fact the agent might have moved to another node
-            agentObservation = {agent: self.getAgentObservations(
-                agent) for agent in self.agtPropSpace}
+        # retrieving the observations and taking into account the fact the agent might have moved to another node
+        agentObservation = {agent: self.getAgentObservations(
+            agent) for agent in self.agtPropSpace}
 
         return self.fromObsPropToObsGym(agentObservation)
 
-    def getReward(self, agent, observations) -> float:
+    def getReward(self, agent, previousObservations, observations) -> Tuple[float, bool]:
 
-        # it can use the environment instead of the using only observations of the current agent
-        rwds = {
-            "attacker1": {
-                "foundNode": {
-                    "PC2Link": 10
-                },
-                "nodeLocation": {
-                    "PC2": 100
-                },
-                "foundPassword": {
-                    "abc": 200
-                }
-            },
-            "defender1": {
+        previousObsPropState = self.fromObsGymToObsProp(
+            previousObservations)[agent]
+        obsPropState = self.fromObsGymToObsProp(observations)[agent]
 
-            },
-            "defender2": {
+        newProps = [
+            prop for prop in obsPropState if not prop in previousObsPropState]
 
-            }
-        }
+        if "action1_results" in OrderedDict(newProps).keys():
+            return 10, False
 
-        reward: float = -1
+        if "action2_results" in OrderedDict(newProps).keys():
+            return 100, False
 
-        for obsProp in self.fromObsGymToObsProp({agent: observations[agent]})[agent]:
-            obsPropName = obsProp[0].split("[\"knowledge\"]")[-1][2:-2]
-            obsPropValue = obsProp[1]
-            for rewObsPropName in list(rwds[agent].keys()):
-                if rewObsPropName == obsPropName:
-                    if obsPropValue == list(rwds[agent][rewObsPropName].keys())[0]:
-                        reward += list(rwds[agent][rewObsPropName].values())[0]
+        if "action3_results" in OrderedDict(obsPropState).keys():
+            return 1000, True
 
-        return reward
+        return -1, False
 
 
 if __name__ == '__main__':

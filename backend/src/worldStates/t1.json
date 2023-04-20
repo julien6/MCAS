@@ -60,7 +60,7 @@
                 "agents": {
                     "attacker1": {
                         "binary_file_location": "C:\\Users\\mwlr.exe",
-                        "behaviour": "random",
+                        "behaviour": "marl",
                         "observations": {
                             "hasRootPrivilege": true,
                             "knowHowToSwitchOnReimagablePC1": true
@@ -108,9 +108,9 @@
     "actions": {
         "action1": {
             "description": "Action 1",
-            "precondition": "True & {{node}}.reimagable = True",
+            "precondition": "True",
             "postcondition": {
-                "{{node}}.value": 12,
+                "{{node}}.value1": 12,
                 "{{node}}.reimagable": false,
                 "{{agent}}.observations.action1_results": "action1_results"
             },
@@ -118,25 +118,18 @@
         },
         "action2": {
             "description": "Action 2",
-            "precondition": "{{agent}}.knowledge.action1_results = 'action1_results'",
+            "precondition": "{{agent}}.observations.action1_results != None",
             "postcondition": {
+                "{{node}}.value2": 10,
                 "{{agent}}.observations.action2_results": "action2_results"
             },
             "success_probability": 1
         },
         "action3": {
             "description": "Action 3",
-            "precondition": "{{agent}}.knowledge.action2_results = 'action2_results'",
+            "precondition": "{{agent}}.observations.action2_results != None",
             "postcondition": {
                 "{{agent}}.observations.action3_results": "action3_results"
-            },
-            "success_probability": 1
-        },
-        "action4": {
-            "description": "Action 4",
-            "precondition": "{{agent}}.knowledge.action3_results = 'action3_results'",
-            "postcondition": {
-                "{{agent}}.observations.action4_results": "action4_results"
             },
             "success_probability": 1
         },
