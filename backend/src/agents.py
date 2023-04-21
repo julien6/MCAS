@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from copy import copy
 from typing import Dict, List, Any
 from environment import EnvironmentMngr
 from random import shuffle
@@ -24,6 +25,9 @@ class Agent:
         self.agentID = agentID
 
     def nextAction(self, observationGym: Any, reward: float) -> int:
+        pass
+
+    def reset(self):
         pass
 
 
@@ -128,16 +132,21 @@ class MARLAgent(Agent):
 class DecisionTreeAgent(Agent):
 
     actionsList: List[int]
+    initActionsList: List[int]
 
     def __init__(self, envMngr: EnvironmentMngr, agentID: str, actionsList: List[str]) -> None:
         super().__init__(envMngr, agentID)
         self.actionsList = [self.envMngr.fromActPropIDToActGym(
             {self.agentID: action})[self.agentID] for action in actionsList]
+        self.initActionsList = copy(self.actionsList)
 
     def nextAction(self, observation: any, reward) -> int:
         if len(self.actionsList) == 0:
             return self.envMngr.fromActPropIDToActGym({self.agentID: "doNothing"})[self.agentID]
         return self.actionsList.pop(0)
+
+    def reset(self):
+        self.actionsList = copy(self.initActionsList)
 
 
 class RandomAgent(Agent):

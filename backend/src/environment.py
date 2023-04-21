@@ -74,7 +74,11 @@ class EnvironmentMngr:
     # the list of all possible agents names (with full name path)
     agtPropSpace: List[str]
 
-    def __init__(self, nodeEnvironment: Any) -> None:
+    seed: int
+
+    def __init__(self, nodeEnvironment: Any, seed: int = 42) -> None:
+
+        self.seed = seed
 
         self.environment = nodeEnvironment
 
@@ -85,9 +89,9 @@ class EnvironmentMngr:
 
         # getting observation and aciton spaces as Gym spaces as a vector and a finite number interval
         self.obsGymSpace = spaces.Dict({agentName: spaces.MultiBinary(len(
-            agentObsPropSpace)) for agentName, agentObsPropSpace in self.obsPropSpace.items()})
+            agentObsPropSpace), seed=self.seed) for agentName, agentObsPropSpace in self.obsPropSpace.items()})
         self.actGymSpace = spaces.Dict({agentName: spaces.Discrete(len(
-            agentActPropSpace)) for agentName, agentActPropSpace in self.actPropSpace.items()})
+            agentActPropSpace), seed=self.seed) for agentName, agentActPropSpace in self.actPropSpace.items()})
 
     def reset(self):
         self.environment = deepcopy(self.initialEnvironment)
@@ -243,6 +247,8 @@ class EnvironmentMngr:
 
         if (areAllPropertiesPresent):
             # print("EXPRESSION: ", precondition)
+            precondition = precondition.replace('"True"', "True")
+            precondition = precondition.replace('"False"', "False")
             preconditionSatisfied = eval(precondition)
             if (not preconditionSatisfied):
                 print("error: precondition not meet : {}".format(precondition))
@@ -280,17 +286,31 @@ class EnvironmentMngr:
         newProps = [
             prop for prop in obsPropState if not prop in previousObsPropState]
 
-        if "action1_results" in OrderedDict(newProps).keys():
-            return 90, False
+        if "attacker" in agent:
+            if "get_control_on_DB_server" in OrderedDict(newProps).keys():
+                return 50, False
 
-        if "action2_results" in OrderedDict(newProps).keys():
-            return 90, False
+            if "exfiltrate_data_over_C2_channel" in OrderedDict(newProps).keys():
+                return 50, False
 
-        if "action3_results" in OrderedDict(newProps).keys():
-            return 100, True
-        
-        if "action3_results" in OrderedDict(obsPropState).keys():
-            return 1, True
+            if "get_control_on_PS_server" in OrderedDict(newProps).keys():
+                return 70, False
+
+            if "install_a_custom_spyware" in OrderedDict(newProps).keys():
+                return 70, False
+
+            if "getting_flag" in OrderedDict(newProps).keys():
+                return 100, True
+
+            if "getting_flag" in OrderedDict(obsPropState).keys():
+                return 10, True
+
+        if "defender" in agent:
+            if "monitor_executed_commands_and_arguments" in OrderedDict(newProps).keys():
+                return 100, False
+
+            if "monitor_executed_commands_and_arguments" in OrderedDict(obsPropState).keys():
+                return 10, False
 
         return -1, False
 

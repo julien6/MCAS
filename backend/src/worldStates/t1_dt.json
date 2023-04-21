@@ -5,17 +5,31 @@
             "processes": {
                 "agents": {
                     "attacker1": {
-                        "behaviour": "marl",
+                        "behaviour": "attacker1DT",
                         "observations": {
                         },
                         "name": "simpleAttacker",
                         "running": true
                     },
                     "attacker2": {
-                        "behaviour": "marl",
+                        "behaviour": "attacker2DT",
                         "observations": {
                         },
                         "name": "simpleAttacker",
+                        "running": true
+                    },
+                    "defender1": {
+                        "behaviour": "lazy",
+                        "observations": {
+                        },
+                        "name": "simpleDefender",
+                        "running": true
+                    },
+                    "defender2": {
+                        "behaviour": "lazy",
+                        "observations": {
+                        },
+                        "name": "simpleDefender",
                         "running": true
                     }
                 }

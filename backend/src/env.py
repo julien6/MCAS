@@ -181,13 +181,13 @@ class EnvironmentPlayer:
 
     def init_agent_behaviours(self):
 
-        singleAttackerDT: List[int] = ["action1", "action2", "action3"]
-        singleDefenderDT: List[int] = []
+        singleAttackerDT: List[int] = ["get_control_on_DB_server", "exfiltrate_data_over_C2_channel", "get_control_on_PS_server", "install_a_custom_spyware", "getting_flag"]
+        singleDefenderDT: List[int] = ["monitor_executed_commands_and_arguments"]
 
-        attacker1DT: List[int] = ["action1", "action3"]
-        attacker2DT: List[int] = ["action2"]
+        attacker1DT: List[int] = ["get_control_on_DB_server", "exfiltrate_data_over_C2_channel"]
+        attacker2DT: List[int] = ["get_control_on_PS_server", "install_a_custom_spyware", "getting_flag"]
 
-        defender1DT: List[int] = []
+        defender1DT: List[int] = ["monitor_executed_commands_and_arguments"]
         defender2DT: List[int] = []
 
         for agent in self.env.envMngr.agtPropSpace:
@@ -279,8 +279,8 @@ if __name__ == '__main__':
     #     envPlayer.next()
     #     print("\n\n")
 
-    executionNumber = 10
-    episodeNumber = 100
+    executionNumber = 1
+    episodeNumber = 1000
     epochNumberPerEpisode = 20
 
     averageCumulativeRewardsList: Dict[str, List[float]] = {
@@ -289,7 +289,7 @@ if __name__ == '__main__':
     for executionIndex in range(0, executionNumber):
 
         cumulativeRewardsList: Dict[str, List[float]] = {
-        agent: [] for agent in envPlayer.env.envMngr.agtPropSpace}
+            agent: [] for agent in envPlayer.env.envMngr.agtPropSpace}
 
         for k in range(0, episodeNumber):
             print("============= Episode {} ===================".format(str(k)))
@@ -297,15 +297,19 @@ if __name__ == '__main__':
                 print("---- Epoch {} ----".format(str(i)))
                 envPlayer.next()
                 print("")
-            print(" ===> Cumulative reward at the end oft the espisode: ",
+            print(" ===> Cumulative reward at the end of the espisode: ",
                   envPlayer.env._cumulative_rewards)
 
             cumulativeRewardsList = {agent: cumulativeRewardsList[agent] + [
                 envPlayer.env._cumulative_rewards[agent]] for agent in envPlayer.env.envMngr.agtPropSpace}
 
+            # reset the environement and agent behaviours
             envPlayer.env.reset()
+            for agent in envPlayer.agents:
+                envPlayer.agents[agent].reset()
+
             print("\n\n")
-        
+
         for agent, cumulativeRewards in cumulativeRewardsList.items():
             averageCumulativeRewardsList[agent] = [sum(i) for i in zip(
                 averageCumulativeRewardsList[agent], cumulativeRewards)]
@@ -315,9 +319,13 @@ if __name__ == '__main__':
             float(i/executionNumber) for i in averageCumulativeRewards]
 
     x = [int(episodeIndex) for episodeIndex in range(0, episodeNumber)]
-    
+
+    markers = ["v", "o", "x", "s", "*", ".", "+", "s", "d"]
+
     for agent, averageCumulativeRewards in averageCumulativeRewardsList.items():
-        if agent == "attacker1":
-            plt.scatter(x, averageCumulativeRewards)
+        plt.scatter(x, averageCumulativeRewards, marker=markers.pop(), s=70, alpha=0.25, label=agent)
+
+    plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+    plt.tight_layout()
 
     plt.show()

@@ -1,0 +1,258 @@
+{
+    "meta_data": {},
+    "nodes": {
+        "PC1": {
+            "processes": {
+                "agents": {
+                    "attacker1": {
+                        "behaviour": "marl",
+                        "observations": {
+                        },
+                        "name": "simpleAttacker",
+                        "running": true
+                    },
+                    "attacker2": {
+                        "behaviour": "marl",
+                        "observations": {
+                        },
+                        "name": "simpleAttacker",
+                        "running": true
+                    },
+                    "defender": {
+                        "binary_file_location": "C:\\Users\\mwlr.exe",
+                        "behaviour": "lazy",
+                        "observations": {
+                            "hasRootPrivilege": true,
+                            "knowHowToSwitchOnReimagablePC1": true
+                        },
+                        "name": "simpleAttacker",
+                        "running": true
+                    }
+                }
+            },
+            "use_privilege_account_management": false,
+            "detect_in_application_log_content": false,
+            "monitor_executed_commands_and_arguments": false,
+            "use_code_signing": false,
+            "sla_weight": 0.7,
+            "value": 15
+        }
+    },
+    "actions": {
+        "rename_system_utilities": {
+            "description": "rename_system_utilities",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.rename_system_utilities": "True",
+                "{{node}}.rename_system_utilities": "True",
+                "{{agent}}.observations.use_code_signing": false,
+                "{{node}}.use_code_signing": false
+            },
+            "success_probability": 1
+        },
+        "use_code_signing": {
+            "description": "use_code_signing",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.use_code_signing": "True",
+                "{{node}}.use_code_signing": "True"
+            },
+            "success_probability": 1
+        },
+        "use_powershell": {
+            "description": "use_powershell",
+            "precondition": "{{node}}.use_code_signing == False",
+            "postcondition": {
+                "{{agent}}.observations.use_powershell": "True",
+                "{{node}}.use_powershell": "True"
+            },
+            "success_probability": 1
+        },
+        "use_command_powershell": {
+            "description": "use_command_powershell",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.use_command_powershell": "True",
+                "{{node}}.use_command_powershell": "True"
+            },
+            "success_probability": 1
+        },
+        "use_dll_side_loading_to_execute_script": {
+            "description": "use_dll_side_loading_to_execute_script",
+            "precondition": "{{node}}.use_command_powershell == True or {{node}}.use_powershell == True",
+            "postcondition": {
+                "{{agent}}.observations.use_dll_side_loading_to_execute_script": "True",
+                "{{node}}.use_dll_side_loading_to_execute_script": "True"
+            },
+            "success_probability": 1
+        },
+        "use_remote_system_discovery_on_ws": {
+            "description": "use_remote_system_discovery_on_ws",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.use_remote_system_discovery_on_ws": "True",
+                "{{node}}.use_remote_system_discovery_on_ws": "True"
+            },
+            "success_probability": 1
+        },
+        "detect_in_application_log_content": {
+            "description": "detect_in_application_log_content",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.detect_in_application_log_content": "True",
+                "{{node}}.detect_in_application_log_content": "True"
+            },
+            "success_probability": 1
+        },
+        "exploit_public_facing_application": {
+            "description": "exploit_public_facing_application",
+            "precondition": "{{node}}.detect_in_application_log_content == False",
+            "postcondition": {
+                "{{agent}}.observations.exploit_public_facing_application": "True",
+                "{{node}}.exploit_public_facing_application": "True"
+            },
+            "success_probability": 1
+        },
+        "use_valid_accounts": {
+            "description": "use_valid_accounts",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.use_valid_accounts": "True",
+                "{{node}}.use_valid_accounts": "True"
+            },
+            "success_probability": 1
+        },
+        "access_on_ws": {
+            "description": "access_on_ws",
+            "precondition": "{{node}}.use_valid_accounts == True or {{node}}.exploit_public_facing_application",
+            "postcondition": {
+                "{{agent}}.observations.access_on_ws": "True",
+                "{{node}}.access_on_ws": "True"
+            },
+            "success_probability": 1
+        },
+        "exploit_system_network_configuration_discovery_on_ws": {
+            "description": "exploit_system_network_configuration_discovery_on_ws",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.exploit_system_network_configuration_discovery_on_ws": "True",
+                "{{node}}.exploit_system_network_configuration_discovery_on_ws": "True"
+            },
+            "success_probability": 1
+        },
+        "discover_PS_server": {
+            "description": "discover_PS_server",
+            "precondition": "{{node}}.exploit_system_network_configuration_discovery_on_ws == True and {{node}}.access_on_ws == True",
+            "postcondition": {
+                "{{agent}}.observations.discover_PS_server": "True",
+                "{{node}}.discover_PS_server": "True"
+            },
+            "success_probability": 1
+        },
+        "use_lateral_move_transfer_to_lateral_move_on_PS_server": {
+            "description": "use_lateral_move_transfer_to_lateral_move_on_PS_server",
+            "precondition": "{{node}}.discover_PS_server == True",
+            "postcondition": {
+                "{{agent}}.observations.use_lateral_move_transfer_to_lateral_move_on_PS_server": "True",
+                "{{node}}.use_lateral_move_transfer_to_lateral_move_on_PS_server": "True"
+            },
+            "success_probability": 1
+        },
+        "discover_DB_server": {
+            "description": "discover_DB_server",
+            "precondition": "{{node}}.access_on_ws == True and {{node}}.use_dll_side_loading_to_execute_script == True and {{node}}.use_remote_system_discovery_on_ws == True",
+            "postcondition": {
+                "{{agent}}.observations.discover_DB_server": "True",
+                "{{node}}.discover_DB_server": "True"
+            },
+            "success_probability": 1
+        },
+        "use_privilege_account_management": {
+            "description": "use_privilege_account_management",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.use_privilege_account_management": "True",
+                "{{node}}.use_privilege_account_management": "True"
+            },
+            "success_probability": 1
+        },
+        "pass_the_hash_to_lateral_move_to_db_server": {
+            "description": "pass_the_hash_to_lateral_move_to_db_server",
+            "precondition": "{{node}}.discover_DB_server == True and {{node}}.use_privilege_account_management == False",
+            "postcondition": {
+                "{{agent}}.observations.pass_the_hash_to_lateral_move_to_db_server": "True",
+                "{{node}}.pass_the_hash_to_lateral_move_to_db_server": "True"
+            },
+            "success_probability": 1
+        },
+        "use_an_ingress_tool_transfer_to_control_server": {
+            "description": "use_an_ingress_tool_transfer_to_control_server",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.use_an_ingress_tool_transfer_to_control_server": "True",
+                "{{node}}.use_an_ingress_tool_transfer_to_control_server": "True"
+            },
+            "success_probability": 1
+        },
+        "get_control_on_DB_server": {
+            "description": "exfiltrate_data_over_C2_channel",
+            "precondition": "{{node}}.use_an_ingress_tool_transfer_to_control_server == True and {{node}}.pass_the_hash_to_lateral_move_to_db_server == True",
+            "postcondition": {
+                "{{agent}}.observations.get_control_on_DB_server": "True",
+                "{{node}}.get_control_on_DB_server": "True"
+            },
+            "success_probability": 1
+        },
+        "monitor_executed_commands_and_arguments": {
+            "description": "monitor_executed_commands_and_arguments",
+            "precondition": "True",
+            "postcondition": {
+                "{{agent}}.observations.monitor_executed_commands_and_arguments": "True",
+                "{{node}}.monitor_executed_commands_and_arguments": "True"
+            },
+            "success_probability": 1
+        },
+        "exfiltrate_data_over_C2_channel": {
+            "description": "exfiltrate_data_over_C2_channel",
+            "precondition": "{{node}}.get_control_on_DB_server == True and {{node}}.monitor_executed_commands_and_arguments == False",
+            "postcondition": {
+                "{{agent}}.observations.exfiltrate_data_over_C2_channel": "True",
+                "{{node}}.exfiltrate_data_over_C2_channel": "True"
+            },
+            "success_probability": 1
+        },
+        "get_control_on_PS_server": {
+            "description": "get_control_on_PS_server",
+            "precondition": "{{node}}.use_an_ingress_tool_transfer_to_control_server == True and {{node}}.use_lateral_move_transfer_to_lateral_move_on_PS_server == True",
+            "postcondition": {
+                "{{agent}}.observations.get_control_on_PS_server": "True",
+                "{{node}}.get_control_on_PS_server": "True"
+            },
+            "success_probability": 1
+        },
+        "install_a_custom_spyware": {
+            "description": "install_a_custom_spyware",
+            "precondition": "{{node}}.get_control_on_PS_server == True",
+            "postcondition": {
+                "{{agent}}.observations.install_a_custom_spyware": "True",
+                "{{node}}.install_a_custom_spyware": "True"
+            },
+            "success_probability": 1
+        },
+        "getting_flag": {
+            "description": "getting_flag",
+            "precondition": "{{node}}.install_a_custom_spyware == True and {{node}}.exfiltrate_data_over_C2_channel",
+            "postcondition": {
+                "{{agent}}.observations.getting_flag": "True",
+                "{{node}}.getting_flag": "True"
+            },
+            "success_probability": 1
+        },
+        "doNothing": {
+            "description": "doNothing",
+            "precondition": "True",
+            "postcondition": {},
+            "success_probability": 1
+        }
+    }
+}
