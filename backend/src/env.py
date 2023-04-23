@@ -136,16 +136,21 @@ class McasEnvironment(AECEnv):
 
         currentAgent = self.agent_selection
 
-        obs = self.envMngr.applyAction(action, currentAgent)
+        obs, actionApplied = self.envMngr.applyAction(action, currentAgent)
 
-        reward, end = self.envMngr.getReward(
-            currentAgent, self.observations, obs)
+        if (currentAgent == self.agents[-1]):
+            reward, end = self.envMngr.getReward()["attackers"]
 
-        print("reward: ", reward)
+            for attacker in self.agents:
 
-        self.rewards[currentAgent] = reward
+                print("reward: ", reward)
 
-        self._cumulative_rewards[currentAgent] += reward
+                self.rewards[attacker] = reward
+
+                self._cumulative_rewards[attacker] += reward
+
+                if (end):
+                    print("Attacker {} reached the ultimate state".format(attacker))
 
         self.observations[currentAgent] = obs[currentAgent]
 
@@ -153,9 +158,6 @@ class McasEnvironment(AECEnv):
 
         if self.render_mode == "human":
             self.render()
-
-        if (end):
-            print("Agent {} reached the ultimate state".format(currentAgent))
 
         self.terminations[currentAgent] = False  # end
 
@@ -181,13 +183,65 @@ class EnvironmentPlayer:
 
     def init_agent_behaviours(self):
 
-        singleAttackerDT: List[int] = ["get_control_on_DB_server", "exfiltrate_data_over_C2_channel", "get_control_on_PS_server", "install_a_custom_spyware", "getting_flag"]
-        singleDefenderDT: List[int] = ["monitor_executed_commands_and_arguments"]
+        singleAttackerDT: List[int] = ["use_powershell",
+                                       "use_dll_side_loading_to_execute_script",
+                                       "use_remote_system_discovery_on_ws",
+                                       "exploit_public_facing_application",
+                                       "access_on_ws",
+                                       "discover_DB_server",
+                                       "pass_the_hash_to_lateral_move_to_db_server",
+                                       "use_an_ingress_tool_transfer_to_control_server",
+                                       "get_control_on_DB_server",
+                                       "exfiltrate_data_over_C2_channel",
+                                       "exploit_system_network_configuration_discovery_on_ws",
+                                       "discover_PS_server",
+                                       "use_lateral_tool_transfer_to_lateral_move_on_PS_server",
+                                       "get_control_on_PS_server",
+                                       "install_a_custom_spyware",
+                                       "getting_flag"]
 
-        attacker1DT: List[int] = ["get_control_on_DB_server", "exfiltrate_data_over_C2_channel"]
-        attacker2DT: List[int] = ["get_control_on_PS_server", "install_a_custom_spyware", "getting_flag"]
+        singleDefenderDT: List[int] = [
+            "use_code_signing",
+            "doNothing",
+            "doNothing",
+            "detect_in_application_log_content",
+            "doNothing",
+            "doNothing",
+            "use_privilege_account_management",
+            "doNothing",
+            "doNothing",
+            "monitor_executed_commands_and_arguments",
+            "doNothing",
+            "doNothing",
+            "doNothing",
+            "doNothing",
+            "doNothing",
+            "doNothing"]
 
-        defender1DT: List[int] = ["monitor_executed_commands_and_arguments"]
+        attacker1DT: List[int] = [
+            # "use_valid_accounts",
+            #                       "access_on_ws",
+            #                       "exploit_system_network_configuration_discovery_on_ws",
+            #                       "discover_PS_server",
+            #                       "use_lateral_tool_transfer_to_lateral_move_on_PS_server",
+            #                       "use_an_ingress_tool_transfer_to_control_server",
+                                  "get_control_on_PS_server",
+                                  "install_a_custom_spyware"]
+
+        attacker2DT: List[int] = [
+            # "exploit_public_facing_application",
+            # "access_on_ws",
+            # "use_powershell",
+            # "use_dll_side_loading_to_execute_script",
+            # "use_remote_system_discovery_on_ws",
+            # "discover_DB_server",
+            # "pass_the_hash_to_lateral_move_to_db_server",
+            # "use_an_ingress_tool_transfer_to_control_server",
+            "get_control_on_DB_server",
+            "exfiltrate_data_over_C2_channel",
+            "getting_flag"]
+
+        defender1DT: List[int] = ["detect_in_application_log_content"]
         defender2DT: List[int] = []
 
         for agent in self.env.envMngr.agtPropSpace:
@@ -275,13 +329,9 @@ if __name__ == '__main__':
 
     envPlayer: EnvironmentPlayer = loadFile("worldStates/t1.json")
 
-    # for k in range(0, 20):
-    #     envPlayer.next()
-    #     print("\n\n")
-
     executionNumber = 1
     episodeNumber = 1000
-    epochNumberPerEpisode = 20
+    iterationNumberPerEpisode = 50
 
     averageCumulativeRewardsList: Dict[str, List[float]] = {
         agent: [0] * episodeNumber for agent in envPlayer.env.envMngr.agtPropSpace}
@@ -293,8 +343,8 @@ if __name__ == '__main__':
 
         for k in range(0, episodeNumber):
             print("============= Episode {} ===================".format(str(k)))
-            for i in range(0, epochNumberPerEpisode):
-                print("---- Epoch {} ----".format(str(i)))
+            for i in range(0, iterationNumberPerEpisode):
+                print("---- Iteration {} ----".format(str(i)))
                 envPlayer.next()
                 print("")
             print(" ===> Cumulative reward at the end of the espisode: ",
@@ -322,8 +372,11 @@ if __name__ == '__main__':
 
     markers = ["v", "o", "x", "s", "*", ".", "+", "s", "d"]
 
+    json.dump(averageCumulativeRewardsList, open("dt.json", "w+"))
+
     for agent, averageCumulativeRewards in averageCumulativeRewardsList.items():
-        plt.scatter(x, averageCumulativeRewards, marker=markers.pop(), s=70, alpha=0.25, label=agent)
+        plt.scatter(x, averageCumulativeRewards,
+                    marker=markers.pop(), s=70, alpha=0.25, label=agent)
 
     plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
     plt.tight_layout()

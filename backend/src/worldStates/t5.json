@@ -6,25 +6,13 @@
                 "agents": {
                     "attacker1": {
                         "behaviour": "marl",
-                        "observations": {
-                        },
+                        "observations": {},
                         "name": "simpleAttacker",
                         "running": true
                     },
                     "attacker2": {
                         "behaviour": "marl",
-                        "observations": {
-                        },
-                        "name": "simpleAttacker",
-                        "running": true
-                    },
-                    "defender": {
-                        "binary_file_location": "C:\\Users\\mwlr.exe",
-                        "behaviour": "lazy",
-                        "observations": {
-                            "hasRootPrivilege": true,
-                            "knowHowToSwitchOnReimagablePC1": true
-                        },
+                        "observations": {},
                         "name": "simpleAttacker",
                         "running": true
                     }
@@ -33,7 +21,12 @@
             "use_privilege_account_management": false,
             "detect_in_application_log_content": false,
             "monitor_executed_commands_and_arguments": false,
+            "use_valid_accounts": false,
+            "use_command_powershell": true,
             "use_code_signing": false,
+            "use_lateral_tool_transfer_to_lateral_move_on_PS_server": false,
+            "pass_the_hash_to_lateral_move_to_db_server": false,
+            "use_powershell": false,
             "sla_weight": 0.7,
             "value": 15
         }
@@ -149,12 +142,12 @@
             },
             "success_probability": 1
         },
-        "use_lateral_move_transfer_to_lateral_move_on_PS_server": {
-            "description": "use_lateral_move_transfer_to_lateral_move_on_PS_server",
+        "use_lateral_tool_transfer_to_lateral_move_on_PS_server": {
+            "description": "use_lateral_tool_transfer_to_lateral_move_on_PS_server",
             "precondition": "{{node}}.discover_PS_server == True",
             "postcondition": {
-                "{{agent}}.observations.use_lateral_move_transfer_to_lateral_move_on_PS_server": "True",
-                "{{node}}.use_lateral_move_transfer_to_lateral_move_on_PS_server": "True"
+                "{{agent}}.observations.use_lateral_tool_transfer_to_lateral_move_on_PS_server": "True",
+                "{{node}}.use_lateral_tool_transfer_to_lateral_move_on_PS_server": "True"
             },
             "success_probability": 1
         },
@@ -187,7 +180,7 @@
         },
         "use_an_ingress_tool_transfer_to_control_server": {
             "description": "use_an_ingress_tool_transfer_to_control_server",
-            "precondition": "True",
+            "precondition": "{{node}}.use_lateral_tool_transfer_to_lateral_move_on_PS_server == True or {{node}}.pass_the_hash_to_lateral_move_to_db_server == True",
             "postcondition": {
                 "{{agent}}.observations.use_an_ingress_tool_transfer_to_control_server": "True",
                 "{{node}}.use_an_ingress_tool_transfer_to_control_server": "True"
@@ -223,7 +216,7 @@
         },
         "get_control_on_PS_server": {
             "description": "get_control_on_PS_server",
-            "precondition": "{{node}}.use_an_ingress_tool_transfer_to_control_server == True and {{node}}.use_lateral_move_transfer_to_lateral_move_on_PS_server == True",
+            "precondition": "{{node}}.use_an_ingress_tool_transfer_to_control_server == True and {{node}}.use_lateral_tool_transfer_to_lateral_move_on_PS_server == True",
             "postcondition": {
                 "{{agent}}.observations.get_control_on_PS_server": "True",
                 "{{node}}.get_control_on_PS_server": "True"
@@ -249,6 +242,12 @@
             "success_probability": 1
         },
         "doNothing": {
+            "description": "doNothing",
+            "precondition": "True",
+            "postcondition": {},
+            "success_probability": 1
+        },
+        "_open_file_1": {
             "description": "doNothing",
             "precondition": "True",
             "postcondition": {},

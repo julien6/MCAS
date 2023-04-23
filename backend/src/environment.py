@@ -275,44 +275,76 @@ class EnvironmentMngr:
         agentObservation = {agent: self.getAgentObservations(
             agent) for agent in self.agtPropSpace}
 
-        return self.fromObsPropToObsGym(agentObservation)
+        return self.fromObsPropToObsGym(agentObservation), areAllPropertiesPresent and preconditionSatisfied
 
-    def getReward(self, agent, previousObservations, observations) -> Tuple[float, bool]:
+    def getReward(self) -> Dict[str, Tuple[float, bool]]:
 
-        previousObsPropState = self.fromObsGymToObsProp(
-            previousObservations)[agent]
-        obsPropState = self.fromObsGymToObsProp(observations)[agent]
+        propertiesIDs = list(OrderedDict(
+            self.environment["nodes"]["PC1"]).keys())
 
-        newProps = [
-            prop for prop in obsPropState if not prop in previousObsPropState]
+        if "getting_flag" in propertiesIDs:
+            return {
+                "attackers": (20000, True),
+                "defenders": (-100, False)
+            }
 
-        if "attacker" in agent:
-            if "get_control_on_DB_server" in OrderedDict(newProps).keys():
-                return 50, False
+        if "install_a_custom_spyware" in propertiesIDs and "exfiltrate_data_over_C2_channel" in propertiesIDs:
+            return {
+                "attackers": (10000, False),
+                "defenders": (-10, False)
+            }
 
-            if "exfiltrate_data_over_C2_channel" in OrderedDict(newProps).keys():
-                return 50, False
+        # if "get_control_on_DB_server" in propertiesIDs \
+        #         and "get_control_on_PS_server":
+        #     return {
+        #         "attackers": (500, False),
+        #         "defenders": (-100, False)
+        #     }
 
-            if "get_control_on_PS_server" in OrderedDict(newProps).keys():
-                return 70, False
+        if "pass_the_hash_to_lateral_move_to_db_server" in propertiesIDs \
+                and "use_an_ingress_tool_transfer_to_control_server" in propertiesIDs:
+            return {
+                "attackers": (2500, False),
+                "defenders": (-100, False)
+            }
 
-            if "install_a_custom_spyware" in OrderedDict(newProps).keys():
-                return 70, False
+        if "use_lateral_tool_transfer_to_lateral_move_on_PS_server" in propertiesIDs \
+                and "use_an_ingress_tool_transfer_to_control_server" in propertiesIDs:
+            return {
+                "attackers": (2500, False),
+                "defenders": (-100, False)
+            }
 
-            if "getting_flag" in OrderedDict(newProps).keys():
-                return 100, True
+        # if "discover_PS_server" in propertiesIDs or "discover_DB_server" in propertiesIDs:
+        #     return {
+        #         "attackers": (100, False),
+        #         "defenders": (-100, False)
+        #     }
 
-            if "getting_flag" in OrderedDict(obsPropState).keys():
-                return 10, True
+        if "access_on_ws" in propertiesIDs and "use_remote_system_discovery_on_ws" in propertiesIDs \
+                and "use_dll_side_loading_to_execute_script" in propertiesIDs:
+            return {
+                "attackers": (500, False),
+                "defenders": (-100, False)
+            }
 
-        if "defender" in agent:
-            if "monitor_executed_commands_and_arguments" in OrderedDict(newProps).keys():
-                return 100, False
+        if "access_on_ws" in propertiesIDs and "exploit_system_network_configuration_discovery_on_ws" in propertiesIDs:
+            return {
+                "attackers": (500, False),
+                "defenders": (-100, False)
+            }
 
-            if "monitor_executed_commands_and_arguments" in OrderedDict(obsPropState).keys():
-                return 10, False
+        if "use_valid_accounts" in propertiesIDs or "exploit_public_facing_application" in propertiesIDs \
+                or "use_powershell" in propertiesIDs or "use_command_powershell" in propertiesIDs:
+            return {
+                "attackers": (1, False),
+                "defenders": (-100, False)
+            }
 
-        return -1, False
+        return {
+            "attackers": (-1, False),
+            "defenders": (-1, False)
+        }
 
 
 if __name__ == '__main__':

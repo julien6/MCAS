@@ -4,6 +4,7 @@ from typing import Dict, List, Any
 from environment import EnvironmentMngr
 from random import shuffle
 
+import math
 import random
 
 
@@ -38,6 +39,7 @@ class MARLAgent(Agent):
     epsilon: float
     qTable: Dict
     lastObsState: str
+    iteration: int
 
     def __init__(self, envMngr: EnvironmentMngr, agentID: str, alpha: int = 0.1, gamma: int = 0.6, epsilon: int = 0.2) -> None:
         super().__init__(envMngr, agentID)
@@ -47,8 +49,13 @@ class MARLAgent(Agent):
         self.qTable = {}
         self.lastObsState = None
         self.lastAction = None
+        self.iteration = 1
 
     def nextAction(self, observation: str, reward) -> int:
+
+        # if(self.iteration > 1500):
+        #     self.epsilon = 0.02
+
         # If this is the first time, choose randomly
         if (self.lastObsState == None or self.lastAction == None):
             self.lastObsState = fromObsToState(observation)
@@ -125,6 +132,8 @@ class MARLAgent(Agent):
 
         self.lastAction = action
         self.lastObsState = state
+
+        self.iteration += 1
 
         return action
 
