@@ -31,20 +31,18 @@ print(agentsRewards.keys())
 
 x = [int(episodeIndex) for episodeIndex in range(0, 1000)]
 
-markers = ["v", "o", "x", ".", "*", "+", "s", "d"]
+markers = ["v", "o", "x", "s", "*", ".", "+", "s", "d"]
+scales = [20, 70, 20, 20, 70, 20]
 
 for agent, averageCumulativeRewards in agentsRewards.items():
     plt.scatter(x, averageCumulativeRewards, marker=markers.pop(0),
-                s=70, alpha=0.25, label=agent)
+                s=scales.pop(0), alpha=0.2, label=agent)
 
 plt.rcParams.update({'font.size': 20})
 
 # plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
-plt.legend(bbox_to_anchor=(0.7, 0.1), loc='lower left')
+plt.legend(bbox_to_anchor=(0.22, 1.0), loc='upper right')
 plt.tight_layout()
-plt.xlabel("Episodes", size=25)
-plt.ylabel("Average of rewards by episode", size=25)
-
-# plt.savefig('/home/julien/Bureau/graphs.pdf')
-
+plt.xlabel("Episodes", size=15)
+plt.ylabel("Average of rewards by episode", size=15)
 plt.show()
