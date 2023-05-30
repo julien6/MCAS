@@ -1,0 +1,11 @@
+In this example, the JSON object represents a network topology with two subnets (192.168.1.0/24 and 192.168.2.0/24) containing multiple Linux and Windows virtual machines.
+
+The router is connected to two switches ("switch1" and "switch2") with respective IP addresses of 192.168.1.2 and 192.168.2.2. The router has two interfaces ("eth0" and "eth1") with IP addresses belonging to the respective subnets.
+
+Each switch is connected to the router and virtual machines. The switches have interfaces connected to the respective virtual machines ("linux_vm1", "windows_vm1", "linux_vm2", and "windows_vm2").
+
+The Linux and Windows virtual machines are represented with properties like "id", "type", "os", "ip", "interfaces", and "applications". Each virtual machine has a single interface connected to its respective switch and is assigned a unique IP address within its subnet.
+
+The virtual machines also run applications specified under the "applications" property. In this example, both Linux and Windows virtual machines have a web server (port 80) and SSH server (port 22) running. The Windows virtual machines additionally run a file server (port 445) and RDP server (port 3389).
+
+This JSON representation provides a detailed view of the network topology, showcasing two subnets and the virtual machines connected to their respective switches, along with their IP addresses, interfaces, and running applications.
