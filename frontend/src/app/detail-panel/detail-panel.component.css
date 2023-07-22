@@ -1,13 +1,27 @@
 @import "~jsoneditor/dist/jsoneditor.min.css";
 
+@import "~jsoneditor/examples/css/darktheme.css";
+
 .column-left {
   float: left;
   width: 30%;
+  margin: 0px;
+  padding: 0px;
+  height: calc(100vh - 64px);
+  background-color: green;
 }
 
 .column-right {
   float: right;
+  margin: 0px;
+  padding: 0px;
   width: 70%;
+  height: calc(100vh - 64px);
+}
+
+.graphical {
+  background-color: darkgrey;
+  height: calc(100vh - 64px);
 }
 
 /* Clear floats after the columns */
@@ -15,13 +29,19 @@
   content: "";
   display: table;
   clear: both;
+  background-color: azure;
+}
+
+.command_output {
+  position: fixed;
+
 }
 
 :host ::ng-deep json-editor,
 :host ::ng-deep json-editor .jsoneditor,
 :host ::ng-deep json-editor>div,
 :host ::ng-deep json-editor jsoneditor-outer {
-  height: 90vh;
+  height: calc(100vh - 64px);
 
   position: inline-block;
 }

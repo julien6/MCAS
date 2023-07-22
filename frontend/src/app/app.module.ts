@@ -27,8 +27,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PreferencesComponent } from './preferences/preferences.component';
 import { LibraryComponent } from './library/library.component';
@@ -41,7 +39,13 @@ import { MatRippleModule } from '@angular/material/core';
 import { LibraryElementComponent } from './library-element/library-element.component'
 import { MarkdownModule } from 'ngx-markdown';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { ConfigureRunComponent } from './configure-run/configure-run.component';
+import { PackagingComponent } from './packaging/packaging.component';
+import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatStepperModule} from '@angular/material/stepper';
+import { ConfigShareService } from './services/config-share.service';
 
 @NgModule({
   declarations: [
@@ -56,19 +60,19 @@ import { FormsModule } from '@angular/forms';
     LibraryComponent,
     PropertiesComponent,
     HistoryComponent,
-    LibraryElementComponent
+    LibraryElementComponent,
+    ConfigureRunComponent,
+    PackagingComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AngJsoneditorModule,
     NgTerminalModule,
-    HttpClientModule,
     NgChartsModule,
     NoopAnimationsModule,
-    MatTabsModule,
-    BrowserModule,
-    AppRoutingModule,
+    MatStepperModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
     MarkdownModule.forRoot({ loader: HttpClient }),
@@ -95,7 +99,7 @@ import { FormsModule } from '@angular/forms';
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  providers: [AppNetworkService, WorldStateService, ServerAPIService, HttpClient],
+  providers: [AppNetworkService, WorldStateService, ConfigShareService, ServerAPIService, HttpClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

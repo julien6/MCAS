@@ -12,7 +12,6 @@
     <button mat-menu-item>Close</button>
   </mat-menu>
   <mat-menu #new_submenu="matMenu">
-    <button mat-menu-item (click)="new_project()">Project</button>
     <button mat-menu-item disabled="{{this.disable_scenario_creation}}" (click)="new_scenario()">Scenario</button>
     <button mat-menu-item disabled="{{this.disable_agent_creation}}" (click)="new_agent()">Agent</button>
     <button mat-menu-item disabled="{{this.disable_node_creation}}" (click)="new_node()">Node</button>
@@ -27,6 +26,16 @@
   </mat-menu>
   <!-- End Edit menu -->
 
+  <!-- Run menu -->
+  <button mat-button [matMenuTriggerFor]="run_menu">Configure & Run</button>
+  <mat-menu #run_menu="matMenu">
+    <button mat-menu-item (click)="openEmSimDialog('undefined')">Configure & Run Simulation/Emulation</button>
+    <button mat-menu-item (click)="openEmSimDialog('full_sim')">Configure & Run Full Simulation</button>
+    <button mat-menu-item (click)="openEmSimDialog('full_emu')">Configure & Run Full Emulation</button>
+    <button mat-menu-item (click)="openPackagingDialog()">Configure & Run MAS Packaging</button>
+  </mat-menu>
+  <!-- End Run menu -->
+
   <!-- View menu -->
   <button mat-button [matMenuTriggerFor]="view_menu">View</button>
   <mat-menu #view_menu="matMenu">
@@ -38,14 +47,21 @@
   <ng-template #show_hide_dialog>
     <h1 mat-dialog-title>Show/Hide</h1>
     <mat-list role="list">
-      <mat-list-item role="listitem"> <mat-checkbox [checked]="this.shown_toolbars"
-          (change)="show_hide_toolbars()">Toolbars</mat-checkbox></mat-list-item>
-      <mat-list-item role="listitem"><mat-checkbox [checked]="this.shown_environment_properties_panel"
-          (change)="show_environment_properties_panel()">Environment properties panel</mat-checkbox></mat-list-item>
-      <mat-list-item role="listitem"><mat-checkbox [checked]="this.shown_graphical_visualization_panel"
-          (change)="show_graphical_visualization_panel()">Graphical visualization panel</mat-checkbox></mat-list-item>
-      <mat-list-item role="listitem"><mat-checkbox [checked]="this.shown_prompt_interface"
-          (change)="show_prompt_interface()">Prompt interface</mat-checkbox></mat-list-item>
+      <mat-list-item role="listitem">
+        <mat-checkbox [checked]="this.shown_toolbars" (change)="show_hide_toolbars()">Toolbars</mat-checkbox>
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <mat-checkbox [checked]="this.shown_environment_properties_panel"
+          (change)="show_environment_properties_panel()">Environment properties panel</mat-checkbox>
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <mat-checkbox [checked]="this.shown_graphical_visualization_panel"
+          (change)="show_graphical_visualization_panel()">Graphical visualization panel</mat-checkbox>
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <mat-checkbox [checked]="this.shown_prompt_interface" (change)="show_prompt_interface()">Prompt interface
+        </mat-checkbox>
+      </mat-list-item>
     </mat-list>
   </ng-template>
   <!-- End View menu -->

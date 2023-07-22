@@ -1,10 +1,33 @@
-<div class="row">
-    <div class="column-left">
-        <json-editor [options]="editorOptions" [data]="visualData" (change)="showJson($event)"></json-editor>
-    </div>
-    <div class="column-right">
-        <div class="row">
+<div *ngIf="this.menuBarConfiguration.show_hide.properties; then thenBlock else elseBlock"></div>
 
+<ng-template #thenBlock>
+    <div class="row">
+        <div class="column-left">
+            <json-editor [options]="editorOptions" [data]="visualData" (change)="showJson($event)"></json-editor>
+        </div>
+        <div class="column-right">
+            <div class="row">
+                <div class="graphical">
+                    <mat-tab-group>
+                        <mat-tab label="Graph visualization">
+                            <app-graph [detailData]="this.sharedData" [lastAgentPlayed]="this.lastAgent"></app-graph>
+                        </mat-tab>
+                        <mat-tab label="Charts visualization">
+                            <app-charts-visualization [lastMetrics]="this.lastMetrics"></app-charts-visualization>
+                        </mat-tab>
+                        <mat-tab label="Logs visualization">
+                            Logs visualization
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #elseBlock>
+    <div class="row">
+        <div class="graphical">
             <mat-tab-group>
                 <mat-tab label="Graph visualization">
                     <app-graph [detailData]="this.sharedData" [lastAgentPlayed]="this.lastAgent"></app-graph>
@@ -12,11 +35,10 @@
                 <mat-tab label="Charts visualization">
                     <app-charts-visualization [lastMetrics]="this.lastMetrics"></app-charts-visualization>
                 </mat-tab>
+                <mat-tab label="Logs visualization">
+                    Logs visualization
+                </mat-tab>
             </mat-tab-group>
-
-        </div>
-        <div style="position:fixed;bottom: 0" class="row">
-            <app-terminal [detailData]="this.sharedData"></app-terminal>
         </div>
     </div>
-</div>
+</ng-template>

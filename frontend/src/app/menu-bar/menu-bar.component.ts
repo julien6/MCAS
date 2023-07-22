@@ -5,6 +5,9 @@ import { PreferencesComponent } from '../preferences/preferences.component';
 import { LibraryComponent } from '../library/library.component';
 import { HistoryComponent } from '../history/history.component';
 import { PropertiesComponent } from '../properties/properties.component';
+import { ConfigureRunComponent } from '../configure-run/configure-run.component';
+import { PackagingComponent } from '../packaging/packaging.component';
+import { ConfigShareService } from '../services/config-share.service';
 
 @Component({
   selector: 'app-menu-bar',
@@ -13,7 +16,7 @@ import { PropertiesComponent } from '../properties/properties.component';
 })
 export class MenuBarComponent {
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private configShareService: ConfigShareService) { }
 
   ngOnInit() {
   }
@@ -22,17 +25,12 @@ export class MenuBarComponent {
 
   disable_properties: boolean = true;
   disable_history: boolean = true;
-  disable_scenario_creation: boolean = true;
+  disable_scenario_creation: boolean = false;
   disable_node_creation: boolean = true;
   disable_agent_creation: boolean = true;
 
-  new_project() {
-    this.disable_scenario_creation = false;
-    this.disable_properties = false;
-    this.disable_history = false;
-  }
-
   new_scenario() {
+    this.disable_scenario_creation = true;
     this.disable_node_creation = false;
     this.disable_agent_creation = false;
   }
@@ -63,8 +61,10 @@ export class MenuBarComponent {
     this.shown_environment_properties_panel = !this.shown_environment_properties_panel;
     if (!this.shown_environment_properties_panel) {
       // hide environment properties panel
+      this.configShareService.hideShow("properties", false);
     } else {
       // show environment properties panel
+      this.configShareService.hideShow("properties", true);
     }
   }
 
@@ -116,7 +116,19 @@ export class MenuBarComponent {
       width: '100%'
     });
   }
-  
+
+  openEmSimDialog(mode: string) {
+    this.dialog.open(ConfigureRunComponent, {
+      width: '100%'
+    });
+  }
+
+  openPackagingDialog() {
+    this.dialog.open(PackagingComponent, {
+      width: '100%'
+    });
+  }
+
   menuMethod() {
     this.trigger.openMenu();
   }
