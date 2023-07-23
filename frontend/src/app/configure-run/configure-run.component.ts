@@ -15,7 +15,6 @@ export class ConfigureRunComponent implements OnInit {
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
   });
-  isLinear = false;
 
   constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ConfigureRunComponent>) { }
 

@@ -1,17 +1,51 @@
 <h1 mat-dialog-title>Configure & Run</h1>
 <div mat-dialog-content>
-    Configure and run...
-
-    <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
-        {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
-    </button>
-    <mat-stepper [linear]="isLinear" #stepper>
+    <mat-stepper [linear]="true" #stepper>
         <mat-step [stepControl]="firstFormGroup">
             <form [formGroup]="firstFormGroup">
-                <ng-template matStepLabel>Fill out your name</ng-template>
+                <!-- Having a configuring step to define
+                    1 - modes:
+
+                        - full simulation
+                            - load an existing simulation configuration for currently loaded scenario
+                            - create a simulation configuration
+                                - the simulation engine:
+                                    - CybORG simulation engine
+                                    - MCAS simulation engine
+                                    - CYST
+                                - the number of iteration per episode
+                                - the number of episode
+                                ...
+                            
+                        - full emulation
+                            - load an existing emulation configuration for currently loaded scenario
+                            - create an emulation configuration
+                                - the emulation engine:
+                                    - CybORG emulation engine
+                                    - MCAS emulation engine
+                                - check/provide the deployment configuration file
+                                    - access the generated virtual machine deployment file (via another text editor alert dialog)
+                                ...
+
+                        - (TODO: mix of simulation/emulation...)
+                        
+                        - how and where to save the resulting environment (especially agents' behaviours)
+                            - store in library (ex: agents' behaviours learnt in simulation could be stored in library to be used
+                            in a emulation scenario)
+
+                    2 - setting up the simulation / emulation with real-time logs and progress bar
+                        - show errors, warning... and successful scenario configuration setup...
+                    
+                    3 - Launch scenario
+                -->
+                <ng-template matStepLabel>Configuring for running</ng-template>
                 <mat-form-field>
-                    <mat-label>Name</mat-label>
-                    <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+                    <mat-label>Run name</mat-label>
+                    <input matInput placeholder="ex: " formControlName="firstCtrl" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Run name</mat-label>
+                    <input matInput placeholder="ex: " formControlName="firstCtrl" required>
                 </mat-form-field>
                 <div>
                     <button mat-button matStepperNext>Next</button>
