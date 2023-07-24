@@ -50,13 +50,13 @@ export class DetailPanelComponent implements OnInit {
     this.editorOptions.mode = 'code';
     this.editorOptions.mainMenuBar = true;
     this.editorOptions.language = "en";
-    (<any>this.editorOptions).templates = this.options.templates;
-    this.editorOptions.expandAll = true
+    // (<any>this.editorOptions).templates = this.options.templates;
+    // this.editorOptions.expandAll = true;
 
-    this.visualData = this.worldStateService.getInitialState()
+    this.visualData = this.worldStateService.getInitialState();
     this.sharedData = this.visualData;
 
-    this.menuBarConfiguration = this.configShareService.getInitialConfiguration()
+    this.menuBarConfiguration = this.configShareService.getInitialConfiguration();
 
   }
 

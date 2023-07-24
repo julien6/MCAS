@@ -41,11 +41,13 @@ import { MarkdownModule } from 'ngx-markdown';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ConfigureRunComponent } from './configure-run/configure-run.component';
 import { PackagingComponent } from './packaging/packaging.component';
-import {FormBuilder, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatStepperModule} from '@angular/material/stepper';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatStepperModule } from '@angular/material/stepper';
 import { ConfigShareService } from './services/config-share.service';
+import { NgFor } from '@angular/common';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,9 @@ import { ConfigShareService } from './services/config-share.service';
     BrowserModule,
     AppRoutingModule,
     AngJsoneditorModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    NgFor,
     NgTerminalModule,
     NgChartsModule,
     NoopAnimationsModule,
