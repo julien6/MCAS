@@ -3,30 +3,7 @@
     <mat-stepper [linear]="true" #stepper>
         <mat-step [stepControl]="firstFormGroup">
             <form [formGroup]="firstFormGroup">
-                <!-- Having a configuring step to define
-                    1 - modes:
-                            
-                        - full emulation
-                            - load an existing emulation configuration for currently loaded scenario
-                            - create an emulation configuration
-                                - the emulation engine:
-                                    - CybORG emulation engine
-                                    - MCAS emulation engine
-                                - check/provide the deployment configuration file
-                                    - access the generated virtual machine deployment file (via another text editor alert dialog)
-                                ...
 
-                        - (TODO: mix of simulation/emulation...)
-                        
-                        - how and where to save the resulting environment (especially agents' behaviours)
-                            - store in library (ex: agents' behaviours learnt in simulation could be stored in library to be used
-                            in a emulation scenario)
-
-                    2 - setting up the simulation / emulation with real-time logs and progress bar
-                        - show errors, warning... and successful scenario configuration setup...
-                    
-                    3 - Launch scenario
-                -->
                 <ng-template matStepLabel>Configuring for running</ng-template>
                 <mat-form-field>
                     <mat-label>Running mode</mat-label>
@@ -99,38 +76,65 @@
                             <mat-option value="MCAS_emulation_engine">
                                 MCAS emulation engine
                             </mat-option>
-                            <mat-option value="CYST_emulation_engine">
-                                CYST emulation engine
-                            </mat-option>
                         </mat-select>
                     </mat-form-field>
 
                     <br>
 
-                    <button mat-stroked-button>
+                    <button mat-stroked-button (click)="openDialogWithRef(deployment_plan_editor)">
                         Deployment plan
                         <mat-icon>open_in_new</mat-icon>
                     </button>
+                    <ng-template #deployment_plan_editor>
+                        <h1 mat-dialog-title>Editing deployment plan</h1>
+                        <app-editor [(text)]="yamlInputData" mode="yaml"></app-editor>
+                        <br>
+                        <button mat-button (click)="saveDeploymentPlan()">Save</button>
+                    </ng-template>
 
                 </form>
 
+                <br>
+                <mat-divider></mat-divider>
+                <br>
+
+                <!-- how and where to save the resulting environment (especially agents' behaviours)
+                - store in library (ex: agents' behaviours learnt in simulation could be stored in library to be used
+                in a emulation scenario) -->
+                <button mat-stroked-button (click)="openDialogWithRef(saving_plan_editor)">
+                    Plan for saving resulting scenario, agents...
+                    <mat-icon>open_in_new</mat-icon>
+                </button>
+                <ng-template #saving_plan_editor>
+                    <h1 mat-dialog-title>Editing saving plan</h1>
+                    <app-editor [(text)]="jsonInputData" mode="json"></app-editor>
+                    <br>
+                    <button mat-button (click)="saveSavingPlan()">Save</button>
+                </ng-template>
+
+                <br><br>
                 <div>
                     <button mat-button matStepperNext>Next</button>
                 </div>
             </form>
         </mat-step>
-        <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
-            <form [formGroup]="secondFormGroup">
-                <mat-form-field>
-                    <mat-label>Address</mat-label>
-                    <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
-                </mat-form-field>
-                <div>
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button matStepperNext>Next</button>
-                </div>
-            </form>
+
+        <mat-step [stepControl]="secondFormGroup" label="Launch setting up">
+            <!-- 2 - setting up the simulation / emulation with real-time logs and progress bar
+            - show errors, warning... and successful scenario configuration setup... -->
+            <p>Logs, errors after sending commands to backend for setting up scenario</p>
+            
+            <app-editor [(text)]="logsData" [terminalDisplay]="true" mode="text"></app-editor>
+
+            <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+
+            <br><br>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext>Next</button>
+            </div>
         </mat-step>
+
         <mat-step>
             <ng-template matStepLabel>Done</ng-template>
             <p>You are now done.</p>

@@ -119,7 +119,8 @@ export class MenuBarComponent {
 
   openEmSimDialog(mode: string) {
     this.dialog.open(ConfigureRunComponent, {
-      width: '100%'
+      width: '100%',
+      data: { "running_mode": mode }
     });
   }
 

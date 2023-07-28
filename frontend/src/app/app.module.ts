@@ -48,6 +48,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { ConfigShareService } from './services/config-share.service';
 import { NgFor } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
+import { EditorModule } from './editor/editor.module';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @NgModule({
   declarations: [
@@ -74,7 +76,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatSelectModule,
     NgFor,
     NgTerminalModule,
+    EditorModule,
     NgChartsModule,
+    MatProgressBarModule,
     NoopAnimationsModule,
     MatStepperModule,
     ReactiveFormsModule,

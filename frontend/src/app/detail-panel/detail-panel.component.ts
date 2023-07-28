@@ -45,6 +45,10 @@ export class DetailPanelComponent implements OnInit {
     ]
   }
 
+  show_green_agents: boolean = false;
+  show_red_agents: boolean = false;
+  show_blue_agents: boolean = false;
+
   constructor(private worldStateService: WorldStateService, private configShareService: ConfigShareService) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'code';

@@ -1,6 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TemplateRef, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+
+import 'ace-builds';
+import 'ace-builds/src-noconflict/mode-json';
+import 'ace-builds/src-noconflict/mode-yaml';
+import 'ace-builds/src-noconflict/mode-typescript';
+import 'ace-builds/src-noconflict/mode-scss';
+
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Inject } from '@angular/core';
 
 @Component({
   selector: 'app-configure-run',
@@ -8,6 +19,12 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   styleUrls: ['./configure-run.component.css']
 })
 export class ConfigureRunComponent implements OnInit {
+
+  jsonInputData = '';
+  yamlInputData = '';
+  appModuleTsData = '';
+  scssData = '';
+  logsData = '';
 
   firstFormGroup: FormGroup;
 
@@ -23,8 +40,9 @@ export class ConfigureRunComponent implements OnInit {
   selectedNumIterPerEp: number;
   selectedNumEp: number;
 
-  constructor(private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ConfigureRunComponent>) {
-    this.selectedMode = "";
+  constructor(public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any,
+    private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ConfigureRunComponent>) {
+    this.selectedMode = this.data.running_mode;
     this.selectedSimulationEngine = "";
     this.selectedEmulationEngine = "";
     this.selectedNumIterPerEp = 0;
@@ -33,8 +51,8 @@ export class ConfigureRunComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.firstFormGroup = new FormGroup({
-      select_mode: new FormControl(null, Validators.required),
+    this.firstFormGroup = this._formBuilder.group({
+      select_mode: [this.data.running_mode, Validators.required],
     });
 
     this.fullSimulationFormGroup = new FormGroup({
@@ -47,10 +65,14 @@ export class ConfigureRunComponent implements OnInit {
       select_emulation_engine: new FormControl(null, Validators.required),
     });
 
-    this.secondFormGroup = new FormGroup({
-      secondCtrl: new FormControl(null, Validators.required),
-    });
+  }
 
+  saveSavingPlan() {
+    console.log(this.jsonInputData);
+  }
+
+  saveDeploymentPlan() {
+    console.log(this.yamlInputData);
   }
 
   onSelectingMode(value: any) {
@@ -71,6 +93,13 @@ export class ConfigureRunComponent implements OnInit {
 
   onSelectingNumEp(value: any) {
     this.selectedNumEp = value;
+  }
+
+  openDialogWithRef(ref: TemplateRef<any>, height_percentage: string = "auto", width_percentage: string = "auto") {
+    this.dialog.open(ref, {
+      height: height_percentage,
+      width: width_percentage
+    });
   }
 
 }

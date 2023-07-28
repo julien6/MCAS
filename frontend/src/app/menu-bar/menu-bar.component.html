@@ -30,8 +30,8 @@
   <button mat-button [matMenuTriggerFor]="run_menu">Configure & Run</button>
   <mat-menu #run_menu="matMenu">
     <button mat-menu-item (click)="openEmSimDialog('undefined')">Configure & Run Simulation/Emulation</button>
-    <button mat-menu-item (click)="openEmSimDialog('full_sim')">Configure & Run Full Simulation</button>
-    <button mat-menu-item (click)="openEmSimDialog('full_emu')">Configure & Run Full Emulation</button>
+    <button mat-menu-item (click)="openEmSimDialog('full_simulation')">Configure & Run Full Simulation</button>
+    <button mat-menu-item (click)="openEmSimDialog('full_emulation')">Configure & Run Full Emulation</button>
     <button mat-menu-item (click)="openPackagingDialog()">Configure & Run MAS Packaging</button>
   </mat-menu>
   <!-- End Run menu -->

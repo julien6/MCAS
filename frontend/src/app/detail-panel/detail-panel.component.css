@@ -37,6 +37,16 @@
 
 }
 
+.show_agent_types {
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+}
+
+.show_team {
+  margin: 0 30px;
+}
+
 :host ::ng-deep json-editor,
 :host ::ng-deep json-editor .jsoneditor,
 :host ::ng-deep json-editor>div,

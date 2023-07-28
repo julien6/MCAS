@@ -9,16 +9,36 @@
             <div class="row">
                 <div class="graphical">
                     <mat-tab-group>
-                        <mat-tab label="Graph visualization">
+                        <mat-tab label="Network view">
                             <app-graph [detailData]="this.sharedData" [lastAgentPlayed]="this.lastAgent"></app-graph>
                         </mat-tab>
-                        <mat-tab label="Charts visualization">
+                        <mat-tab label="Agents behaviors">
+
+                            <mat-tab-group>
+                                <mat-tab label="Logs">
+                                </mat-tab>
+                                <mat-tab label="Pixel visualization">
+                                </mat-tab>
+                                <mat-tab label="Histogram">
+                                </mat-tab>
+                                <mat-tab label="Pie chart">
+                                </mat-tab>
+                            </mat-tab-group>
+
+                        </mat-tab>
+
+                        <mat-tab label="Observables/metrics">
                             <app-charts-visualization [lastMetrics]="this.lastMetrics"></app-charts-visualization>
                         </mat-tab>
-                        <mat-tab label="Logs visualization">
-                            Logs visualization
-                        </mat-tab>
+
                     </mat-tab-group>
+
+                    <section class="show_agent_types">
+                        <mat-checkbox class="show_team" [(ngModel)]="show_green_agents">Green agents</mat-checkbox>
+                        <mat-checkbox class="show_team" [(ngModel)]="show_red_agents">Red agents</mat-checkbox>
+                        <mat-checkbox class="show_team" [(ngModel)]="show_blue_agents">Blue agents</mat-checkbox>
+                    </section>
+
                 </div>
             </div>
         </div>
