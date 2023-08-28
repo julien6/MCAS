@@ -59,6 +59,7 @@ export class ConfigureRunComponent implements OnInit {
       select_simulation_engine: new FormControl(null, Validators.required),
       select_number_of_iteration_per_episode: new FormControl(null, Validators.required),
       select_number_of_episode: new FormControl(null, Validators.required),
+      select_pause_duration: new FormControl(0, Validators.required)
     });
 
     this.fullEmulationFormGroup = new FormGroup({
@@ -92,6 +93,10 @@ export class ConfigureRunComponent implements OnInit {
   }
 
   onSelectingNumEp(value: any) {
+    this.selectedNumEp = value;
+  }
+
+  onSelectingPauseDuration(value: any) {
     this.selectedNumEp = value;
   }
 

@@ -1,0 +1,62 @@
+<mat-accordion class="example-headers-align" multi>
+
+    <mat-expansion-panel expanded="false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Green Team
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.green">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{agent.name}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <!-- pixel visualization -->
+            <app-pixel-visualization [width]="300" [height]="101" [data]="data"></app-pixel-visualization>
+
+        </mat-expansion-panel>
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel expanded="false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Red Team
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.red">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{agent.name}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <!-- pixel visualization -->
+        </mat-expansion-panel>
+
+    </mat-expansion-panel>
+
+    <mat-expansion-panel expanded="false">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Blue Team
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.blue">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{agent.name}}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <!-- pixel visualization -->
+        </mat-expansion-panel>
+
+    </mat-expansion-panel>
+
+</mat-accordion>

@@ -8,27 +8,57 @@
         <div class="column-right">
             <div class="row">
                 <div class="graphical">
-                    <mat-tab-group>
-                        <mat-tab label="Network view">
-                            <app-graph [detailData]="this.sharedData" [lastAgentPlayed]="this.lastAgent"></app-graph>
-                        </mat-tab>
-                        <mat-tab label="Agents behaviors">
+                    <mat-tab-group [color]="'accent'" [backgroundColor]="'accent'">
+                        <mat-tab label="Network">
 
-                            <mat-tab-group>
-                                <mat-tab label="Logs">
+                            <mat-tab-group [color]="'primary'" [backgroundColor]="'primary'">
+                                <mat-tab label="Topology">
+                                    <app-network-topology [detailData]="this.sharedData"
+                                        [lastAgentPlayed]="this.lastAgent"></app-network-topology>
                                 </mat-tab>
-                                <mat-tab label="Pixel visualization">
-                                </mat-tab>
-                                <mat-tab label="Histogram">
-                                </mat-tab>
-                                <mat-tab label="Pie chart">
+
+                                <mat-tab label="Nodes">
+                                    <app-network-nodes></app-network-nodes>
                                 </mat-tab>
                             </mat-tab-group>
 
                         </mat-tab>
 
-                        <mat-tab label="Observables/metrics">
-                            <app-charts-visualization [lastMetrics]="this.lastMetrics"></app-charts-visualization>
+                        <mat-tab label="Agents">
+
+                            <mat-tab-group [color]="'primary'" [backgroundColor]="'primary'">
+                                <mat-tab label="Logs">
+                                    <app-agents-logs></app-agents-logs>
+                                </mat-tab>
+                                <mat-tab label="Pixel visualization">
+                                    <app-agents-pixels></app-agents-pixels>
+                                </mat-tab>
+                                <mat-tab label="Histogram">
+                                    <app-agents-histograms></app-agents-histograms>
+                                </mat-tab>
+                                <mat-tab label="Pie chart">
+                                    <app-agents-piecharts></app-agents-piecharts>
+                                </mat-tab>
+                                <mat-tab label="Sequence diagram">
+                                    <app-agents-seqdiagrams></app-agents-seqdiagrams>
+                                </mat-tab>
+                            </mat-tab-group>
+
+                        </mat-tab>
+
+                        <mat-tab label="Global">
+                            <mat-tab-group [color]="'primary'" [backgroundColor]="'primary'">
+                                <mat-tab label="Graphs">
+                                    <app-global-graphs [lastMetrics]="this.lastMetrics">
+                                    </app-global-graphs>
+                                </mat-tab>
+                                <mat-tab label="Matrixes">
+                                    <app-global-matrixes></app-global-matrixes>
+                                </mat-tab>
+                                <mat-tab label="Sequence diagrams">
+                                    <app-global-seqdiagrams></app-global-seqdiagrams>
+                                </mat-tab>
+                            </mat-tab-group>
                         </mat-tab>
 
                     </mat-tab-group>
@@ -50,10 +80,11 @@
         <div class="graphical">
             <mat-tab-group>
                 <mat-tab label="Graph visualization">
-                    <app-graph [detailData]="this.sharedData" [lastAgentPlayed]="this.lastAgent"></app-graph>
+                    <app-network-topology [detailData]="this.sharedData" [lastAgentPlayed]="this.lastAgent">
+                    </app-network-topology>
                 </mat-tab>
                 <mat-tab label="Charts visualization">
-                    <app-charts-visualization [lastMetrics]="this.lastMetrics"></app-charts-visualization>
+                    <app-global-graphs [lastMetrics]="this.lastMetrics"></app-global-graphs>
                 </mat-tab>
                 <mat-tab label="Logs visualization">
                     Logs visualization

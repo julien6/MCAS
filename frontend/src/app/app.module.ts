@@ -6,11 +6,9 @@ import { AngJsoneditorModule } from '@maaxgr/ang-jsoneditor';
 import { DetailPanelComponent } from './detail-panel/detail-panel.component'
 import { AppNetworkService } from './services/app.network.service';
 import { WorldStateService } from './services/app.worldState.service';
-import { GraphComponent } from './graph/graph.component';
 import { TerminalComponent } from './terminal/terminal.component';
 import { NgTerminalModule } from 'ng-terminal';
 import { ServerAPIService } from './services/serverAPI.service';
-import { ChartsVisualizationComponent } from './charts-visualization/charts-visualization.component';
 import { NgChartsModule } from 'ng2-charts';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -37,11 +35,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatRippleModule } from '@angular/material/core';
 import { LibraryElementComponent } from './library-element/library-element.component'
-import { MarkdownModule } from 'ngx-markdown';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ConfigureRunComponent } from './configure-run/configure-run.component';
 import { PackagingComponent } from './packaging/packaging.component';
-import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -49,15 +46,27 @@ import { ConfigShareService } from './services/config-share.service';
 import { NgFor } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { EditorModule } from './editor/editor.module';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { PixelVisualizationModule } from './pixel-visualization/pixel-visualization.module';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { AgentsLogsComponent } from './agents-logs/agents-logs.component';
+import { AgentsPixelsComponent } from './agents-pixels/agents-pixels.component';
+import { AgentsHistogramsComponent } from './agents-histograms/agents-histograms.component';
+import { AgentsPiechartsComponent } from './agents-piecharts/agents-piecharts.component';
+import { AgentsSeqdiagramsComponent } from './agents-seqdiagrams/agents-seqdiagrams.component';
+import { NetworkNodesComponent } from './network-nodes/network-nodes.component';
+import { NetworkTopologyComponent } from './network-topology/network-topology.component';
+import { GlobalGraphsComponent } from './global-graphs/global-graphs.component';
+import { GlobalMatrixesComponent } from './global-matrixes/global-matrixes.component';
+import { GlobalSeqdiagramsComponent } from './global-seqdiagrams/global-seqdiagrams.component';
+import { MatTableModule } from '@angular/material/table'
+import { MarkdownModule, MarkedOptions, MarkedRenderer } from 'ngx-markdown';
+import { MatSortModule } from '@angular/material/sort'
 
 @NgModule({
   declarations: [
     AppComponent,
     DetailPanelComponent,
-    GraphComponent,
     TerminalComponent,
-    ChartsVisualizationComponent,
     AppComponent,
     MenuBarComponent,
     PreferencesComponent,
@@ -66,17 +75,30 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     HistoryComponent,
     LibraryElementComponent,
     ConfigureRunComponent,
-    PackagingComponent
+    PackagingComponent,
+    AgentsLogsComponent,
+    AgentsPixelsComponent,
+    AgentsHistogramsComponent,
+    AgentsPiechartsComponent,
+    AgentsSeqdiagramsComponent,
+    NetworkNodesComponent,
+    NetworkTopologyComponent,
+    GlobalGraphsComponent,
+    GlobalMatrixesComponent,
+    GlobalSeqdiagramsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AngJsoneditorModule,
     MatFormFieldModule,
+    MatSortModule,
     MatSelectModule,
     NgFor,
     NgTerminalModule,
+    MatTableModule,
     EditorModule,
+    PixelVisualizationModule,
     NgChartsModule,
     MatProgressBarModule,
     NoopAnimationsModule,
@@ -84,7 +106,13 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MarkdownModule.forRoot({ loader: HttpClient }),
+    MarkdownModule.forRoot({
+      loader: HttpClient,
+      markedOptions: {
+        provide: MarkedOptions,
+        useFactory: markedOptionsFactory
+      }
+    }),
     MatTabsModule,
     MatRippleModule,
     MatSlideToggleModule,
@@ -112,3 +140,23 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+// function that returns `MarkedOptions` with renderer override
+export function markedOptionsFactory(): MarkedOptions {
+  const renderer = new MarkedRenderer();
+  renderer.code = function (code, language: any) {
+    if (language.match(/^mermaid/)) {
+      return '<div class="mermaid">' + code + '</div>';
+    } else {
+      return '<pre><code>' + code + '</code></pre>';
+    }
+  };
+  return {
+    renderer: renderer,
+    gfm: true,
+    breaks: false,
+    pedantic: false,
+    smartLists: true,
+    smartypants: false
+  };
+}

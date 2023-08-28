@@ -134,4 +134,20 @@ export class MenuBarComponent {
     this.trigger.openMenu();
   }
 
+  run() {
+    throw new Error('Method not implemented.');
+  }
+  pause() {
+    throw new Error('Method not implemented.');
+  }
+  stop() {
+    throw new Error('Method not implemented.');
+  }
+  runPackaging() {
+    throw new Error('Method not implemented.');
+  }
+  resume() {
+    throw new Error('Method not implemented.');
+  }
+
 }

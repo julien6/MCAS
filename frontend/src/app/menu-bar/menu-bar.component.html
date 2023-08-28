@@ -5,6 +5,7 @@
   <mat-menu #file_menu="matMenu">
     <button mat-menu-item [matMenuTriggerFor]="new_submenu">New</button>
     <button mat-menu-item>Open</button>
+    <button mat-menu-item>Save in library</button>
     <button mat-menu-item>Export to</button>
     <button mat-menu-item>Import from</button>
     <button mat-menu-item disabled="{{this.disable_properties}}" (click)="openPropertiesDialog()">Properties</button>
@@ -26,15 +27,26 @@
   </mat-menu>
   <!-- End Edit menu -->
 
-  <!-- Run menu -->
-  <button mat-button [matMenuTriggerFor]="run_menu">Configure & Run</button>
-  <mat-menu #run_menu="matMenu">
-    <button mat-menu-item (click)="openEmSimDialog('undefined')">Configure & Run Simulation/Emulation</button>
-    <button mat-menu-item (click)="openEmSimDialog('full_simulation')">Configure & Run Full Simulation</button>
-    <button mat-menu-item (click)="openEmSimDialog('full_emulation')">Configure & Run Full Emulation</button>
-    <button mat-menu-item (click)="openPackagingDialog()">Configure & Run MAS Packaging</button>
+  <!-- Run configuration menu -->
+  <button mat-button [matMenuTriggerFor]="run_configuration_menu">Running configuration</button>
+  <mat-menu #run_configuration_menu="matMenu">
+    <button mat-menu-item (click)="openEmSimDialog('undefined')">Configure Simulation/Emulation</button>
+    <button mat-menu-item (click)="openEmSimDialog('full_simulation')">Configure Full Simulation</button>
+    <button mat-menu-item (click)="openEmSimDialog('full_emulation')">Configure Full Emulation</button>
+    <button mat-menu-item (click)="openPackagingDialog()">Configure MAS Packaging</button>
   </mat-menu>
   <!-- End Run menu -->
+
+    <!-- Run menu -->
+    <button mat-button [matMenuTriggerFor]="run_menu">Run</button>
+    <mat-menu #run_menu="matMenu">
+      <button mat-menu-item (click)="run()">Run</button>
+      <button mat-menu-item (click)="pause()">Pause</button>
+      <button mat-menu-item (click)="resume()">Resume</button>
+      <button mat-menu-item (click)="stop()">Stop</button>
+      <button mat-menu-item (click)="runPackaging()">Run packaging</button>
+    </mat-menu>
+    <!-- End Run menu -->
 
   <!-- View menu -->
   <button mat-button [matMenuTriggerFor]="view_menu">View</button>
@@ -73,7 +85,8 @@
     <button mat-menu-item (click)="openDialogWithRef(about_MCAS)">About MCAS</button>
   </mat-menu>
   <ng-template #about_MCAS>
-    <h1 mat-dialog-title>About MCAS</h1>
+    <h1 mat-dialog-title>About MCAS <img src="../../assets/favicon.png" alt="MCAS icon"
+        style="width:50px;height:50px;float:right"></h1>
     <div mat-dialog-content>
       <p>MCAS is a PoC intended to be used as an experimental platform to assess cyberdefense multi-agent system</p>
       <p><b>Version</b>: 0.4.3</p>

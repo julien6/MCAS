@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Configure & Run</h1>
+<h1 mat-dialog-title>Running configuration</h1>
 <div mat-dialog-content>
     <mat-stepper [linear]="true" #stepper>
         <mat-step [stepControl]="firstFormGroup">
@@ -60,6 +60,14 @@
                             (ngModelChange)="onSelectingNumEp($event)" placeholder="ex: 1000">
                     </mat-form-field>
 
+                    <br>
+
+                    <mat-form-field>
+                        <mat-label>Pause duration (in seconds) after each iteration/episode</mat-label>
+                        <input matInput type="number" formControlName="select_pause_duration"
+                            (ngModelChange)="onSelectingPauseDuration($event)" placeholder="ex: 10">
+                    </mat-form-field>
+
                 </form>
 
                 <form *ngIf="this.selectedMode=='full_emulation'" [formGroup]="fullEmulationFormGroup">
@@ -119,7 +127,7 @@
             </form>
         </mat-step>
 
-        <mat-step [stepControl]="secondFormGroup" label="Launch setting up">
+        <mat-step [stepControl]="secondFormGroup" label="Setting up scenario">
             <!-- 2 - setting up the simulation / emulation with real-time logs and progress bar
             - show errors, warning... and successful scenario configuration setup... -->
             <p>Logs, errors after sending commands to backend for setting up scenario</p>
