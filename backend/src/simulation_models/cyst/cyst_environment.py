@@ -5,7 +5,7 @@ import numpy as np
 from pettingzoo import AECEnv
 from pettingzoo.utils import agent_selector, wrappers
 from typing import Dict, List, Any, Tuple, Union
-from backend.src.agents.agents import Agent, DecisionTreeAgent, LazyAgent, MARLAgent, RandomAgent
+from agents.agents import Agent, DecisionTreeAgent, LazyAgent, MARLAgent, RandomAgent
 from environment import EnvironmentMngr
 import matplotlib.pyplot as plt
 
