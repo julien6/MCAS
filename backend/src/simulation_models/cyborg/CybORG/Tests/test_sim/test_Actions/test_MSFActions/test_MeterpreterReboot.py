@@ -2,8 +2,8 @@ import inspect
 
 import pytest
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions import MeterpreterReboot, GetUid
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions import MeterpreterReboot, GetUid
 
 
 @pytest.mark.parametrize(["host", "user", "session_type", "expected_observation", "expected_observation_after"],

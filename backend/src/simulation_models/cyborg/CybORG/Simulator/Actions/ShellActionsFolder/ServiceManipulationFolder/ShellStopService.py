@@ -1,5 +1,5 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Actions.ShellActionsFolder.ServiceManipulationFolder.ServiceManipulation import ServiceManipulation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.ServiceManipulationFolder.ServiceManipulation import ServiceManipulation
 
 
 class ShellStopService(ServiceManipulation):

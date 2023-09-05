@@ -6,19 +6,19 @@ from typing import Optional, List
 import numpy as np
 
 
-from CybORG.Shared.Enums import (OperatingSystemPatch, OperatingSystemKernelVersion,
+from simulation_models.cyborg.CybORG.Shared.Enums import (OperatingSystemPatch, OperatingSystemKernelVersion,
         OperatingSystemVersion, DecoyType,
         OperatingSystemDistribution, OperatingSystemType
         )
 
-from CybORG.Simulator.Entity import Entity
-from CybORG.Simulator.File import File
-from CybORG.Simulator.Interface import Interface
-from CybORG.Simulator.MSFServerSession import MSFServerSession
-from CybORG.Simulator.Process import Process
-from CybORG.Simulator.Session import VelociraptorServer, RedAbstractSession, Session
+from simulation_models.cyborg.CybORG.Simulator.Entity import Entity
+from simulation_models.cyborg.CybORG.Simulator.File import File
+from simulation_models.cyborg.CybORG.Simulator.Interface import Interface
+from simulation_models.cyborg.CybORG.Simulator.MSFServerSession import MSFServerSession
+from simulation_models.cyborg.CybORG.Simulator.Process import Process
+from simulation_models.cyborg.CybORG.Simulator.Session import VelociraptorServer, RedAbstractSession, Session
 
-from CybORG.Simulator.User import User
+from simulation_models.cyborg.CybORG.Simulator.User import User
 
 
 class Host(Entity):

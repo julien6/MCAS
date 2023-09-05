@@ -1,7 +1,7 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Actions.ShellActionsFolder.AccountManipulationFolder.AccountManipulation import AccountManipulation
-from CybORG.Shared.Enums import OperatingSystemType
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.AccountManipulationFolder.AccountManipulation import AccountManipulation
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class RemoveUserFromGroupWindows(AccountManipulation):

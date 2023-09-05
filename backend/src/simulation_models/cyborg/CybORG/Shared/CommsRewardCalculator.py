@@ -1,4 +1,4 @@
-from CybORG.Shared.RewardCalculator import RewardCalculator
+from simulation_models.cyborg.CybORG.Shared.RewardCalculator import RewardCalculator
 
 
 class CommsAvailabilityRewardCalculator(RewardCalculator):
@@ -66,9 +66,9 @@ class CompleteCompromiseRewardCalculator(RewardCalculator):
 
 # from collections import namedtuple
 
-# from CybORG.Shared import Scenario
-# from CybORG.Shared.RewardCalculator import RewardCalculator
-# from from CybORG.Simulator.Actions.SendData import SendData # May be optional
+# from simulation_models.cyborg.CybORG.Shared import Scenario
+# from simulation_models.cyborg.CybORG.Shared.RewardCalculator import RewardCalculator
+# from from simulation_models.cyborg.CybORG.Simulator.Actions.SendData import SendData # May be optional
 #
 # class CommsIntegrityRewardCalculator(RewardCalculator):
 #     def __init__(self, agent_name: str, scenario: Scenario):

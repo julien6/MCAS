@@ -1,7 +1,7 @@
 import pytest
 
-from CybORG.Agents import DroneRedAgent
-from CybORG.Tests.test_sim.sim_fixtures import create_cyborg
+from simulation_models.cyborg.CybORG.Agents import DroneRedAgent
+from simulation_models.cyborg.CybORG.Tests.test_sim.sim_fixtures import create_cyborg
 
 SCENARIO = 'Scenario3'
 

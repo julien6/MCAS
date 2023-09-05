@@ -5,14 +5,14 @@ from ipaddress import IPv4Address, IPv4Network
 from prettytable import PrettyTable
 import numpy as np
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions import Remove
-from CybORG.Shared.Enums import TrinaryEnum
-from CybORG.Agents.SimpleAgents.B_line import B_lineAgent
-from CybORG.Agents.Wrappers.BlueTableWrapper import BlueTableWrapper
-from CybORG.Simulator.Actions.AbstractActions import Monitor
-from CybORG.Agents import MonitorAgent
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions import Remove
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.B_line import B_lineAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BlueTableWrapper import BlueTableWrapper
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions import Monitor
+from simulation_models.cyborg.CybORG.Agents import MonitorAgent
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 def get_table(rows):

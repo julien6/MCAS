@@ -1,8 +1,8 @@
-from CybORG.Agents import BaseAgent
-from CybORG.Shared import Results
-from CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic
-from CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
+from simulation_models.cyborg.CybORG.Agents import BaseAgent
+from simulation_models.cyborg.CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
 
 class RemoveBlueDrone(BaseAgent):
     def __init__(self, name):

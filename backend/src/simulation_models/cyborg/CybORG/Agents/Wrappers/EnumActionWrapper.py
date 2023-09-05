@@ -2,9 +2,9 @@ import copy
 import inspect, pprint
 from typing import Union
 
-from CybORG.Agents.SimpleAgents import BaseAgent
-from CybORG.Agents.Wrappers import BaseWrapper
-from CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents import BaseAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers import BaseWrapper
+from simulation_models.cyborg.CybORG.Shared import Results
 
 
 class EnumActionWrapper(BaseWrapper):

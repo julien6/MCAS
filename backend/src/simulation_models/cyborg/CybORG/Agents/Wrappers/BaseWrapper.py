@@ -1,8 +1,8 @@
 from typing import Union, Any
 
-from CybORG import CybORG
-from CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
-from CybORG.Shared import Results
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
+from simulation_models.cyborg.CybORG.Shared import Results
 
 
 class BaseWrapper:

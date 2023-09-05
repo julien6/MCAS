@@ -2,13 +2,13 @@ import pytest
 import inspect
 from ipaddress import IPv4Network, IPv4Address
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions import SSHLoginExploit, MeterpreterIPConfig, MSFPingsweep, MSFPortscan, \
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions import SSHLoginExploit, MeterpreterIPConfig, MSFPingsweep, MSFPortscan, \
     UpgradeToMeterpreter, MSFAutoroute, MS17_010_PSExec
-from CybORG.Shared.Enums import OperatingSystemDistribution, OperatingSystemType, \
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemDistribution, OperatingSystemType, \
     Architecture, SessionType, ProcessState, AppProtocol, ProcessType, TrinaryEnum
-from CybORG.Simulator.Scenarios import FileReaderScenarioGenerator
-from CybORG.Tests.EphemeralPort import LinuxEphemeralPort, Win2008EphemeralPort
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import LinuxEphemeralPort, Win2008EphemeralPort
 
 
 def test_ms_17_010_nacl_block(cyborg_scenario1):

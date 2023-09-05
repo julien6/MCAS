@@ -2,8 +2,8 @@ import random
 
 import pytest
 
-from CybORG.Agents.Wrappers import IntFixedFlatWrapper
-from CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers import IntFixedFlatWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
 
 
 def test_flat_fixed_wrapper_observation_space(create_cyborg_sim):

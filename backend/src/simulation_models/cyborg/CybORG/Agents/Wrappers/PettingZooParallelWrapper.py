@@ -3,9 +3,9 @@ from typing import Optional, Tuple
 import numpy as np
 from gym import spaces
 
-from CybORG import CybORG
-from CybORG.Agents.Wrappers import BaseWrapper
-from CybORG.Simulator.Actions import Sleep
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.Wrappers import BaseWrapper
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep
 from pprint import pprint
 
 

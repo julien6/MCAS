@@ -2,9 +2,9 @@
 import string
 
 
-from CybORG.Simulator.Actions.MSFActionsFolder.MSFAction import MSFAction
-from CybORG.Shared.Enums import SessionType, AppProtocol, OperatingSystemType
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.MSFActionsFolder.MSFAction import MSFAction
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, AppProtocol, OperatingSystemType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 # Create a Windows service which runs an executable for persistence.

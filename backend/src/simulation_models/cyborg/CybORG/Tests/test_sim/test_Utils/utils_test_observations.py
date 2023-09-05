@@ -4,10 +4,10 @@ from collections import namedtuple
 
 import pytest
 
-from CybORG.Simulator.Actions import (DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, 
+from simulation_models.cyborg.CybORG.Simulator.Actions import (DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, 
         PrivilegeEscalate, Impact)
 
-from CybORG.Shared.Enums import (TrinaryEnum, ProcessType, ProcessState, SessionType, OperatingSystemType, 
+from simulation_models.cyborg.CybORG.Shared.Enums import (TrinaryEnum, ProcessType, ProcessState, SessionType, OperatingSystemType, 
         OperatingSystemDistribution, OperatingSystemVersion, Architecture)
 
 # All the following Observations are obtained from Scenario 1b on CybORG v2.0

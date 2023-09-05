@@ -1,11 +1,11 @@
 
 
-from CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Shared import Observation
 from .Monitor import Monitor
-from CybORG.Simulator.Actions import Action
-from CybORG.Simulator.Actions.ConcreteActions.RestoreFromBackup import RestoreFromBackup
-from CybORG.Simulator.Session import VelociraptorServer
-from CybORG.Simulator.Actions.AbstractActions import Monitor
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.RestoreFromBackup import RestoreFromBackup
+from simulation_models.cyborg.CybORG.Simulator.Session import VelociraptorServer
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions import Monitor
 
 class Restore(Action):
     def __init__(self, session: int, agent: str, hostname: str):

@@ -2,10 +2,10 @@ from collections import namedtuple
 
 import pytest
 
-from CybORG.Shared.Enums import TrinaryEnum
-from CybORG.Simulator.Actions import Sleep, InvalidAction, Action
-from CybORG.Shared import Observation
-from CybORG.Tests.test_sim.sim_fixtures import create_cyborg, SCENARIOS
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep, InvalidAction, Action
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Tests.test_sim.sim_fixtures import create_cyborg, SCENARIOS
 
 ScenarioAgent = namedtuple('ScenarioAgent', ['scenario', 'agent'])
 SCENARIO_AGENTS = [ScenarioAgent(s,a) for s in SCENARIOS for a in SCENARIOS[s]['Agents']]

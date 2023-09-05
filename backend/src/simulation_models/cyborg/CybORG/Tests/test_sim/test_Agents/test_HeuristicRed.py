@@ -1,6 +1,6 @@
 import pytest
 
-from CybORG.Agents import HeuristicRed
+from simulation_models.cyborg.CybORG.Agents import HeuristicRed
 
 killchain = ['DiscoverRemoteSystems', 'DiscoverNetworkServices', 'ExploitRemoteService','PrivilegeEscalate']
 

@@ -5,10 +5,10 @@ import pytest
 import numpy as np
 from prettytable import PrettyTable
 
-from CybORG import CybORG
-from CybORG.Agents import B_lineAgent, MonitorAgent
-from CybORG.Agents.Wrappers import ChallengeWrapper
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent, MonitorAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers import ChallengeWrapper
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 @pytest.skip(allow_module_level=True)
 

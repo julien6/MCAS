@@ -1,9 +1,9 @@
 # Copyright DST Group. Licensed under the MIT license.
 from collections import namedtuple
 
-from CybORG.Shared import Scenario
-from CybORG.Shared.Enums import OperatingSystemType
-from CybORG.Shared.RewardCalculator import RewardCalculator
+from simulation_models.cyborg.CybORG.Shared import Scenario
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType
+from simulation_models.cyborg.CybORG.Shared.RewardCalculator import RewardCalculator
 import pprint
 
 WIN_REWARD = 0

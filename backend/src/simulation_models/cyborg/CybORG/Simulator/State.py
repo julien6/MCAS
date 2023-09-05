@@ -8,14 +8,14 @@ from math import sqrt
 import networkx as nx
 from networkx import connected_components
 
-from CybORG.Shared import Scenario, CybORGLogger
-from CybORG.Shared.Enums import SessionType
-from CybORG.Shared.Observation import Observation
-from CybORG.Simulator.Drone import Drone
-from CybORG.Simulator.Host import Host
-from CybORG.Simulator.Process import Process
-from CybORG.Simulator.Session import Session
-from CybORG.Simulator.Subnet import Subnet
+from simulation_models.cyborg.CybORG.Shared import Scenario, CybORGLogger
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Drone import Drone
+from simulation_models.cyborg.CybORG.Simulator.Host import Host
+from simulation_models.cyborg.CybORG.Simulator.Process import Process
+from simulation_models.cyborg.CybORG.Simulator.Session import Session
+from simulation_models.cyborg.CybORG.Simulator.Subnet import Subnet
 
 
 class State(CybORGLogger):

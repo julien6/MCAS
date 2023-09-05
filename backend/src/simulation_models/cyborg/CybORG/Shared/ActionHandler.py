@@ -1,6 +1,6 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Actions.Action import Action
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class ActionHandler:

@@ -1,4 +1,4 @@
-from CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
 import random
 
 

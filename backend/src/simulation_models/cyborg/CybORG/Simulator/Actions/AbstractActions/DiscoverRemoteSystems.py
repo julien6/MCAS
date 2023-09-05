@@ -1,8 +1,8 @@
 from ipaddress import IPv4Network
 
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions import Action
-from CybORG.Simulator.Actions.ConcreteActions.Pingsweep import Pingsweep
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.Pingsweep import Pingsweep
 
 
 class DiscoverRemoteSystems(Action):

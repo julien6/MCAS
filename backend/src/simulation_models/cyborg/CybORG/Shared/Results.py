@@ -3,7 +3,7 @@
 import pprint
 from copy import deepcopy
 
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class Results:

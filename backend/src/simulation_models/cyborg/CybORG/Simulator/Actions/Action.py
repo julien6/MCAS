@@ -4,9 +4,9 @@ from typing import Optional
 
 from networkx import shortest_path, has_path, NetworkXNoPath
 
-from CybORG.Shared import Observation, CybORGLogger
-from CybORG.Simulator.Host import Host
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared import Observation, CybORGLogger
+from simulation_models.cyborg.CybORG.Simulator.Host import Host
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 lo_subnet = IPv4Network('127.0.0.0/8')
 lo = IPv4Address('127.0.0.1')

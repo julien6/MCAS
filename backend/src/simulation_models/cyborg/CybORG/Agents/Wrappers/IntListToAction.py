@@ -1,11 +1,11 @@
 import inspect
 
-from CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
-from CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
+from simulation_models.cyborg.CybORG.Shared import Results
 
 
 # this wrapper converts a list into an action object based on the action space
-from CybORG.Simulator.Actions import Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep
 
 
 class IntListToActionWrapper(BaseWrapper):

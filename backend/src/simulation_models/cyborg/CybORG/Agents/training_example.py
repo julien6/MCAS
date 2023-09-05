@@ -1,13 +1,13 @@
 
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 import inspect
 
-from CybORG.Agents import RandomAgent
-from CybORG.Agents.Wrappers import EnumActionWrapper
-from CybORG.Agents.Wrappers.FixedFlatWrapper import FixedFlatWrapper
-from CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
-from CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents import RandomAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers import EnumActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.FixedFlatWrapper import FixedFlatWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 MAX_STEPS_PER_GAME = 20
 MAX_EPS = 20

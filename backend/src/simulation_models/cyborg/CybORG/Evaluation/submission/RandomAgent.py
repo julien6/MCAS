@@ -3,9 +3,9 @@ from typing import Union
 
 from gym import Space
 
-from CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
 
-from CybORG.Simulator.Actions import Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep
 
 
 class RandomAgent(BaseAgent):

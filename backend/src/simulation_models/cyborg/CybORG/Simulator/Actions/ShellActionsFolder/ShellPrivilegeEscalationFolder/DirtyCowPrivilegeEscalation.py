@@ -1,7 +1,7 @@
 # Copyright DST Group. Licensed under the MIT license.
 from ipaddress import IPv4Address
 
-from CybORG.Simulator.Actions.ShellActionsFolder.ShellPrivilegeEscalationFolder.ShellPrivilegeEscalation import ShellPrivilegeEscalation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.ShellPrivilegeEscalationFolder.ShellPrivilegeEscalation import ShellPrivilegeEscalation
 
 
 # May want to separate this action into two actions which takes a session each in future, rather than one action that
@@ -20,9 +20,9 @@ from CybORG.Simulator.Actions.ShellActionsFolder.ShellPrivilegeEscalationFolder.
 # su firefart
 # Now prompted for password, enter "password"
 # gives a root privileged session as user firefart (which has replaced root user in /etc/passwd file)
-from CybORG.Shared.Enums import FileType
-from CybORG.Shared.Observation import Observation
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared.Enums import FileType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class DirtyCowPrivilegeEscalation(ShellPrivilegeEscalation):

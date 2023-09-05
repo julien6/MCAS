@@ -1,8 +1,8 @@
 import pytest
 
-from CybORG import CybORG
-from CybORG.Agents import DroneRedAgent
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import DroneRedAgent
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
 
 
 @pytest.mark.parametrize("num_steps", [0, 1, 2, 20, 100, 1000])

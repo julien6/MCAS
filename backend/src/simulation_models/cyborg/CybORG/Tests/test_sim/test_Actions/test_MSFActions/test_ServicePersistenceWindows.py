@@ -1,18 +1,18 @@
 # import pytest
 # import inspect
 #
-# from CybORG import CybORG
+# from simulation_models.cyborg.CybORG import CybORG
 # from ipaddress import IPv4Address
-# from CybORG.Simulator.Actions import MSFPortscan, SSHLoginExploit, UpgradeToMeterpreter, ServicePersistenceWindows, \
+# from simulation_models.cyborg.CybORG.Simulator.Actions import MSFPortscan, SSHLoginExploit, UpgradeToMeterpreter, ServicePersistenceWindows, \
 #     MeterpreterReboot
-# from CybORG.Shared.Enums import SessionType
-# from CybORG.Simulator.LocalGroup import LocalGroup
-# from CybORG.Simulator.User import User
+# from simulation_models.cyborg.CybORG.Shared.Enums import SessionType
+# from simulation_models.cyborg.CybORG.Simulator.LocalGroup import LocalGroup
+# from simulation_models.cyborg.CybORG.Simulator.User import User
 # from collections import namedtuple
 #
-# from CybORG.Tests.EphemeralPort import LinuxEphemeralPort
-# from CybORG.Tests.utils import PID
-# import CybORG.Shared.Enums as CyEnums
+# from simulation_models.cyborg.CybORG.Tests.EphemeralPort import LinuxEphemeralPort
+# from simulation_models.cyborg.CybORG.Tests.utils import PID
+# import simulation_models.cyborg.CybORG.Shared.Enums as CyEnums
 #
 #
 # @pytest.fixture()

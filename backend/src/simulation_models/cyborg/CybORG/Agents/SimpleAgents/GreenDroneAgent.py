@@ -1,7 +1,7 @@
-from CybORG.Agents import BaseAgent
-from CybORG.Shared import Results
-from CybORG.Simulator.Actions import Sleep
-from CybORG.Simulator.Actions.GreenActions.SendData import SendData
+from simulation_models.cyborg.CybORG.Agents import BaseAgent
+from simulation_models.cyborg.CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions.GreenActions.SendData import SendData
 
 
 class GreenDroneAgent(BaseAgent):

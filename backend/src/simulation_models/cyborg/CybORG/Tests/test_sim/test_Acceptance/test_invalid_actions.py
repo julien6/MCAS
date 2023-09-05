@@ -1,9 +1,9 @@
 # import inspect
 # import random
-# from CybORG import CybORG
-# from CybORG.Agents import RedMeanderAgent, B_lineAgent
-# from CybORG.Agents.Wrappers import ChallengeWrapper
-# from CybORG.Simulator.Actions import Remove
+# from simulation_models.cyborg.CybORG import CybORG
+# from simulation_models.cyborg.CybORG.Agents import RedMeanderAgent, B_lineAgent
+# from simulation_models.cyborg.CybORG.Agents.Wrappers import ChallengeWrapper
+# from simulation_models.cyborg.CybORG.Simulator.Actions import Remove
 
 # path = str(inspect.getfile(CybORG))
 # path = path[:-7] + f'/Simulator/Scenarios/scenario_files/Scenario2.yaml'

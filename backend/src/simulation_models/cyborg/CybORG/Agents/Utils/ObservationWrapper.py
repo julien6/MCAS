@@ -1,7 +1,7 @@
 from typing import Union, Any
 from ipaddress import IPv4Address, IPv4Network
 
-from CybORG.Shared.Enums import OperatingSystemType, SessionType
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType, SessionType
 
 class ObservationWrapper():
     

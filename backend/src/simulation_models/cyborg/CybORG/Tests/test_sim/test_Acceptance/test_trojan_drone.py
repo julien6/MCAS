@@ -1,8 +1,8 @@
 import pytest
 
-from CybORG import CybORG
-from CybORG.Agents import SleepAgent
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import SleepAgent
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
 
 
 def test_red_spawns():

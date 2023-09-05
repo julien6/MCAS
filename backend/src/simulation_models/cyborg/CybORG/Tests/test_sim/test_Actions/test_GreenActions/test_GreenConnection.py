@@ -7,18 +7,18 @@ from ipaddress import IPv4Network, IPv4Address
 
 from docutils.nodes import address
 
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 import inspect
 import pytest
 
-from CybORG.Simulator.Actions import Sleep
-from CybORG.Simulator.Actions.GreenActions.GreenConnection import GreenConnection
-from CybORG.Simulator.Actions.AbstractActions.Monitor import Monitor
-from CybORG.Agents import MonitorAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions.GreenActions.GreenConnection import GreenConnection
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions.Monitor import Monitor
+from simulation_models.cyborg.CybORG.Agents import MonitorAgent
 
-from CybORG.Shared.Enums import TrinaryEnum, OperatingSystemVersion, OperatingSystemType, OperatingSystemDistribution, \
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, OperatingSystemVersion, OperatingSystemType, OperatingSystemDistribution, \
     Architecture
-from CybORG.Tests.EphemeralPort import LinuxEphemeralPort
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import LinuxEphemeralPort
 
 
 @pytest.mark.skip("Not implemented")

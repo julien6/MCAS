@@ -2,11 +2,11 @@ import inspect
 
 import pytest
 
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 from .scenario_fixtures.scenario_fixtures import SCENARIOS
-from CybORG.Agents.Utils import RedAgentBelief
-from CybORG.Agents import SleepAgent
-from CybORG.Simulator.Scenarios import FileReaderScenarioGenerator, DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents.Utils import RedAgentBelief
+from simulation_models.cyborg.CybORG.Agents import SleepAgent
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import FileReaderScenarioGenerator, DroneSwarmScenarioGenerator
 
 
 def create_cyborg_file(scenario_name, blue_agent):

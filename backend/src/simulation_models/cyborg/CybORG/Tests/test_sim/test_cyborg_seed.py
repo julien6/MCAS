@@ -2,8 +2,8 @@ import inspect
 
 import pytest
 
-from CybORG import CybORG
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator, FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator, FileReaderScenarioGenerator
 
 
 @pytest.fixture(params=list(range(10)))

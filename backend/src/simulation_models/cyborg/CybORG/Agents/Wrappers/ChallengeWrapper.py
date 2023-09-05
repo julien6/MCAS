@@ -1,5 +1,5 @@
 from gym import Env
-from CybORG.Agents.Wrappers import BaseWrapper, OpenAIGymWrapper, BlueTableWrapper,RedTableWrapper,EnumActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers import BaseWrapper, OpenAIGymWrapper, BlueTableWrapper,RedTableWrapper,EnumActionWrapper
 
 
 class ChallengeWrapper(Env,BaseWrapper):

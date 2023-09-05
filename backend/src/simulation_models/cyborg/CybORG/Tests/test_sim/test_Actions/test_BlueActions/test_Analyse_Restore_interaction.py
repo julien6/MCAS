@@ -2,9 +2,9 @@ import inspect
 
 import pytest
 
-from CybORG.Tests.test_sim.sim_fixtures import compromised_cyborg, SCENARIOS
-from CybORG.Simulator.Actions import *
-from CybORG.Agents import RedMeanderAgent
+from simulation_models.cyborg.CybORG.Tests.test_sim.sim_fixtures import compromised_cyborg, SCENARIOS
+from simulation_models.cyborg.CybORG.Simulator.Actions import *
+from simulation_models.cyborg.CybORG.Agents import RedMeanderAgent
 
 SCENARIO = 'Scenario2'
 HOSTS = SCENARIOS[SCENARIO]['Hosts']

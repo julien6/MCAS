@@ -1,7 +1,7 @@
 import torch
 from collections import deque
-from CybORG.Shared import Results
-from CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
+from simulation_models.cyborg.CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
 
 
 class RewardShape(BaseWrapper):

@@ -1,9 +1,9 @@
 from math import sqrt
 
-from CybORG.Agents import BaseAgent
-from CybORG.Shared import Results
-from CybORG.Simulator.Actions import ExploitDroneVulnerability, FloodBandwidth, SeizeControl, Sleep
-from CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic
+from simulation_models.cyborg.CybORG.Agents import BaseAgent
+from simulation_models.cyborg.CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Simulator.Actions import ExploitDroneVulnerability, FloodBandwidth, SeizeControl, Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic
 
 
 class RedDroneWormAgent(BaseAgent):

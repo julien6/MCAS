@@ -8,6 +8,8 @@ import { PropertiesComponent } from '../properties/properties.component';
 import { ConfigureRunComponent } from '../configure-run/configure-run.component';
 import { PackagingComponent } from '../packaging/packaging.component';
 import { ConfigShareService } from '../services/config-share.service';
+import { ServerAPIService } from '../services/serverAPI.service';
+import { DataService } from "../services/app.data.service"
 
 @Component({
   selector: 'app-menu-bar',
@@ -16,7 +18,7 @@ import { ConfigShareService } from '../services/config-share.service';
 })
 export class MenuBarComponent {
 
-  constructor(public dialog: MatDialog, private configShareService: ConfigShareService) { }
+  constructor(private serverAPIService: ServerAPIService, private dataService: DataService, public dialog: MatDialog, private configShareService: ConfigShareService) { }
 
   ngOnInit() {
   }
@@ -137,15 +139,29 @@ export class MenuBarComponent {
   run() {
     throw new Error('Method not implemented.');
   }
+
   pause() {
     throw new Error('Method not implemented.');
   }
+
+  next(episode_number: boolean = true, iteration_number: boolean = true, observation_spaces: boolean = true, agents_actions: boolean = true,
+    agents_observations: boolean = true, agents_rewards: boolean = true, true_states: boolean = true, network_graph: boolean = true, team_agent_mapping: boolean = true) {
+    this.serverAPIService.getRequest("simulation-next?episode_number=" + episode_number + "&iteration_number=" + iteration_number
+      + "&observation_spaces=" + observation_spaces + "&agents_actions=" + agents_actions + "&agents_observations=" + agents_observations
+      + "&agents_rewards=" + agents_rewards + "&true_states=" + true_states + "&network_graph=" + network_graph +
+      "&team_agent_mapping=" + team_agent_mapping).subscribe((data) => {
+        this.dataService.setStateData(data)
+      })
+  }
+
   stop() {
     throw new Error('Method not implemented.');
   }
+
   runPackaging() {
     throw new Error('Method not implemented.');
   }
+
   resume() {
     throw new Error('Method not implemented.');
   }

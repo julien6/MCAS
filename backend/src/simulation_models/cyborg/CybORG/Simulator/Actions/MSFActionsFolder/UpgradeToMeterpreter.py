@@ -3,11 +3,11 @@ import string
 from ipaddress import IPv4Address
 
 
-from CybORG.Simulator.Actions.Action import lo
-from CybORG.Simulator.Actions.MSFActionsFolder.MSFAction import MSFAction
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import lo
+from simulation_models.cyborg.CybORG.Simulator.Actions.MSFActionsFolder.MSFAction import MSFAction
 # Upgrade a MSF_SHELL session to a METERPRETER session
-from CybORG.Shared.Enums import SessionType, AppProtocol
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, AppProtocol
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class UpgradeToMeterpreter(MSFAction):

@@ -1,13 +1,13 @@
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions import Action
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.BlueKeep import BlueKeep
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.EternalBlue import EternalBlue
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.HTTPRFI import HTTPRFI
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.HTTPSRFI import HTTPSRFI
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.SSHBruteForce import SSHBruteForce
-from CybORG.Simulator.Actions.Action import lo
-from CybORG.Simulator.Session import GreenAbstractSession
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.BlueKeep import BlueKeep
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.EternalBlue import EternalBlue
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.HTTPRFI import HTTPRFI
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.HTTPSRFI import HTTPSRFI
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.SSHBruteForce import SSHBruteForce
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import lo
+from simulation_models.cyborg.CybORG.Simulator.Session import GreenAbstractSession
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class GreenConnection(Action):

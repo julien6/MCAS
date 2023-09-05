@@ -1,10 +1,10 @@
 # Copyright DST Group. Licensed under the MIT license.
 from datetime import datetime
 
-from CybORG.Shared.Enums import FileType, FileVersion
-from CybORG.Simulator.Entity import Entity
-from CybORG.Simulator.LocalGroup import LocalGroup
-from CybORG.Simulator.User import User
+from simulation_models.cyborg.CybORG.Shared.Enums import FileType, FileVersion
+from simulation_models.cyborg.CybORG.Simulator.Entity import Entity
+from simulation_models.cyborg.CybORG.Simulator.LocalGroup import LocalGroup
+from simulation_models.cyborg.CybORG.Simulator.User import User
 import enum
 
 

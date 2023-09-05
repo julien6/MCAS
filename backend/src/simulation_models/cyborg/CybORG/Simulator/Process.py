@@ -4,10 +4,10 @@ import copy
 from ipaddress import IPv4Address
 from typing import List, Optional
 
-from CybORG.Shared.Enums import (ProcessType, ProcessVersion,
+from simulation_models.cyborg.CybORG.Shared.Enums import (ProcessType, ProcessVersion,
         TransportProtocol, DecoyType)
-from CybORG.Simulator.Entity import Entity
-from CybORG.Simulator.User import User
+from simulation_models.cyborg.CybORG.Simulator.Entity import Entity
+from simulation_models.cyborg.CybORG.Simulator.User import User
 
 
 class Process(Entity):

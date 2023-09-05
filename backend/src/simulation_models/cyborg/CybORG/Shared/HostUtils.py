@@ -2,7 +2,7 @@
 import datetime
 from ipaddress import IPv4Address, IPv4Network
 
-import CybORG.Shared.Enums as CyEnums
+import simulation_models.cyborg.CybORG.Shared.Enums as CyEnums
 
 
 class NetworkInterface:

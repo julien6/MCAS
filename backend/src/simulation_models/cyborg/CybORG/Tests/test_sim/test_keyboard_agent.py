@@ -1,11 +1,11 @@
 import inspect
 import random
 
-from CybORG import CybORG
-from CybORG.Agents.SimpleAgents.KeyboardAgent import KeyboardAgent
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.KeyboardAgent import KeyboardAgent
 import pytest
 
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 @pytest.fixture(scope="function", params=['Scenario1', 'Scenario1b', 'Scenario2'])

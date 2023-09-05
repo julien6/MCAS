@@ -2,9 +2,9 @@ from copy import deepcopy
 from prettytable import PrettyTable
 import numpy as np
 
-from CybORG.Shared.Results import Results
-from CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
-from CybORG.Agents.Wrappers.TrueTableWrapper import TrueTableWrapper
+from simulation_models.cyborg.CybORG.Shared.Results import Results
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.TrueTableWrapper import TrueTableWrapper
 
 class BlueTableWrapper(BaseWrapper):
     def __init__(self,env=None, output_mode='table'):

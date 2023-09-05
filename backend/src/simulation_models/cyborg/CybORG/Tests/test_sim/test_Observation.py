@@ -3,10 +3,10 @@ from ipaddress import IPv4Address, IPv4Network
 
 import numpy as np
 
-from CybORG.Shared.Enums import TrinaryEnum, ProcessName, ProcessType, ProcessVersion, AppProtocol, OperatingSystemType, \
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, ProcessName, ProcessType, ProcessVersion, AppProtocol, OperatingSystemType, \
     OperatingSystemVersion, OperatingSystemDistribution, Architecture, SessionType, Path, ProcessState, \
     FileType, Vulnerability, Vendor, FileExt, BuiltInGroups, PasswordHashType
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 import pytest
 

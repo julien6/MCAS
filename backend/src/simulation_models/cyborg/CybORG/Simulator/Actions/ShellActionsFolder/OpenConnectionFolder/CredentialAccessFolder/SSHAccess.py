@@ -1,9 +1,9 @@
 # Copyright DST Group. Licensed under the MIT license.
 from ipaddress import IPv4Address
 
-from CybORG.Simulator.Actions.ShellActionsFolder.OpenConnectionFolder.CredentialAccessFolder.CredentialAccess import CredentialAccess
-from CybORG.Shared.Enums import SessionType, ProcessType
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.OpenConnectionFolder.CredentialAccessFolder.CredentialAccess import CredentialAccess
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, ProcessType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class SSHAccess(CredentialAccess):

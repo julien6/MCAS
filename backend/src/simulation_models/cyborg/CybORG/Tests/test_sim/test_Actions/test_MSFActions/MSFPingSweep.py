@@ -2,12 +2,12 @@ import inspect
 from ipaddress import IPv4Network, IPv4Address
 from pprint import pprint
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions import SSHLoginExploit, MeterpreterIPConfig, MSFPingsweep, MSFPortscan, UpgradeToMeterpreter, \
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions import SSHLoginExploit, MeterpreterIPConfig, MSFPingsweep, MSFPortscan, UpgradeToMeterpreter, \
     MSFAutoroute, MS17_010_PSExec
-from CybORG.Shared.Enums import OperatingSystemDistribution, OperatingSystemKernelVersion, OperatingSystemType, \
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemDistribution, OperatingSystemKernelVersion, OperatingSystemType, \
     Architecture, SessionType, ProcessState, AppProtocol, ProcessType
-from CybORG.Tests.EphemeralPort import LinuxEphemeralPort, Win2008EphemeralPort
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import LinuxEphemeralPort, Win2008EphemeralPort
 
 def test_pingsweep(cyborg_scenario1):
     cyborg = cyborg_scenario1

@@ -3,8 +3,8 @@ from ipaddress import IPv4Network
 
 import pytest
 
-from CybORG.Agents.Utils import SubnetBelief
-from CybORG.Simulator.Actions import DiscoverRemoteSystems
+from simulation_models.cyborg.CybORG.Agents.Utils import SubnetBelief
+from simulation_models.cyborg.CybORG.Simulator.Actions import DiscoverRemoteSystems
 
 SUBNET = IPv4Network('10.0.33.64/28')
 

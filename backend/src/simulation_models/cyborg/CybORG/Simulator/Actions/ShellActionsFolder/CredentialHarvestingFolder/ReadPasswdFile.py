@@ -1,7 +1,7 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Actions.ShellActionsFolder.CredentialHarvestingFolder.CredentialHarvesting import CredentialHarvesting
-from CybORG.Shared.Enums import OperatingSystemType, Path
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.CredentialHarvestingFolder.CredentialHarvesting import CredentialHarvesting
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType, Path
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class ReadPasswdFile(CredentialHarvesting):

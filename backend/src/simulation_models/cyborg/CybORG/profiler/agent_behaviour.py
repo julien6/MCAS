@@ -6,14 +6,14 @@ import numpy as np
 import pygame
 from networkx import number_connected_components
 
-from CybORG import CybORG
-from CybORG.Agents import RandomAgent, DroneRedAgent, SleepAgent, RemoveBlueDrone, RetakeBlueDrone
-from CybORG.Agents.SimpleAgents.DroneBlueAgent import AdvancedRetakeBlueDrone, AdvancedBlockBlueDrone
-from CybORG.Agents.SimpleAgents.DroneRedAgent import BlockAgent, FloodAgent, LegalExploitDrone
-from CybORG.Agents.SimpleAgents.GreenDroneAgent import GreenDroneAgent
-from CybORG.Simulator.Actions.Action import RemoteAction
-from CybORG.Simulator.Actions.GreenActions.SendData import SendData
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import RandomAgent, DroneRedAgent, SleepAgent, RemoveBlueDrone, RetakeBlueDrone
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.DroneBlueAgent import AdvancedRetakeBlueDrone, AdvancedBlockBlueDrone
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.DroneRedAgent import BlockAgent, FloodAgent, LegalExploitDrone
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.GreenDroneAgent import GreenDroneAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import RemoteAction
+from simulation_models.cyborg.CybORG.Simulator.Actions.GreenActions.SendData import SendData
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
 
 
 def get_agent_behaviour_metrics(number_of_drones=20, maximum_steps=100, number_of_repeats=100,

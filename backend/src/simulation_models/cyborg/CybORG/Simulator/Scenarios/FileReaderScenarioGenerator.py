@@ -7,10 +7,10 @@ from math import log2
 import yaml
 
 
-from CybORG.Shared import Scenario
-from CybORG.Simulator.Actions import Monitor
-from CybORG.Shared.Scenario import ScenarioHost
-from CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
+from simulation_models.cyborg.CybORG.Shared import Scenario
+from simulation_models.cyborg.CybORG.Simulator.Actions import Monitor
+from simulation_models.cyborg.CybORG.Shared.Scenario import ScenarioHost
+from simulation_models.cyborg.CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
 
 
 class FileReaderScenarioGenerator(ScenarioGenerator):
@@ -28,7 +28,7 @@ class FileReaderScenarioGenerator(ScenarioGenerator):
 
         with open(self.file_path) as fIn:
             scenario_dict = yaml.load(fIn, Loader=yaml.FullLoader)
-        from CybORG import CybORG
+        from simulation_models.cyborg.CybORG import CybORG
         cyborg_path = str(inspect.getfile(CybORG))
         images_file_path = cyborg_path[:-7] + '/Simulator/Scenarios/scenario_files/images/'
         with open(images_file_path + 'images.yaml') as fIn:

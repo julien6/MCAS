@@ -6,7 +6,7 @@ export class AppNetworkService {
   public getNetworkOptions(): Options {
     return {
       autoResize: true,
-      height: "500px",
+      height: "800px",
       width: "100%",
       physics: true,
       nodes: {

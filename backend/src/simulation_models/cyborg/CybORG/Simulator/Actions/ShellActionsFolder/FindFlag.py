@@ -1,7 +1,7 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Actions.ShellActionsFolder.ShellAction import ShellAction
-from CybORG.Shared.Enums import FileType
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.ShellAction import ShellAction
+from simulation_models.cyborg.CybORG.Shared.Enums import FileType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class FindFlag(ShellAction):

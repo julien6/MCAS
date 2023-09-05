@@ -3,16 +3,16 @@ from pprint import pprint
 import numpy as np
 import pytest
 
-from CybORG import CybORG
-from CybORG.Agents import SleepAgent, DroneRedAgent
-from CybORG.Simulator.Actions import Remove, Sleep
-from CybORG.Simulator.Actions.ConcreteActions.ActivateTrojan import ActivateTrojan
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.SeizeControl import SeizeControl
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.ExploitDroneVulnerability import ExploitDroneVulnerability
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
-from CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Tests.utils import AlwaysTrueGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import SleepAgent, DroneRedAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions import Remove, Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ActivateTrojan import ActivateTrojan
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.SeizeControl import SeizeControl
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.ExploitDroneVulnerability import ExploitDroneVulnerability
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.utils import AlwaysTrueGenerator
 
 """Testing ExploitDroneVulnerability"""
 

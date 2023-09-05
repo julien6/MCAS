@@ -1,9 +1,9 @@
 # Copyright DST Group. Licensed under the MIT license.
 from ipaddress import IPv4Address, IPv4Network
 
-from CybORG.Simulator.Actions.ShellActionsFolder.NetworkScanFolder.NetworkScan import NetworkScan
-from CybORG.Shared.Enums import FileType, InterfaceType
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.NetworkScanFolder.NetworkScan import NetworkScan
+from simulation_models.cyborg.CybORG.Shared.Enums import FileType, InterfaceType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class NmapScan(NetworkScan):

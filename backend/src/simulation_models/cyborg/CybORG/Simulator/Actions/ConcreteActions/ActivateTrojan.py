@@ -1,7 +1,7 @@
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions import Action
-from CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions_AlwaysSuccessful
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions_AlwaysSuccessful
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class ActivateTrojan(Action):

@@ -5,16 +5,16 @@
 
 import inspect
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions import DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, \
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions import DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, \
     PrivilegeEscalate, Impact, Analyse
-from CybORG.Shared.Enums import TrinaryEnum, FileType, Path
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
-from CybORG.Tests.EphemeralPort import Win2008EphemeralPort, LinuxEphemeralPort
-from CybORG.Tests.test_sim.test_Acceptance.test_reward_function import security_values, availability_values
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, FileType, Path
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import Win2008EphemeralPort, LinuxEphemeralPort
+from simulation_models.cyborg.CybORG.Tests.test_sim.test_Acceptance.test_reward_function import security_values, availability_values
 
 import pytest
-from CybORG.Agents import B_lineAgent
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent
 
 @pytest.mark.skip
 def test_blue_analyse_on_red_killchain(security_values,availability_values, cyborg_scenario1b):

@@ -1,4 +1,4 @@
-from CybORG.Agents.Wrappers import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers import PettingZooParallelWrapper
 from .RandomAgent import RandomAgent
 
 agents = {f"blue_agent_{agent}": RandomAgent() for agent in range(18)}

@@ -1,10 +1,10 @@
 import pytest
 
-from CybORG import CybORG
-from CybORG.Agents import SleepAgent
-from CybORG.Simulator.Actions import ExploitDroneVulnerability, SeizeControl
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
-from CybORG.Tests.utils import AlwaysTrueGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import SleepAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions import ExploitDroneVulnerability, SeizeControl
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.utils import AlwaysTrueGenerator
 
 
 @pytest.fixture(scope='function')

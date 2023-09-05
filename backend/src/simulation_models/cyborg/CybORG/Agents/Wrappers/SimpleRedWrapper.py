@@ -3,9 +3,9 @@ from copy import deepcopy
 import numpy as np
 from gym import spaces, Env
 
-from CybORG.Agents.Utils import RedAgentBelief, HostStatus
-from CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
-from CybORG.Simulator.Actions import Sleep
+from simulation_models.cyborg.CybORG.Agents.Utils import RedAgentBelief, HostStatus
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep
 
 class SimpleRedWrapper(BaseWrapper, Env):
     def __init__(self, env=None, step_limit=100):

@@ -1,10 +1,10 @@
 # Copyright DST Group. Licensed under the MIT license.
 
-from CybORG.Shared.Observation import Observation
-from CybORG.Shared.Enums import SessionType, QueryType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, QueryType
 
 
-from CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
 
 
 class GetFileInfo(Action):

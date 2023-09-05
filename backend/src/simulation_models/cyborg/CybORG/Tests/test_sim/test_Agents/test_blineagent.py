@@ -1,18 +1,18 @@
 import inspect
 import random
 
-from CybORG import CybORG
-from CybORG.Agents import SleepAgent
-from CybORG.Agents.SimpleAgents.B_line import B_lineAgent
-from CybORG.Agents.SimpleAgents.BlueReactAgent import BlueReactRemoveAgent, BlueReactRestoreAgent
-from CybORG.Shared.Enums import TrinaryEnum
-from CybORG.Simulator.Actions import Impact, Remove, Monitor, ExploitRemoteService
-from CybORG.Simulator.Actions import Restore
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import SleepAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.B_line import B_lineAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BlueReactAgent import BlueReactRemoveAgent, BlueReactRestoreAgent
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum
+from simulation_models.cyborg.CybORG.Simulator.Actions import Impact, Remove, Monitor, ExploitRemoteService
+from simulation_models.cyborg.CybORG.Simulator.Actions import Restore
 
 import pytest
 
-from CybORG.Simulator.Scenarios import FileReaderScenarioGenerator
-from CybORG.Tests.utils import AlwaysTrueGenerator
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.utils import AlwaysTrueGenerator
 
 
 @pytest.mark.skip

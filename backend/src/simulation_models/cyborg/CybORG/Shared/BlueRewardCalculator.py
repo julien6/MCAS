@@ -1,8 +1,8 @@
 from collections import namedtuple
 
-from CybORG.Shared import Scenario
-from CybORG.Shared.RedRewardCalculator import DistruptRewardCalculator, PwnRewardCalculator
-from CybORG.Shared.RewardCalculator import RewardCalculator
+from simulation_models.cyborg.CybORG.Shared import Scenario
+from simulation_models.cyborg.CybORG.Shared.RedRewardCalculator import DistruptRewardCalculator, PwnRewardCalculator
+from simulation_models.cyborg.CybORG.Shared.RewardCalculator import RewardCalculator
 
 
 HostReward = namedtuple('HostReward','confidentiality availability')

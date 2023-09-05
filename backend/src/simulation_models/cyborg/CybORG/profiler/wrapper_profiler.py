@@ -1,15 +1,15 @@
 import cProfile
 import inspect
 
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 
 # for visualisation of code profile:
 # python -m cProfile -o profile.pstats profiler.py
 # gprof2dot -f pstats profile.pstats | dot -Tpng -o output.png && eog output.png
-from CybORG.Agents.SimpleAgents.Meander import RedMeanderAgent
-from CybORG.Agents.Wrappers.BlueTableWrapper import BlueTableWrapper
-from CybORG.Agents.Wrappers.EnumActionWrapper import EnumActionWrapper
-from CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.Meander import RedMeanderAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BlueTableWrapper import BlueTableWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.EnumActionWrapper import EnumActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
 
 
 

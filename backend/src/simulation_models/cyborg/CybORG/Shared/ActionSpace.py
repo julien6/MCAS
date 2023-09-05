@@ -3,8 +3,8 @@
 import sys
 from inspect import signature
 
-from CybORG.Shared import CybORGLogger
-from CybORG.Shared.Enums import SessionType
+from simulation_models.cyborg.CybORG.Shared import CybORGLogger
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType
 
 MAX_SUBNETS = 10
 MAX_ADDRESSES = 10

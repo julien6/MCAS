@@ -6,8 +6,8 @@ from typing import Union, List, Optional, Tuple
 
 from prettytable import PrettyTable
 
-from CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
-from CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
 
 
 

@@ -4,8 +4,8 @@ import pytest
 
 from utils_test_observations import (RED_INITIAL, RED_PINGSWEEP, RED_PORTSCAN, RED_EXPLOIT, RED_PRIVESC, OBS_SUCCESS,
         OBS_FAIL)
-from CybORG.Agents.Utils.ObservationWrapper import ObservationWrapper
-from CybORG.Shared.Enums import TrinaryEnum, OperatingSystemType
+from simulation_models.cyborg.CybORG.Agents.Utils.ObservationWrapper import ObservationWrapper
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, OperatingSystemType
 
 TEST_CASES = {
         'RED_INITIAL': RED_INITIAL,

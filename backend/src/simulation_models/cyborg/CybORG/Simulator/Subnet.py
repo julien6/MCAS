@@ -1,5 +1,5 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Entity import Entity
+from simulation_models.cyborg.CybORG.Simulator.Entity import Entity
 from ipaddress import IPv4Network
 
 

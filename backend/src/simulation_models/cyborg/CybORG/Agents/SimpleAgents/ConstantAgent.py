@@ -1,6 +1,6 @@
-from CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
-from CybORG.Shared import Results
-from CybORG.Simulator.Actions import Sleep, Monitor
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
+from simulation_models.cyborg.CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep, Monitor
 
 class ConstantAgent(BaseAgent):
 

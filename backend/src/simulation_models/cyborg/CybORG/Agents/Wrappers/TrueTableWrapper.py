@@ -2,8 +2,8 @@ from copy import deepcopy
 from pprint import pprint
 from prettytable import PrettyTable
 
-from CybORG.Shared.Enums import TrinaryEnum
-from CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
 
 class TrueTableWrapper(BaseWrapper):
     def __init__(self,env=None, observer_mode=True):

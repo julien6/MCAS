@@ -1,17 +1,17 @@
-from CybORG import CybORG
-from CybORG.Agents import SleepAgent
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import SleepAgent
 
 # test block comms and remote action
-from CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic, AllowTraffic
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.SeizeControl import SeizeControl
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.ExploitDroneVulnerability import ExploitDroneVulnerability
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
-from CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic, AllowTraffic
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.SeizeControl import SeizeControl
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.ExploitDroneVulnerability import ExploitDroneVulnerability
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
 
 # TODO add more tests for observations
 # TODO test if too much traffic fails actions
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
-from CybORG.Tests.utils import AlwaysTrueGenerator
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.utils import AlwaysTrueGenerator
 
 
 def test_simultaneous_block_and_exploit(unattacked_blue):

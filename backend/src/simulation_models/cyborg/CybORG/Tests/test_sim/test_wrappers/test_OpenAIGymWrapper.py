@@ -4,13 +4,13 @@ import pytest
 import numpy as np
 from gym import spaces
 
-from CybORG import CybORG
-from CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
-from CybORG.Agents.Wrappers.FixedFlatWrapper import FixedFlatWrapper
-from CybORG.Agents.Wrappers.EnumActionWrapper import EnumActionWrapper
-from CybORG.Agents.Wrappers import BlueTableWrapper
-from CybORG.Agents import MonitorAgent, B_lineAgent
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.FixedFlatWrapper import FixedFlatWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.EnumActionWrapper import EnumActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers import BlueTableWrapper
+from simulation_models.cyborg.CybORG.Agents import MonitorAgent, B_lineAgent
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 def test_steps(cyborg_scenario1b):

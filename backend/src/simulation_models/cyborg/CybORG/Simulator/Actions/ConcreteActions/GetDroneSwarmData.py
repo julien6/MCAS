@@ -1,6 +1,6 @@
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions.Action import RemoteAction
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import RemoteAction
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class GetDroneSwarmData(RemoteAction):

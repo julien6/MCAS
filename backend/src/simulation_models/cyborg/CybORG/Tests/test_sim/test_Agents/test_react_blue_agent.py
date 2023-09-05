@@ -1,12 +1,12 @@
 import inspect
 from ipaddress import IPv4Network
 
-from CybORG import CybORG
-from CybORG.Agents.SimpleAgents.BlueReactAgent import BlueReactRemoveAgent
-from CybORG.Simulator.Actions import Impact, PrivilegeEscalate, ExploitRemoteService, DiscoverNetworkServices, \
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BlueReactAgent import BlueReactRemoveAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions import Impact, PrivilegeEscalate, ExploitRemoteService, DiscoverNetworkServices, \
     DiscoverRemoteSystems
-from CybORG.Shared.Enums import TrinaryEnum, SessionType, ProcessType, ProcessState, OperatingSystemType
-from CybORG.Tests.EphemeralPort import LinuxEphemeralPort, Win2008EphemeralPort, PID
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, SessionType, ProcessType, ProcessState, OperatingSystemType
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import LinuxEphemeralPort, Win2008EphemeralPort, PID
 import pytest
 
 

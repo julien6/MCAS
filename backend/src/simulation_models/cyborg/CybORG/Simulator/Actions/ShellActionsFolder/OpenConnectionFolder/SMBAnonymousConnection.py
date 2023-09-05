@@ -1,10 +1,10 @@
 # Copyright DST Group. Licensed under the MIT license.
 from ipaddress import IPv4Address
 
-from CybORG.Simulator.Actions.ShellActionsFolder.OpenConnectionFolder.OpenConnection import OpenConnection
-from CybORG.Shared.Enums import ProcessType, InterfaceType
-from CybORG.Shared.Observation import Observation
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.OpenConnectionFolder.OpenConnection import OpenConnection
+from simulation_models.cyborg.CybORG.Shared.Enums import ProcessType, InterfaceType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 # smbclient -L //target -N

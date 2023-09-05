@@ -1,8 +1,8 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Actions.ShellActionsFolder.PersistenceFolder.Persistence import Persistence
-from CybORG.Simulator.State import State
-from CybORG.Shared.Enums import OperatingSystemType
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.PersistenceFolder.Persistence import Persistence
+from simulation_models.cyborg.CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 class Schtasks(Persistence):
     def __init__(self, session, agent, frequency, ip_address):

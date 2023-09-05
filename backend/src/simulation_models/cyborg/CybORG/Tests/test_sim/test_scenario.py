@@ -1,4 +1,4 @@
-from CybORG.Simulator.Actions import PrivilegeEscalate, MS17_010_PSExec, UpgradeToMeterpreter, SSHLoginExploit, \
+from simulation_models.cyborg.CybORG.Simulator.Actions import PrivilegeEscalate, MS17_010_PSExec, UpgradeToMeterpreter, SSHLoginExploit, \
     MeterpreterIPConfig, MSFAutoroute, MSFPingsweep, MSFPortscan, GetFileInfo, GetProcessList, GetProcessInfo, \
     VelociraptorPoll, Sleep, Impact, Monitor, Analyse, Restore, Remove, \
     DiscoverNetworkServices, DiscoverRemoteSystems, ExploitRemoteService, Misinform

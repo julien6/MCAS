@@ -1,4 +1,4 @@
-from CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
 
 
 class LocalAction(Action):

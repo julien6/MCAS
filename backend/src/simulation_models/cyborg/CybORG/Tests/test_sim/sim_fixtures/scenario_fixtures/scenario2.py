@@ -1,5 +1,5 @@
-from CybORG.Shared.Enums import OperatingSystemType
-from CybORG.Simulator.Actions import *
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType
+from simulation_models.cyborg.CybORG.Simulator.Actions import *
 
 agents = ['Red', 'Blue', 'Green']
 

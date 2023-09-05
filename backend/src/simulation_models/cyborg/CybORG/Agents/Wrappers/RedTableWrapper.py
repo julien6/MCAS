@@ -3,8 +3,8 @@ from copy import deepcopy
 from prettytable import PrettyTable
 import numpy as np
 
-from CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
-from CybORG.Agents.Wrappers.TrueTableWrapper import TrueTableWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.TrueTableWrapper import TrueTableWrapper
 
 
 class RedTableWrapper(BaseWrapper):

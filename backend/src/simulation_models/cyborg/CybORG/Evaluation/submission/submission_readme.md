@@ -19,7 +19,7 @@ agents = {f"blue_agent_{agent}": RandomAgent() for agent in range(18)}
 
 The submission.py also contains the wrap function, which wraps the CybORG environment to alter the interface. The following example illustrates a wrap function for the PettingZooParallelWrapper. 
 ```python3
-from CybORG.Agents.Wrappers import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers import PettingZooParallelWrapper
 
 def wrap(env):
     return PettingZooParallelWrapper(env=env)

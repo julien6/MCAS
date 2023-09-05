@@ -5,8 +5,7 @@ import { AppComponent } from './app.component';
 import { AngJsoneditorModule } from '@maaxgr/ang-jsoneditor';
 import { DetailPanelComponent } from './detail-panel/detail-panel.component'
 import { AppNetworkService } from './services/app.network.service';
-import { WorldStateService } from './services/app.worldState.service';
-import { TerminalComponent } from './terminal/terminal.component';
+import { DataService } from './services/app.data.service';
 import { NgTerminalModule } from 'ng-terminal';
 import { ServerAPIService } from './services/serverAPI.service';
 import { NgChartsModule } from 'ng2-charts';
@@ -66,7 +65,6 @@ import { MatSortModule } from '@angular/material/sort'
   declarations: [
     AppComponent,
     DetailPanelComponent,
-    TerminalComponent,
     AppComponent,
     MenuBarComponent,
     PreferencesComponent,
@@ -136,7 +134,7 @@ import { MatSortModule } from '@angular/material/sort'
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  providers: [AppNetworkService, WorldStateService, ConfigShareService, ServerAPIService, HttpClient],
+  providers: [AppNetworkService, DataService, ConfigShareService, ServerAPIService, HttpClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,9 +1,9 @@
 
 
-from CybORG.Agents import BaseAgent
-from CybORG.Shared import Scenario
-from CybORG.Simulator.Actions.Action import lo
-from CybORG.Shared.RewardCalculator import RewardCalculator
+from simulation_models.cyborg.CybORG.Agents import BaseAgent
+from simulation_models.cyborg.CybORG.Shared import Scenario
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import lo
+from simulation_models.cyborg.CybORG.Shared.RewardCalculator import RewardCalculator
 
 
 class ScenarioGenerator:

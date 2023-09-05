@@ -2,8 +2,8 @@
 ## Additionally, we waive copyright and related rights in the utilized code worldwide through the CC0 1.0 Universal public domain dedication.
 from ipaddress import IPv4Address
 
-from CybORG.Shared.Enums import SessionType, OperatingSystemType
-from CybORG.Simulator.Entity import Entity
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, OperatingSystemType
+from simulation_models.cyborg.CybORG.Simulator.Entity import Entity
 from pprint import pprint, pformat
 
 class Session(Entity):

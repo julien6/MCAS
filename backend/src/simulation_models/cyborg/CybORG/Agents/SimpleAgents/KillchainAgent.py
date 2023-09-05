@@ -1,10 +1,10 @@
-from CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
 import random
 import math
 
 from ipaddress import IPv4Network, IPv4Address
 
-from CybORG.Simulator.Actions import NmapScan, SambaUsermapScript, UpgradeToMeterpreter, MSFAutoroute, PingSweep, MSFEternalBlue, GetShell, FindFlag, TomcatCredentialScanner, TomcatExploit, SSHLoginExploit
+from simulation_models.cyborg.CybORG.Simulator.Actions import NmapScan, SambaUsermapScript, UpgradeToMeterpreter, MSFAutoroute, PingSweep, MSFEternalBlue, GetShell, FindFlag, TomcatCredentialScanner, TomcatExploit, SSHLoginExploit
 
 
 class KillchainAgent(BaseAgent):

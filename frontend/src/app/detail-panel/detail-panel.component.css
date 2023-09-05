@@ -4,10 +4,11 @@
 
 .column-left {
   float: left;
-  width: 30%;
+  width: calc(30% - 1px);
+  border-right: 1px solid;
   margin: 0px;
   padding: 0px;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 112px);
   background-color: green;
 }
 
@@ -16,12 +17,12 @@
   margin: 0px;
   padding: 0px;
   width: 70%;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 112px);
 }
 
 .graphical {
   background-color: lightgray;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 112px);
 }
 
 /* Clear floats after the columns */
@@ -51,7 +52,7 @@
 :host ::ng-deep json-editor .jsoneditor,
 :host ::ng-deep json-editor>div,
 :host ::ng-deep json-editor jsoneditor-outer {
-  height: calc(100vh - 64px);
-
+  height: calc(100vh - 112px);
+  border-right: 0px;
   position: inline-block;
 }

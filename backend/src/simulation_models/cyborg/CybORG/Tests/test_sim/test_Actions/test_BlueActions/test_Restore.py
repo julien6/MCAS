@@ -3,11 +3,11 @@
 # import itertools
 # from copy import deepcopy
 #
-# from CybORG.Tests.test_sim.sim_fixtures import compromised_cyborg, SCENARIOS
-# from CybORG.Agents.Utils import ObservationWrapper
-# from CybORG.Simulator.Actions import Restore, ExploitRemoteService, PrivilegeEscalate
-# from CybORG.Shared.Enums import SessionType, OperatingSystemType, ProcessType, ProcessState, TrinaryEnum
-# from CybORG.Tests.EphemeralPort import Win2008EphemeralPort, LinuxEphemeralPort
+# from simulation_models.cyborg.CybORG.Tests.test_sim.sim_fixtures import compromised_cyborg, SCENARIOS
+# from simulation_models.cyborg.CybORG.Agents.Utils import ObservationWrapper
+# from simulation_models.cyborg.CybORG.Simulator.Actions import Restore, ExploitRemoteService, PrivilegeEscalate
+# from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, OperatingSystemType, ProcessType, ProcessState, TrinaryEnum
+# from simulation_models.cyborg.CybORG.Tests.EphemeralPort import Win2008EphemeralPort, LinuxEphemeralPort
 #
 # SCENARIO = 'Scenario2'
 # HOSTS = SCENARIOS[SCENARIO]['Hosts']

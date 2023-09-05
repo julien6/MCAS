@@ -5,14 +5,14 @@ from typing import List
 
 import numpy as np
 
-from CybORG.Agents import BaseAgent, SleepAgent
-from CybORG.Shared.BaselineRewardCalculator import BaselineRewardCalculator
-from CybORG.Shared.BlueRewardCalculator import HybridAvailabilityConfidentialityRewardCalculator
-from CybORG.Shared.RedRewardCalculator import HybridImpactPwnRewardCalculator, DistruptRewardCalculator, \
+from simulation_models.cyborg.CybORG.Agents import BaseAgent, SleepAgent
+from simulation_models.cyborg.CybORG.Shared.BaselineRewardCalculator import BaselineRewardCalculator
+from simulation_models.cyborg.CybORG.Shared.BlueRewardCalculator import HybridAvailabilityConfidentialityRewardCalculator
+from simulation_models.cyborg.CybORG.Shared.RedRewardCalculator import HybridImpactPwnRewardCalculator, DistruptRewardCalculator, \
     PwnRewardCalculator
-from CybORG.Shared.RewardCalculator import EmptyRewardCalculator
+from simulation_models.cyborg.CybORG.Shared.RewardCalculator import EmptyRewardCalculator
 
-from CybORG.Shared import CybORGLogger
+from simulation_models.cyborg.CybORG.Shared import CybORGLogger
 
 
 class ScenarioSession(CybORGLogger):

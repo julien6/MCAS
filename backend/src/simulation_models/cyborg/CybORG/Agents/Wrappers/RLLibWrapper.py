@@ -3,12 +3,12 @@ import numpy as np
 from ray.rllib.agents import ppo
 from ray.rllib.env import ParallelPettingZooEnv
 from ray.tune import register_env
-from CybORG import CybORG
-from CybORG.Agents import B_lineAgent, GreenAgent
-from CybORG.Agents.Wrappers import ChallengeWrapper
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent, GreenAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers import ChallengeWrapper
 
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
-from CybORG.Simulator.Scenarios import FileReaderScenarioGenerator, DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import FileReaderScenarioGenerator, DroneSwarmScenarioGenerator
 
 
 class RLLibWrapper(ChallengeWrapper):

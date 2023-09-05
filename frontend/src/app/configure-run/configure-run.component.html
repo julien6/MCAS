@@ -32,13 +32,13 @@
                         <mat-label>Simulation engine</mat-label>
                         <mat-select formControlName="select_simulation_engine"
                             (ngModelChange)="onSelectingSimulationEngine($event)">
-                            <mat-option value="CybORG_simulation_engine">
+                            <mat-option value="CybORG">
                                 CybORG simulation engine
                             </mat-option>
-                            <mat-option value="MCAS_simulation_engine">
+                            <mat-option value="MCAS">
                                 MCAS simulation engine
                             </mat-option>
-                            <mat-option value="CYST_simulation_engine">
+                            <mat-option value="CYST">
                                 CYST simulation engine
                             </mat-option>
                         </mat-select>
@@ -78,10 +78,10 @@
                         <mat-label>Emulation engine</mat-label>
                         <mat-select formControlName="select_emulation_engine"
                             (ngModelChange)="onSelectingEmulationEngine($event)">
-                            <mat-option value="CybORG_emulation_engine">
+                            <mat-option value="CybORG">
                                 CybORG emulation engine
                             </mat-option>
-                            <mat-option value="MCAS_emulation_engine">
+                            <mat-option value="MCAS">
                                 MCAS emulation engine
                             </mat-option>
                         </mat-select>
@@ -122,7 +122,7 @@
 
                 <br><br>
                 <div>
-                    <button mat-button matStepperNext>Next</button>
+                    <button mat-button matStepperNext (click)="onLaunchSettingUpSimulation()">Next</button>
                 </div>
             </form>
         </mat-step>
@@ -134,23 +134,15 @@
             
             <app-editor [(text)]="logsData" [terminalDisplay]="true" mode="text"></app-editor>
 
-            <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
+            <mat-progress-bar mode="determinate" value="{{this.simSettingUpProgressValue}}"></mat-progress-bar>
 
             <br><br>
             <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button matStepperNext>Next</button>
+                <button mat-button matStepperPrevious (click)="this.logsData = '';this.simSettingUpDone = false;this.simSettingUpProgressValue = 0">Back</button>
+                <button *ngIf="this.simSettingUpDone" mat-button matStepperNext (click)="this.dialog.closeAll()">Done</button>
             </div>
         </mat-step>
 
-        <mat-step>
-            <ng-template matStepLabel>Done</ng-template>
-            <p>You are now done.</p>
-            <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button (click)="stepper.reset()">Reset</button>
-            </div>
-        </mat-step>
     </mat-stepper>
 
 </div>

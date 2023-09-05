@@ -1,11 +1,11 @@
 
 
-from CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Shared import Observation
 from .Monitor import Monitor
-from CybORG.Simulator.Actions import Action
-from CybORG.Simulator.Actions.AbstractActions import Monitor
-from CybORG.Simulator.Actions.ConcreteActions.DensityScout import DensityScout
-from CybORG.Simulator.Actions.ConcreteActions.SigCheck import SigCheck
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions import Monitor
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.DensityScout import DensityScout
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.SigCheck import SigCheck
 
 
 class Analyse(Action):

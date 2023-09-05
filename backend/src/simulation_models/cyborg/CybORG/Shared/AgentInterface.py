@@ -2,16 +2,16 @@
 
 import sys
 
-from CybORG.Shared import Scenario
-from CybORG.Shared.ActionSpace import ActionSpace
-from CybORG.Simulator.Actions.Action import Action
-from CybORG.Shared.BaselineRewardCalculator import BaselineRewardCalculator
-from CybORG.Shared.BlueRewardCalculator import HybridAvailabilityConfidentialityRewardCalculator
-from CybORG.Shared.Observation import Observation
-from CybORG.Shared.RedRewardCalculator import DistruptRewardCalculator, PwnRewardCalculator, \
+from simulation_models.cyborg.CybORG.Shared import Scenario
+from simulation_models.cyborg.CybORG.Shared.ActionSpace import ActionSpace
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action
+from simulation_models.cyborg.CybORG.Shared.BaselineRewardCalculator import BaselineRewardCalculator
+from simulation_models.cyborg.CybORG.Shared.BlueRewardCalculator import HybridAvailabilityConfidentialityRewardCalculator
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Shared.RedRewardCalculator import DistruptRewardCalculator, PwnRewardCalculator, \
     HybridImpactPwnRewardCalculator
-from CybORG.Shared.Results import Results
-from CybORG.Shared.RewardCalculator import RewardCalculator, EmptyRewardCalculator
+from simulation_models.cyborg.CybORG.Shared.Results import Results
+from simulation_models.cyborg.CybORG.Shared.RewardCalculator import RewardCalculator, EmptyRewardCalculator
 
 MAX_HOSTS = 5
 MAX_PROCESSES = 100    # 50

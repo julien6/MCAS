@@ -1,5 +1,5 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Actions.ShellActionsFolder.InternalEnumerationFolder. \
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.InternalEnumerationFolder. \
     InternalEnumeration import InternalEnumeration
 
 

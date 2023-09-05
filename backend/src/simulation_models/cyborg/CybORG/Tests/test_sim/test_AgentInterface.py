@@ -2,11 +2,11 @@ import inspect
 
 import pytest
 
-from CybORG import CybORG
-from CybORG.Agents.Wrappers import FixedFlatWrapper
-from CybORG.Shared import Results
-from CybORG.Simulator.Actions.Action import Action
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.Wrappers import FixedFlatWrapper
+from simulation_models.cyborg.CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 @pytest.fixture(params=['Red'])

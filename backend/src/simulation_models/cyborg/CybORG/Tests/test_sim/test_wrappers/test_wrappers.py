@@ -2,9 +2,9 @@ import random
 
 import pytest
 
-from CybORG.Agents.Wrappers import FixedFlatWrapper
-from CybORG.Agents.Wrappers.EnumActionWrapper import EnumActionWrapper
-from CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers import FixedFlatWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.EnumActionWrapper import EnumActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
 
 
 def test_intlist_to_action_wrapper_action_space(create_cyborg_sim):

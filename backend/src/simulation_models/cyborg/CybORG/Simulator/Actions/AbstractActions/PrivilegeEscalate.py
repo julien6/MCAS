@@ -9,17 +9,17 @@ Handling of privilege escalation action selection and execution
 from abc import ABC, abstractmethod
 from typing import Tuple, Optional, List
 
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions import Action
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.EscalateAction import (
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.EscalateAction import (
         ExploreHost, EscalateAction
         )
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.JuicyPotato import JuicyPotato
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.V4L2KernelExploit import V4L2KernelExploit
-from CybORG.Shared.Enums import (
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.JuicyPotato import JuicyPotato
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.V4L2KernelExploit import V4L2KernelExploit
+from simulation_models.cyborg.CybORG.Shared.Enums import (
         OperatingSystemType, TrinaryEnum)
-from CybORG.Simulator.State import State
-from CybORG.Simulator.Session import Session
+from simulation_models.cyborg.CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Simulator.Session import Session
 
 # pylint: disable=too-few-public-methods
 class EscalateActionSelector(ABC):

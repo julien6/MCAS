@@ -3,9 +3,9 @@ from typing import Tuple, Union
 from enum import Enum
 from ipaddress import IPv4Address, IPv4Network
 
-from CybORG.Simulator.Actions import (Action, DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, 
+from simulation_models.cyborg.CybORG.Simulator.Actions import (Action, DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, 
         PrivilegeEscalate, Impact)
-from CybORG.Agents.Utils.ObservationWrapper import ObservationWrapper
+from simulation_models.cyborg.CybORG.Agents.Utils.ObservationWrapper import ObservationWrapper
 
 @dataclass
 class RedAgentBelief():

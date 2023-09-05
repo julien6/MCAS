@@ -1,5 +1,5 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Actions.MSFActionsFolder.MSFAction import MSFAction
+from simulation_models.cyborg.CybORG.Simulator.Actions.MSFActionsFolder.MSFAction import MSFAction
 
 
 class RemoteCodeExecution(MSFAction):

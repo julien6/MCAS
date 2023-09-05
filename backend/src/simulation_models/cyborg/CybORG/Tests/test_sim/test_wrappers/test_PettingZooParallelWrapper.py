@@ -6,13 +6,13 @@ import numpy as np
 from gym import spaces
 from pettingzoo.test import parallel_api_test
 
-from CybORG import CybORG
-from CybORG.Agents import RandomAgent, DroneRedAgent, SleepAgent
-from CybORG.Agents.Wrappers.CommsPettingZooParallelWrapper import AgentCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper, ObsCommsPettingZooParallelWrapper
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
-from CybORG.Simulator.Actions import ExploitDroneVulnerability
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Tests.utils import AlwaysTrueGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import RandomAgent, DroneRedAgent, SleepAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers.CommsPettingZooParallelWrapper import AgentCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper, ObsCommsPettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Simulator.Actions import ExploitDroneVulnerability
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.utils import AlwaysTrueGenerator
 
 
 @pytest.fixture(scope="function", params=[PettingZooParallelWrapper, AgentCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper, ObsCommsPettingZooParallelWrapper])

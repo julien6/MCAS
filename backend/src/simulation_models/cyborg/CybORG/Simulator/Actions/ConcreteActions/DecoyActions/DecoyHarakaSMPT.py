@@ -3,13 +3,13 @@ from typing import Tuple, List, Optional
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions import Action
-from CybORG.Shared.Enums import DecoyType, OperatingSystemType
-from CybORG.Simulator.Host import Host
-from CybORG.Simulator.Session import Session
-from CybORG.Simulator.State import State
-from CybORG.Simulator.Actions.AbstractActions.Misinform import Decoy, DecoyFactory, _is_host_using_port
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Shared.Enums import DecoyType, OperatingSystemType
+from simulation_models.cyborg.CybORG.Simulator.Host import Host
+from simulation_models.cyborg.CybORG.Simulator.Session import Session
+from simulation_models.cyborg.CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions.Misinform import Decoy, DecoyFactory, _is_host_using_port
 
 
 class HarakaDecoyFactory(DecoyFactory):

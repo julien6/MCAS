@@ -5,9 +5,9 @@ import pytest
 
 from utils_test_observations import (RED_INITIAL, RED_PINGSWEEP, RED_PORTSCAN, RED_EXPLOIT, RED_PRIVESC,  OBS_SUCCESS, 
         OBS_FAIL, TARGET_HOST, TARGET_IP, SUBNET, SOURCE_HOST, SOURCE_IP, SUBNET_IPS, ENTERPRISE_IP)
-from CybORG.Simulator.Actions import (DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, 
+from simulation_models.cyborg.CybORG.Simulator.Actions import (DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, 
         PrivilegeEscalate, Impact)
-from CybORG.Agents.Utils import RedAgentBelief, SubnetBelief, HostBelief, HostStatus
+from simulation_models.cyborg.CybORG.Agents.Utils import RedAgentBelief, SubnetBelief, HostBelief, HostStatus
 
 PARAMS = {'session':0, 'agent':'Red'}
 

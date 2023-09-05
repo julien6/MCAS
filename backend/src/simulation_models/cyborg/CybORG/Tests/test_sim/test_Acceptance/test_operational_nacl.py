@@ -1,10 +1,10 @@
 import inspect
 import pytest
-from CybORG import CybORG
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
-from CybORG.Agents import B_lineAgent
-from CybORG.Simulator.Actions import Restore, ExploitRemoteService
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions import Restore, ExploitRemoteService
 
 
 @pytest.mark.skip('Update required to not use debugging agent')

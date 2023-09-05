@@ -2,13 +2,13 @@
 import inspect
 from time import sleep
 
-from CybORG import CybORG
-from CybORG.Agents import B_lineAgent, BlueReactRestoreAgent, BlueReactRemoveAgent, SleepAgent, DroneRedAgent, \
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent, BlueReactRestoreAgent, BlueReactRemoveAgent, SleepAgent, DroneRedAgent, \
     RandomAgent, BaseAgent, RedMeanderAgent
-from CybORG.Simulator.Scenarios import FileReaderScenarioGenerator, DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import FileReaderScenarioGenerator, DroneSwarmScenarioGenerator
 import pygame
-from CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
 import random
 
 

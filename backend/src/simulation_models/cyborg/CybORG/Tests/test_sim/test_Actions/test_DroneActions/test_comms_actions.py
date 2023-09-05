@@ -2,9 +2,9 @@ from random import choices, choice
 
 import numpy as np
 
-from CybORG import CybORG
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
 
 
 def test_comms():

@@ -1,7 +1,7 @@
 import inspect
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions import MSFPortscan, SSHLoginExploit, MSFPingsweep, MeterpreterIPConfig, UpgradeToMeterpreter
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions import MSFPortscan, SSHLoginExploit, MSFPingsweep, MeterpreterIPConfig, UpgradeToMeterpreter
 
 
 def test_MSFPortscan(cyborg_scenario1):

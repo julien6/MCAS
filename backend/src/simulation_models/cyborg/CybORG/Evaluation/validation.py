@@ -1,7 +1,7 @@
-from CybORG.Evaluation.evaluation import run_evaluation
+from simulation_models.cyborg.CybORG.Evaluation.evaluation import run_evaluation
 
 # this imports a submission data
-from CybORG.Evaluation.submission.submission import submission_name, submission_team, submission_technique
+from simulation_models.cyborg.CybORG.Evaluation.submission.submission import submission_name, submission_team, submission_technique
 
 if __name__ == "__main__":
     name = submission_name

@@ -3,10 +3,10 @@ from ipaddress import IPv4Address
 
 import pytest
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions import UpgradeToMeterpreter, SSHLoginExploit, MSFPortscan, MSFAutoroute, MSFPingsweep
-from CybORG.Shared.Enums import SessionType, AppProtocol
-from CybORG.Tests.EphemeralPort import LinuxEphemeralPort
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions import UpgradeToMeterpreter, SSHLoginExploit, MSFPortscan, MSFAutoroute, MSFPingsweep
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, AppProtocol
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import LinuxEphemeralPort
 
 
 def test_upgrade_msf_shell(cyborg_scenario1):

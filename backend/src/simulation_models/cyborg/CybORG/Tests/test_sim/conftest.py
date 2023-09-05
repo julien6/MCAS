@@ -2,13 +2,13 @@ import inspect
 
 import pytest
 
-from CybORG import CybORG
-from CybORG.Agents import B_lineAgent
-from CybORG.Agents.Wrappers import OpenAIGymWrapper, EnumActionWrapper, FixedFlatWrapper
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
-from CybORG.Agents.Wrappers.CommsPettingZooParallelWrapper import AgentCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper, ObsCommsPettingZooParallelWrapper
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers import OpenAIGymWrapper, EnumActionWrapper, FixedFlatWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.CommsPettingZooParallelWrapper import AgentCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper, ObsCommsPettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 @pytest.fixture(scope="function", params=['Scenario1', 'Scenario1b', 'Scenario2'])

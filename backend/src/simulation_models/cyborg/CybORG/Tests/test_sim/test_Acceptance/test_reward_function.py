@@ -1,9 +1,9 @@
 import pytest
 import inspect
 
-from CybORG import CybORG
-from CybORG.Agents import MonitorAgent
-from CybORG.Simulator.Actions import Restore
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import MonitorAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions import Restore
 
 @pytest.fixture
 def security_values():

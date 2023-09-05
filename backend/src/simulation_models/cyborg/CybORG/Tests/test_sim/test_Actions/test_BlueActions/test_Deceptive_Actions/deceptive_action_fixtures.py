@@ -2,8 +2,8 @@ import inspect
 
 import pytest
 
-from CybORG import CybORG
-from CybORG.Shared.Enums import TrinaryEnum
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum
 
 HOSTNAMES = ['User0', 'User1', 'User2', 'User3', 'User4','Enterprise0','Enterprise1','Enterprise2',
             'Op_Server0','Op_Host0','Op_Host1','Op_Host2']

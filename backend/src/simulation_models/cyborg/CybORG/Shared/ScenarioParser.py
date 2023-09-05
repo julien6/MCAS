@@ -8,9 +8,9 @@ import yaml
 from copy import deepcopy
 from prettytable import PrettyTable
 
-from CybORG.Shared.State.Credentials import AccessLevel, Credentials
-from CybORG.Shared.State.Service import Service, ServiceType
-from CybORG.Shared.State.OperatingSystem import OperatingSystemType, OperatingSystemInformation
+from simulation_models.cyborg.CybORG.Shared.State.Credentials import AccessLevel, Credentials
+from simulation_models.cyborg.CybORG.Shared.State.Service import Service, ServiceType
+from simulation_models.cyborg.CybORG.Shared.State.OperatingSystem import OperatingSystemType, OperatingSystemInformation
 
 path = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.join(os.path.dirname(path), os.pardir)

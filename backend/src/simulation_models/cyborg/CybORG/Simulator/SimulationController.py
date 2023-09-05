@@ -1,13 +1,13 @@
 # Copyright DST Group. Licensed under the MIT license.
 
 
-from CybORG.Shared import Scenario
-from CybORG.Simulator.Actions.Action import Action, RemoteAction
-from CybORG.Shared.EnvironmentController import EnvironmentController
-from CybORG.Shared.Observation import Observation
-from CybORG.Shared.RewardCalculator import RewardCalculator
-from CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared import Scenario
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action, RemoteAction
+from simulation_models.cyborg.CybORG.Shared.EnvironmentController import EnvironmentController
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Shared.RewardCalculator import RewardCalculator
+from simulation_models.cyborg.CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class SimulationController(EnvironmentController):

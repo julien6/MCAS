@@ -1,5 +1,5 @@
-from CybORG.Agents import BaseAgent
-from CybORG.Simulator.Actions import DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, PrivilegeEscalate, Impact
+from simulation_models.cyborg.CybORG.Agents import BaseAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions import DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, PrivilegeEscalate, Impact
 
 class HeuristicRed(BaseAgent):
     def __init__(self, session=0, priority=None, np_random=None):

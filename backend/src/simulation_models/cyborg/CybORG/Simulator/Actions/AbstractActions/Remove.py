@@ -1,11 +1,11 @@
 
 
-from CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Shared import Observation
 from .Monitor import Monitor
-from CybORG.Simulator.Actions import Action
-from CybORG.Simulator.Actions.ConcreteActions.StopProcess import StopProcess
-from CybORG.Simulator.Session import VelociraptorServer
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.StopProcess import StopProcess
+from simulation_models.cyborg.CybORG.Simulator.Session import VelociraptorServer
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class Remove(Action):

@@ -1,10 +1,10 @@
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 import inspect
 
-from CybORG.Agents import B_lineAgent
-from CybORG.Agents.SimpleAgents.BlueMonitorAgent import BlueMonitorAgent
-from CybORG.Agents.SimpleAgents.KeyboardAgent import KeyboardAgent
-from CybORG.Agents.Wrappers.TrueTableWrapper import TrueTableWrapper
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BlueMonitorAgent import BlueMonitorAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.KeyboardAgent import KeyboardAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers.TrueTableWrapper import TrueTableWrapper
 
 if __name__ == "__main__":
     print("Setup")

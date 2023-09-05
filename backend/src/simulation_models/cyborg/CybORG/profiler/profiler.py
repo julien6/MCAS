@@ -8,10 +8,10 @@ from gym.utils.seeding import np_random
 # gprof2dot -f pstats profile.pstats | dot -Tpng -o output.png && eog output.png
 # or with snakeviz
 # snakeviz profile.pstats
-from CybORG import CybORG
-from CybORG.Agents import RandomAgent
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import RandomAgent
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 def run(path):

@@ -1,7 +1,7 @@
 import numpy as np
 from gym import spaces
 
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
 
 
 class ActionsCommsPettingZooParallelWrapper(PettingZooParallelWrapper):

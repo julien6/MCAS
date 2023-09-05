@@ -1,6 +1,6 @@
 # Copyright DST Group. Licensed under the MIT license.
-from CybORG.Simulator.Session import Session
-from CybORG.Simulator.Process import Process
+from simulation_models.cyborg.CybORG.Simulator.Session import Session
+from simulation_models.cyborg.CybORG.Simulator.Process import Process
 
 
 class MSFServerSession(Session):

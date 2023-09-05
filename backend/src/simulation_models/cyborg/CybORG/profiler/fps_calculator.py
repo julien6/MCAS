@@ -6,9 +6,9 @@ import numpy as np
 from gym import Env, spaces
 from pettingzoo import AECEnv, ParallelEnv
 
-from CybORG import CybORG
-from CybORG.Agents.Wrappers import OpenAIGymWrapper, ChallengeWrapper, FixedFlatWrapper, EnumActionWrapper
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.Wrappers import OpenAIGymWrapper, ChallengeWrapper, FixedFlatWrapper, EnumActionWrapper
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
 
 
 def fps_calculator_open_ai_gym(env: Env, max_frames: int = 10000):

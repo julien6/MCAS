@@ -5,16 +5,16 @@
 # tests should establish varying environmental states that results in these actions performing differently
 from ipaddress import IPv4Network, IPv4Address
 
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 import inspect
 
-from CybORG.Simulator.Actions.GreenActions.GreenPortScan import GreenPortScan
-from CybORG.Simulator.Actions import Monitor
-from CybORG.Agents import MonitorAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions.GreenActions.GreenPortScan import GreenPortScan
+from simulation_models.cyborg.CybORG.Simulator.Actions import Monitor
+from simulation_models.cyborg.CybORG.Agents import MonitorAgent
 
-from CybORG.Shared.Enums import TrinaryEnum, ProcessType, ProcessState, SessionType, OperatingSystemType, OperatingSystemDistribution, OperatingSystemVersion, Architecture
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
-from CybORG.Tests.EphemeralPort import Win2008EphemeralPort
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, ProcessType, ProcessState, SessionType, OperatingSystemType, OperatingSystemDistribution, OperatingSystemVersion, Architecture
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import Win2008EphemeralPort
 import pytest
 
 def process_connections(obs, local_address, remote_address, ports):

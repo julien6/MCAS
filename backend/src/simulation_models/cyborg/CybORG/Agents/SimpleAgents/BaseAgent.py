@@ -1,10 +1,10 @@
 from gym import Space
 from gym.utils import seeding
 import numpy as np
-from CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Shared import Results
 from typing import Any
 
-from CybORG.Simulator.Actions.Action import Action, Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action, Sleep
 
 
 class BaseAgent:

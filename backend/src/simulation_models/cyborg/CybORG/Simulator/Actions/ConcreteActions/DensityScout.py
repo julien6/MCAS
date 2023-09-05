@@ -1,7 +1,7 @@
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions.ConcreteActions.LocalAction import LocalAction
-from CybORG.Simulator.Host import Host
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.LocalAction import LocalAction
+from simulation_models.cyborg.CybORG.Simulator.Host import Host
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class DensityScout(LocalAction):

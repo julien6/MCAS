@@ -1,14 +1,14 @@
 # Copyright DST Group. Licensed under the MIT license.
 from ipaddress import IPv4Address, IPv4Network
 
-from CybORG.Shared import CybORGLogger
-from CybORG.Simulator.Actions.Action import Action
-from CybORG.Simulator.Host import Host
-from CybORG.Simulator.Interface import Interface
-from CybORG.Simulator.MSFServerSession import MSFServerSession
-from CybORG.Simulator.Session import Session
-from CybORG.Simulator.State import State
-from CybORG.Simulator.Subnet import Subnet
+from simulation_models.cyborg.CybORG.Shared import CybORGLogger
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action
+from simulation_models.cyborg.CybORG.Simulator.Host import Host
+from simulation_models.cyborg.CybORG.Simulator.Interface import Interface
+from simulation_models.cyborg.CybORG.Simulator.MSFServerSession import MSFServerSession
+from simulation_models.cyborg.CybORG.Simulator.Session import Session
+from simulation_models.cyborg.CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Simulator.Subnet import Subnet
 
 
 class MSFAction(Action, CybORGLogger):

@@ -31,8 +31,8 @@ The following code shows how an agent typically interacts with CybORG:
 
 ```
 import inspect
-from CybORG import CybORG
-from CybORG.Agents import B_lineAgent
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent
 
 path = str(inspect.getfile(CybORG))
 path = path[:-7] + f'/Shared/Scenarios/Scenario2.yaml'

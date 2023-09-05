@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import List, Union, Optional
 from ipaddress import IPv4Network, IPv4Address
 
-import CybORG.Shared.Enums as CyEnums
+import simulation_models.cyborg.CybORG.Shared.Enums as CyEnums
 
 BROADCAST_ADDRESS = IPv4Address('0.0.0.0')
 

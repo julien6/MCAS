@@ -1,6 +1,6 @@
 import numpy as np
 
-from CybORG.Simulator.Host import Host
+from simulation_models.cyborg.CybORG.Simulator.Host import Host
 
 
 def cart2pol(x, y):

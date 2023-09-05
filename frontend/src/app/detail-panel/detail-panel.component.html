@@ -3,7 +3,14 @@
 <ng-template #thenBlock>
     <div class="row">
         <div class="column-left">
-            <json-editor [options]="editorOptions" [data]="visualData" (change)="showJson($event)"></json-editor>
+            <mat-tab-group [color]="'accent'" [backgroundColor]="'accent'">
+                <mat-tab label="State">
+                    <json-editor [options]="editorOptions" [data]="stateData"></json-editor>
+                </mat-tab>
+                <mat-tab label="Configuration">
+                    <json-editor [options]="editorOptions" [data]="configurationData" (change)="showJson($event)"></json-editor>
+                </mat-tab>
+            </mat-tab-group>
         </div>
         <div class="column-right">
             <div class="row">
@@ -13,8 +20,7 @@
 
                             <mat-tab-group [color]="'primary'" [backgroundColor]="'primary'">
                                 <mat-tab label="Topology">
-                                    <app-network-topology [detailData]="this.sharedData"
-                                        [lastAgentPlayed]="this.lastAgent"></app-network-topology>
+                                    <app-network-topology [stateData]="this.stateData"></app-network-topology>
                                 </mat-tab>
 
                                 <mat-tab label="Nodes">
@@ -49,7 +55,7 @@
                         <mat-tab label="Global">
                             <mat-tab-group [color]="'primary'" [backgroundColor]="'primary'">
                                 <mat-tab label="Graphs">
-                                    <app-global-graphs [lastMetrics]="this.lastMetrics">
+                                    <app-global-graphs>
                                     </app-global-graphs>
                                 </mat-tab>
                                 <mat-tab label="Matrixes">
@@ -80,11 +86,11 @@
         <div class="graphical">
             <mat-tab-group>
                 <mat-tab label="Graph visualization">
-                    <app-network-topology [detailData]="this.sharedData" [lastAgentPlayed]="this.lastAgent">
+                    <app-network-topology [stateData]="this.sharedConfigurationData">
                     </app-network-topology>
                 </mat-tab>
                 <mat-tab label="Charts visualization">
-                    <app-global-graphs [lastMetrics]="this.lastMetrics"></app-global-graphs>
+                    <app-global-graphs></app-global-graphs>
                 </mat-tab>
                 <mat-tab label="Logs visualization">
                     Logs visualization

@@ -5,14 +5,14 @@
 # tests should establish varying environmental states that results in these actions performing differently
 from ipaddress import IPv4Network, IPv4Address
 
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 import inspect
 
-from CybORG.Simulator.Actions.GreenActions.GreenPingSweep import GreenPingSweep
-from CybORG.Simulator.Actions.AbstractActions.Monitor import Monitor
+from simulation_models.cyborg.CybORG.Simulator.Actions.GreenActions.GreenPingSweep import GreenPingSweep
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions.Monitor import Monitor
 
-from CybORG.Shared.Enums import TrinaryEnum, ProcessType, ProcessState, SessionType
-from CybORG.Tests.EphemeralPort import Win2008EphemeralPort
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, ProcessType, ProcessState, SessionType
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import Win2008EphemeralPort
 import pytest
 
 @pytest.mark.skip("Not implemented")

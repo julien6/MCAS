@@ -12,6 +12,8 @@ import 'ace-builds/src-noconflict/mode-scss';
 
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
+import { ServerAPIService } from '../services/serverAPI.service';
+
 
 @Component({
   selector: 'app-configure-run',
@@ -39,14 +41,21 @@ export class ConfigureRunComponent implements OnInit {
   selectedEmulationEngine: string;
   selectedNumIterPerEp: number;
   selectedNumEp: number;
+  selectedPauseDuration: number;
 
-  constructor(public dialog: MatDialog, @Inject(MAT_DIALOG_DATA) public data: any,
+  simSettingUpDone: boolean;
+  simSettingUpProgressValue: number;
+
+  constructor(public dialog: MatDialog, private serverAPIService: ServerAPIService, @Inject(MAT_DIALOG_DATA) public data: any,
     private _formBuilder: FormBuilder, public dialogRef: MatDialogRef<ConfigureRunComponent>) {
     this.selectedMode = this.data.running_mode;
     this.selectedSimulationEngine = "";
     this.selectedEmulationEngine = "";
     this.selectedNumIterPerEp = 0;
     this.selectedNumEp = 0;
+    this.selectedPauseDuration = 0;
+    this.simSettingUpDone = false;
+    this.simSettingUpProgressValue = 0;
   }
 
   ngOnInit(): void {
@@ -97,7 +106,18 @@ export class ConfigureRunComponent implements OnInit {
   }
 
   onSelectingPauseDuration(value: any) {
-    this.selectedNumEp = value;
+    this.selectedPauseDuration = value;
+  }
+
+  onLaunchSettingUpSimulation() {
+
+    this.serverAPIService.postRequest("set-simulation?iteration_pause_duration=" + this.selectedPauseDuration + "&simulation_engine=" + this.selectedSimulationEngine +
+      "&number_of_iterations=" + this.selectedNumIterPerEp + "&number_of_episodes=" + this.selectedNumEp, {}).subscribe((data: any) => {
+        this.logsData = data.logs
+        this.simSettingUpDone = true
+        this.simSettingUpProgressValue = 100
+    })
+
   }
 
   openDialogWithRef(ref: TemplateRef<any>, height_percentage: string = "auto", width_percentage: string = "auto") {

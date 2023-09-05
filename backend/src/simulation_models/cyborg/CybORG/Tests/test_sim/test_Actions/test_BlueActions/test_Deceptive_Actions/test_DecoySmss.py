@@ -1,9 +1,9 @@
 import pytest 
 from deceptive_action_fixtures import cyborg, params, obs_failure, red_killchain, HOSTNAMES, blue_spam
 import itertools 
-from CybORG.Simulator.Actions import DecoySmss, EternalBlue
-from CybORG.Shared.Enums import SessionType, OperatingSystemType, ProcessType, ProcessState
-from CybORG.Tests.EphemeralPort import Win2008EphemeralPort, LinuxEphemeralPort
+from simulation_models.cyborg.CybORG.Simulator.Actions import DecoySmss, EternalBlue
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, OperatingSystemType, ProcessType, ProcessState
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import Win2008EphemeralPort, LinuxEphemeralPort
 
 invalid_hosts = ['User2','User3','User4','Enterprise0','Enterprise1','Enterprise2',
         'Op_Server0','Op_Host0', 'Op_Host1', 'Op_Host2'] # Linux hosts and those with smss (User0, User1)

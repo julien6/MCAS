@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { JsonEditorOptions } from "@maaxgr/ang-jsoneditor";
-import { WorldStateService } from '../services/app.worldState.service';
+import { DataService } from '../../app/services/app.data.service';
 import { ConfigShareService } from '../services/config-share.service';
 
 @Component({
@@ -11,45 +11,42 @@ import { ConfigShareService } from '../services/config-share.service';
 export class DetailPanelComponent implements OnInit {
 
   public editorOptions: JsonEditorOptions;
-  public sharedData: any;
-  public visualData: any;
+  public sharedConfigurationData: any;
+  public configurationData: any;
+  public stateData: any;
 
   public menuBarConfiguration: any;
 
-  public lastAgent: string;
-
-  public lastMetrics: any;
-
-  options = {
-    templates: [
-      {
-        text: 'Node',
-        title: 'Insert a Network Node',
-        className: 'jsoneditor-type-object',
-        field: 'NodeTemplate',
-        value: {
-          'id': "Undefined ID",
-          'label': 'Undefined Name',
-        }
-      },
-      {
-        text: 'Edge',
-        title: 'Insert a Network Edge',
-        field: 'EdgeTemplate',
-        value: {
-          'id': "Undefined ID",
-          'from': "Undefined Start Node",
-          'to': "Undefined End Node",
-        }
-      }
-    ]
-  }
+  // options = {
+  //   templates: [
+  //     {
+  //       text: 'Node',
+  //       title: 'Insert a Network Node',
+  //       className: 'jsoneditor-type-object',
+  //       field: 'NodeTemplate',
+  //       value: {
+  //         'id': "Undefined ID",
+  //         'label': 'Undefined Name',
+  //       }
+  //     },
+  //     {
+  //       text: 'Edge',
+  //       title: 'Insert a Network Edge',
+  //       field: 'EdgeTemplate',
+  //       value: {
+  //         'id': "Undefined ID",
+  //         'from': "Undefined Start Node",
+  //         'to': "Undefined End Node",
+  //       }
+  //     }
+  //   ]
+  // }
 
   show_green_agents: boolean = false;
   show_red_agents: boolean = false;
   show_blue_agents: boolean = false;
 
-  constructor(private worldStateService: WorldStateService, private configShareService: ConfigShareService) {
+  constructor(private dataService: DataService, private configShareService: ConfigShareService) {
     this.editorOptions = new JsonEditorOptions();
     this.editorOptions.mode = 'code';
     this.editorOptions.mainMenuBar = true;
@@ -57,8 +54,8 @@ export class DetailPanelComponent implements OnInit {
     // (<any>this.editorOptions).templates = this.options.templates;
     // this.editorOptions.expandAll = true;
 
-    this.visualData = this.worldStateService.getInitialState();
-    this.sharedData = this.visualData;
+    this.configurationData = {};
+    this.sharedConfigurationData = this.configurationData;
 
     this.menuBarConfiguration = this.configShareService.getInitialConfiguration();
 
@@ -70,28 +67,19 @@ export class DetailPanelComponent implements OnInit {
       this.menuBarConfiguration = data;
     })
 
-    this.worldStateService.currentNetworkGraph$.subscribe((data) => {
-      this.sharedData = data;
-      this.visualData = data;
+    this.dataService.currentConfigurationData$.subscribe((data) => {
+      this.sharedConfigurationData = data;
+      this.configurationData = data;
     })
 
-    this.worldStateService.currentNetworkGraph$.subscribe((data) => {
-      this.sharedData = data;
-      this.visualData = data;
-    })
-
-    this.worldStateService.currentLastAgent$.subscribe((data) => {
-      this.lastAgent = data
-    })
-
-    this.worldStateService.currentLastMetrics$.subscribe((data) => {
-      this.lastMetrics = data
+    this.dataService.currentStateData$.subscribe((data) => {
+      this.stateData = data;
     })
 
   }
 
   showJson(d: Event) {
-    this.sharedData = d;
+    this.sharedConfigurationData = d;
   }
 
 }

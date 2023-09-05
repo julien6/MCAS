@@ -4,27 +4,27 @@ from math import log2, ceil
 import numpy as np
 
 
-from CybORG.Agents import DroneRedAgent
-from CybORG.Agents.SimpleAgents.DroneTrojanAgent import DroneTrojanAgent
-from CybORG.Agents.SimpleAgents.GreenDroneAgent import GreenDroneAgent
-from CybORG.Agents.SimpleAgents.RedDroneWorm import RedDroneWormAgent
-from CybORG.Shared import Scenario
-from CybORG.Simulator.Actions import Sleep
-from CybORG.Simulator.Actions.ConcreteActions.ActivateTrojan import ActivateTrojan
-from CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic, AllowTraffic
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.SeizeControl import SeizeControl
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.ExploitDroneVulnerability import ExploitDroneVulnerability
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
-from CybORG.Simulator.Actions.ConcreteActions.FloodBandwidth import FloodBandwidth
-from CybORG.Simulator.Actions.ConcreteActions.GetDroneSwarmData import GetDroneSwarmData
-from CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
-from CybORG.Simulator.Actions.GreenActions.SendData import SendData
-from CybORG.Shared.CommsRewardCalculator import CommsAvailabilityRewardCalculator, CompleteCompromiseRewardCalculator
-from CybORG.Shared.Scenario import ScenarioHost, ScenarioSubnet, ScenarioAgent, ScenarioSession
-from CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents import DroneRedAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.DroneTrojanAgent import DroneTrojanAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.GreenDroneAgent import GreenDroneAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.RedDroneWorm import RedDroneWormAgent
+from simulation_models.cyborg.CybORG.Shared import Scenario
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ActivateTrojan import ActivateTrojan
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic, AllowTraffic
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.SeizeControl import SeizeControl
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.ExploitDroneVulnerability import ExploitDroneVulnerability
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.RetakeControl import RetakeControl
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.FloodBandwidth import FloodBandwidth
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.GetDroneSwarmData import GetDroneSwarmData
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions
+from simulation_models.cyborg.CybORG.Simulator.Actions.GreenActions.SendData import SendData
+from simulation_models.cyborg.CybORG.Shared.CommsRewardCalculator import CommsAvailabilityRewardCalculator, CompleteCompromiseRewardCalculator
+from simulation_models.cyborg.CybORG.Shared.Scenario import ScenarioHost, ScenarioSubnet, ScenarioAgent, ScenarioSession
+from simulation_models.cyborg.CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
 
 
-# from CybORG.Agents.Wrappers import PettingZooParallelWrapper
+# from simulation_models.cyborg.CybORG.Agents.Wrappers import PettingZooParallelWrapper
 
 
 class DroneSwarmScenarioGenerator(ScenarioGenerator):

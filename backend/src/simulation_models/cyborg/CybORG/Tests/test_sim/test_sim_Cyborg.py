@@ -13,16 +13,16 @@
 #    Team Project Lead: Martin Lucas
 #    e-mail Address:    Martin.Lucas@dst.defence.gov.au
 ##################################################################
-from CybORG import CybORG
-from CybORG.Agents import RandomAgent
-from CybORG.Agents.Wrappers import FixedFlatWrapper
-from CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
-from CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
-from CybORG.Agents.training_example import run_training_example
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
-from CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
-from CybORG.Simulator.SimulationController import SimulationController
-from CybORG.Tests.utils import compare_fundamental_observations
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import RandomAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers import FixedFlatWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
+from simulation_models.cyborg.CybORG.Agents.training_example import run_training_example
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
+from simulation_models.cyborg.CybORG.Simulator.SimulationController import SimulationController
+from simulation_models.cyborg.CybORG.Tests.utils import compare_fundamental_observations
 import pytest
 
 

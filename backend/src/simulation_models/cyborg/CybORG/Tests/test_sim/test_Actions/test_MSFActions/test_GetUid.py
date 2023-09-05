@@ -2,10 +2,10 @@ import inspect
 
 import pytest
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions.MSFActionsFolder import GetUid
-from CybORG.Shared.Enums import BuiltInGroups
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions.MSFActionsFolder import GetUid
+from simulation_models.cyborg.CybORG.Shared.Enums import BuiltInGroups
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 @pytest.mark.parametrize(["host", "user", "session_type", "expected_observation"],

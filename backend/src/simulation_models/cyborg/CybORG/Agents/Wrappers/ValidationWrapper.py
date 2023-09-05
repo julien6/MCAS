@@ -1,4 +1,4 @@
-from CybORG.Agents.Wrappers import BaseWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers import BaseWrapper
 
 
 class ValidationDroneWrapper(BaseWrapper):

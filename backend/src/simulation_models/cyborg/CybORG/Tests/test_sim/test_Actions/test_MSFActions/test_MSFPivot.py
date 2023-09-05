@@ -3,11 +3,11 @@ from ipaddress import IPv4Address
 
 import pytest
 
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 
-from CybORG.Shared.Enums import BuiltInGroups
-from CybORG.Shared.Observation import Observation
-from CybORG.Simulator.Actions import MSFAutoroute, KillProcessLinux, MSFEternalBlue, MS17_010_PSExec
+from simulation_models.cyborg.CybORG.Shared.Enums import BuiltInGroups
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions import MSFAutoroute, KillProcessLinux, MSFEternalBlue, MS17_010_PSExec
 
 
 def test_pivot_execute(cyborg_scenario1_state):

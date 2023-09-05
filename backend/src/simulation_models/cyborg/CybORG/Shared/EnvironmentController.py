@@ -4,14 +4,14 @@
 import gym
 
 
-from CybORG.Shared import Scenario, CybORGLogger
-from CybORG.Simulator.Actions import Action
-from CybORG.Simulator.Actions.Action import InvalidAction, Sleep
-from CybORG.Shared.AgentInterface import AgentInterface
-from CybORG.Shared.Observation import Observation
-from CybORG.Shared.Results import Results
-from CybORG.Shared.RewardCalculator import RewardCalculator
-from CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
+from simulation_models.cyborg.CybORG.Shared import Scenario, CybORGLogger
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import InvalidAction, Sleep
+from simulation_models.cyborg.CybORG.Shared.AgentInterface import AgentInterface
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Shared.Results import Results
+from simulation_models.cyborg.CybORG.Shared.RewardCalculator import RewardCalculator
+from simulation_models.cyborg.CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
 
 
 class EnvironmentController(CybORGLogger):

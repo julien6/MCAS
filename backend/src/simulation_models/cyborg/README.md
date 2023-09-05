@@ -18,8 +18,8 @@ pip install -e .
 Create a CybORG environment with the DroneSwarm Scenario that is used for CAGE Challenge 3:
 
 ```python
-from CybORG import CybORG
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
 
 sg = DroneSwarmScenarioGenerator()
 cyborg = CybORG(sg, 'sim')
@@ -28,9 +28,9 @@ cyborg = CybORG(sg, 'sim')
 The default_red_agent parameter of the DroneSwarmScenarioGenerator allows you to alter the red agent behaviour. Here is an example of a red agent that randomly selects a drone to exploit and seize control of:
 
 ```python
-from CybORG import CybORG
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Agents.SimpleAgents.DroneRedAgent import DroneRedAgent
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.DroneRedAgent import DroneRedAgent
 
 red_agent = DroneRedAgent
 sg = DroneSwarmScenarioGenerator(default_red_agent=red_agent)
@@ -59,10 +59,10 @@ To alter the interface with CybORG, [wrappers](CybORG/Agents/Wrappers) are avali
 The OpenAI Gym Wrapper allows interaction with a single external agent. The name of that external agent must be specified at the creation of the OpenAI Gym Wrapper.
 
 ```python
-from CybORG import CybORG
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
-from CybORG.Agents.Wrappers.FixedFlatWrapper import FixedFlatWrapper
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents.Wrappers.OpenAIGymWrapper import OpenAIGymWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.FixedFlatWrapper import FixedFlatWrapper
 
 sg = DroneSwarmScenarioGenerator()
 cyborg = CybORG(sg, 'sim')
@@ -76,9 +76,9 @@ observation, reward, done, info = open_ai_wrapped_cyborg.step(0)
 The PettingZoo Parallel Wrapper allows multiple agents to interact with the environment simultaneously.
 
 ```python
-from CybORG import CybORG
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
 
 sg = DroneSwarmScenarioGenerator()
 cyborg = CybORG(sg, 'sim')
@@ -88,9 +88,9 @@ observations, rewards, dones, infos = open_ai_wrapped_cyborg.step({'blue_agent_0
 
 ### Ray/RLLib wrapper  
 ```python
-from CybORG import CybORG
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
 from ray.rllib.env import ParallelPettingZooEnv
 from ray.tune import register_env
 

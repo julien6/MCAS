@@ -17,33 +17,33 @@ from ipaddress import IPv4Address
 
 import pytest
 
-from CybORG import CybORG
-from CybORG.Simulator.Actions import (
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Simulator.Actions import (
     DiscoverNetworkServices,
     DiscoverRemoteSystems,
     ExploitRemoteService,
     Misinform,
 )
 
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.EscalateAction import EscalateAction
-from CybORG.Simulator.State import State
-from CybORG.Simulator.Host import Host
-from CybORG.Simulator.Process import Process
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.EscalateAction import EscalateAction
+from simulation_models.cyborg.CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Simulator.Host import Host
+from simulation_models.cyborg.CybORG.Simulator.Process import Process
 
-from CybORG.Agents import B_lineAgent
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent
 
-from CybORG.Simulator.Actions.AbstractActions.Misinform import (
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions.Misinform import (
         tomcat_decoy_factory,
         DecoyFactory,
         Decoy
         )
 
-from CybORG.Simulator.Actions.AbstractActions.PrivilegeEscalate import (
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions.PrivilegeEscalate import (
         EscalateActionSelector, PrivilegeEscalate
         )
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.V4L2KernelExploit import V4L2KernelExploit
-from CybORG.Shared.Enums import TrinaryEnum, DecoyType
-from CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.V4L2KernelExploit import V4L2KernelExploit
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, DecoyType
+from simulation_models.cyborg.CybORG.Shared import Observation
 
 class DummyEscalateAction(EscalateAction):
     """

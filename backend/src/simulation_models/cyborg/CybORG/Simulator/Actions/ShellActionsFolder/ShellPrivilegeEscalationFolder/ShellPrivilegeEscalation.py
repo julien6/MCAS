@@ -1,12 +1,12 @@
 # Copyright DST Group. Licensed under the MIT license.
 import copy
 
-from CybORG.Simulator.Actions.ShellActionsFolder.ShellAction import ShellAction
-from CybORG.Shared.Enums import FileType, SessionType, FileVersion, OperatingSystemType
-from CybORG.Shared.Observation import Observation
-from CybORG.Simulator.File import File
-from CybORG.Simulator.Session import Session
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Simulator.Actions.ShellActionsFolder.ShellAction import ShellAction
+from simulation_models.cyborg.CybORG.Shared.Enums import FileType, SessionType, FileVersion, OperatingSystemType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.File import File
+from simulation_models.cyborg.CybORG.Simulator.Session import Session
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class ShellPrivilegeEscalation(ShellAction):

@@ -1,8 +1,8 @@
 import pytest
 import inspect
 
-from CybORG import CybORG
-from CybORG.Agents import MonitorAgent
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import MonitorAgent
 import inspect
 import json
 import time
@@ -11,14 +11,14 @@ import numpy as np
 import pygame
 from networkx import number_connected_components
 
-from CybORG import CybORG
-from CybORG.Agents import RandomAgent, DroneRedAgent, SleepAgent, RemoveBlueDrone, RetakeBlueDrone
-from CybORG.Agents.SimpleAgents.DroneRedAgent import BlockAgent, FloodAgent, LegalExploitDrone
-from CybORG.Agents.SimpleAgents.GreenDroneAgent import GreenDroneAgent
-from CybORG.Agents.SimpleAgents.RedDroneWorm import RedDroneWormAgent
-from CybORG.Simulator.Actions.Action import RemoteAction
-from CybORG.Simulator.Actions.GreenActions.SendData import SendData
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import RandomAgent, DroneRedAgent, SleepAgent, RemoveBlueDrone, RetakeBlueDrone
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.DroneRedAgent import BlockAgent, FloodAgent, LegalExploitDrone
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.GreenDroneAgent import GreenDroneAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.RedDroneWorm import RedDroneWormAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import RemoteAction
+from simulation_models.cyborg.CybORG.Simulator.Actions.GreenActions.SendData import SendData
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
 
 def test_confidentiality():
     return 0

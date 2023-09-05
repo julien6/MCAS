@@ -1,6 +1,6 @@
-from CybORG.Agents import BaseAgent
-from CybORG.Shared import Results
-from CybORG.Simulator.Actions import PrivilegeEscalate, ExploitRemoteService, DiscoverRemoteSystems, Impact, \
+from simulation_models.cyborg.CybORG.Agents import BaseAgent
+from simulation_models.cyborg.CybORG.Shared import Results
+from simulation_models.cyborg.CybORG.Simulator.Actions import PrivilegeEscalate, ExploitRemoteService, DiscoverRemoteSystems, Impact, \
     DiscoverNetworkServices, Sleep
 
 

@@ -3,12 +3,12 @@ from random import choice
 
 import pytest
 
-from CybORG.Agents.Wrappers import EnumActionWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers import EnumActionWrapper
 
-from CybORG.Simulator.Actions import MeterpreterIPConfig, MSFAutoroute, MS17_010_PSExec, MSFPortscan, MSFPingsweep, \
+from simulation_models.cyborg.CybORG.Simulator.Actions import MeterpreterIPConfig, MSFAutoroute, MS17_010_PSExec, MSFPortscan, MSFPingsweep, \
     UpgradeToMeterpreter, SSHLoginExploit, Sleep, DiscoverNetworkServices, \
     ExploitRemoteService
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 @pytest.fixture(params=['Red'])

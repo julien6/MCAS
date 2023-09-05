@@ -1,9 +1,9 @@
-from CybORG import CybORG
+from simulation_models.cyborg.CybORG import CybORG
 import inspect
 
-from CybORG.Agents.SimpleAgents.BlueMonitorAgent import BlueMonitorAgent
-from CybORG.Agents.SimpleAgents.KeyboardAgent import KeyboardAgent
-from CybORG.Agents.Wrappers.RedTableWrapper import RedTableWrapper
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BlueMonitorAgent import BlueMonitorAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.KeyboardAgent import KeyboardAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers.RedTableWrapper import RedTableWrapper
 
 if __name__ == "__main__":
     print("Setup")

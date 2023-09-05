@@ -2,14 +2,14 @@
 from ipaddress import IPv4Address
 from time import sleep
 
-from CybORG.Simulator.Actions.MSFActionsFolder.RemoteCodeExecutionFolder.RemoteCodeExecution import RemoteCodeExecution
+from simulation_models.cyborg.CybORG.Simulator.Actions.MSFActionsFolder.RemoteCodeExecutionFolder.RemoteCodeExecution import RemoteCodeExecution
 
 # use msf module exploit/windows/smb/ms17_010_eternal_blue, set RHOSTS to target
 # could also change LHOST, LPORT and RPORT (default 139)
 # gives root session
-from CybORG.Shared.Enums import SessionType, OperatingSystemType
-from CybORG.Shared.Observation import Observation
-from CybORG.Simulator.User import User
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, OperatingSystemType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.User import User
 
 
 class MS17_010_PSExec(RemoteCodeExecution):

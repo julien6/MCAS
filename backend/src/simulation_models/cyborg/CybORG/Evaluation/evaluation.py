@@ -2,13 +2,13 @@ import inspect
 import time
 from statistics import mean, stdev
 
-from CybORG import CybORG, CYBORG_VERSION
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG, CYBORG_VERSION
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
 
 from datetime import datetime
 
 # this imports a submissions agents
-from CybORG.Evaluation.submission.submission import agents, wrap
+from simulation_models.cyborg.CybORG.Evaluation.submission.submission import agents, wrap
 
 
 def run_evaluation(name, team, name_of_agent, max_eps, write_to_file=True):

@@ -2,16 +2,16 @@
 from typing import Tuple, List
 from ipaddress import IPv4Address
 
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions.ConcreteActions.EscalateActions.EscalateAction import EscalateAction, ExploreHost
-from CybORG.Simulator.Actions.ConcreteActions.LocalAction import LocalAction
-from CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions, \
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.EscalateActions.EscalateAction import EscalateAction, ExploreHost
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.LocalAction import LocalAction
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.RemoveOtherSessions import RemoveOtherSessions, \
     RemoveOtherSessions_AlwaysSuccessful
-from CybORG.Shared.Enums import TrinaryEnum, DecoyType, OperatingSystemType, SessionType
-from CybORG.Simulator.Host import Host
-from CybORG.Simulator.Process import Process
-from CybORG.Simulator.State import State
-from CybORG.Simulator.Session import Session
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum, DecoyType, OperatingSystemType, SessionType
+from simulation_models.cyborg.CybORG.Simulator.Host import Host
+from simulation_models.cyborg.CybORG.Simulator.Process import Process
+from simulation_models.cyborg.CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Simulator.Session import Session
 
 
 class SeizeControl(LocalAction):

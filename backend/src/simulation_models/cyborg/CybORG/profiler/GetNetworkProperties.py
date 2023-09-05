@@ -1,9 +1,9 @@
 import numpy as np
 from networkx import number_connected_components, adjacency_matrix
 
-from CybORG import CybORG
-from CybORG.Shared.Actions.Action import RemoteAction
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Shared.Actions.Action import RemoteAction
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
 
 
 def get_network_properties(number_of_drones, maximum_steps, max_length_data_links, number_of_repeats=100):

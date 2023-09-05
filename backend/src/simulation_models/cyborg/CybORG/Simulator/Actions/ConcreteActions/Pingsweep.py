@@ -1,10 +1,10 @@
 from ipaddress import IPv4Network
 
-from CybORG.Shared import Observation
-from CybORG.Simulator.Actions.Action import RemoteAction
-from CybORG.Simulator.Actions.ConcreteActions.LocalAction import LocalAction
-from CybORG.Simulator.Actions.Action import lo_subnet, lo
-from CybORG.Simulator.State import State
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import RemoteAction
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.LocalAction import LocalAction
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import lo_subnet, lo
+from simulation_models.cyborg.CybORG.Simulator.State import State
 
 
 class Pingsweep(RemoteAction):

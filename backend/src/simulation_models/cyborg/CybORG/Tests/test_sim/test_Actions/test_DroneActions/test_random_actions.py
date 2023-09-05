@@ -1,11 +1,11 @@
 import pytest
 
-from CybORG import CybORG
-from CybORG.Agents import RandomAgent
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
-from CybORG.Agents.Wrappers.ValidationWrapper import ValidationDroneWrapper
-from CybORG.Simulator.Actions import InvalidAction, Sleep
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import RandomAgent
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.ValidationWrapper import ValidationDroneWrapper
+from simulation_models.cyborg.CybORG.Simulator.Actions import InvalidAction, Sleep
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
 
 
 @pytest.fixture(params=[lambda sg: {f'blue_agent_{agent}': RandomAgent() for agent in range(sg.num_drones)},

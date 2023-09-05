@@ -38,9 +38,10 @@
   <!-- End Run menu -->
 
     <!-- Run menu -->
-    <button mat-button [matMenuTriggerFor]="run_menu">Run</button>
+    <button mat-button [matMenuTriggerFor]="run_menu">Launch</button>
     <mat-menu #run_menu="matMenu">
       <button mat-menu-item (click)="run()">Run</button>
+      <button mat-menu-item (click)="next()">Next</button>
       <button mat-menu-item (click)="pause()">Pause</button>
       <button mat-menu-item (click)="resume()">Resume</button>
       <button mat-menu-item (click)="stop()">Stop</button>

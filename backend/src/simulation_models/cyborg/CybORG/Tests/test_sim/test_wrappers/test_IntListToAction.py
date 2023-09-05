@@ -1,9 +1,9 @@
 import inspect
 import random
 
-from CybORG import CybORG
-from CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.Wrappers.IntListToAction import IntListToActionWrapper
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 def test_step_zeroes(create_cyborg_sim):

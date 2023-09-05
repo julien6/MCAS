@@ -1,11 +1,11 @@
 import pytest
 import inspect
 
-from CybORG import CybORG
-from CybORG.Agents import B_lineAgent
-from CybORG.Shared.Enums import TrinaryEnum
-from CybORG.Simulator.Actions import Monitor, DiscoverRemoteSystems
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum
+from simulation_models.cyborg.CybORG.Simulator.Actions import Monitor, DiscoverRemoteSystems
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 def test_get_observation(cyborg_scenario1b_bline):

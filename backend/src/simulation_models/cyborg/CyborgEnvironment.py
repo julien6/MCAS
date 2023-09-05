@@ -1,13 +1,13 @@
 from ipaddress import IPv4Address, IPv4Network
 from typing import Any, Dict, List
-from CybORG import CybORG
-from CybORG.Agents.SimpleAgents.BaseAgent import PzBaseAgent, PzRandom
-from CybORG.Agents.Wrappers.CommsPettingZooParallelWrapper import AgentCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper
-from CybORG.Simulator.Actions.Action import Action, Sleep
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
-from CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
-from CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
-from CybORG.Agents import B_lineAgent, BlueReactRestoreAgent, BlueReactRemoveAgent, SleepAgent, DroneRedAgent, \
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import PzBaseAgent, PzRandom
+from simulation_models.cyborg.CybORG.Agents.Wrappers.CommsPettingZooParallelWrapper import AgentCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action, Sleep
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent, BlueReactRestoreAgent, BlueReactRemoveAgent, SleepAgent, DroneRedAgent, \
     RandomAgent, BaseAgent, RedMeanderAgent
 from os.path import dirname
 from pprint import pprint
@@ -16,12 +16,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import inspect
-from CybORG.Agents.Wrappers.TrueTableWrapper import true_obs_to_table
-from CybORG.Simulator.SimulationController import SimulationController
+from simulation_models.cyborg.CybORG.Agents.Wrappers.TrueTableWrapper import true_obs_to_table
+from simulation_models.cyborg.CybORG.Simulator.SimulationController import SimulationController
 import json
 import enum
 
 from simulation_models.SimulationModel import SimulationModel
+from networkx.readwrite.json_graph.node_link import node_link_data
 
 class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, o):
@@ -45,7 +46,7 @@ class CyborgEnvironment(SimulationModel):
         # path = dirname(path) + f'/Simulator/Scenarios/scenario_files/Scenario1b.yaml'
         # sg = FileReaderScenarioGenerator(path)
 
-        sg = DroneSwarmScenarioGenerator(num_drones=3)
+        sg = DroneSwarmScenarioGenerator(num_drones=10)
 
         env = CybORG(sg, 'sim')
 
@@ -60,7 +61,7 @@ class CyborgEnvironment(SimulationModel):
         # agents = {agent: RandomAgent() for agent in ["Blue", "Red", "Green"]}
 
         self.agents = {f"blue_agent_{agent}": PzRandom(
-            name=f"blue_agent_{agent}") for agent in range(3)}
+            name=f"blue_agent_{agent}") for agent in range(10)}
 
         self.iteration_data = {}
 
@@ -90,6 +91,11 @@ class CyborgEnvironment(SimulationModel):
         state = json.loads(json.dumps(
             true_state, cls=EnhancedJSONEncoder, indent=4))
         return state
+
+    def get_team_agent_mapping(self):
+        """Return the host agent mapping
+        """
+        return self.wrapped_cyborg.env.environment_controller.team_assignments
 
     def get_true_state(self):
         """Returns the real full host nodes data
@@ -128,7 +134,7 @@ class CyborgEnvironment(SimulationModel):
                                         for agent, observations in self.pz_observations.items()}
             self.agents_rewards = {
                 agent: None for agent in self.wrapped_cyborg.agents}
-            self.true_states = [self.get_true_state()]
+            self.true_states = self.get_true_state()
 
             self.action_spaces = {agent: sp.n for agent,
                                   sp in self.pz_action_spaces.items()}
@@ -197,14 +203,21 @@ class CyborgEnvironment(SimulationModel):
             self.iteration_data["agents_rewards"] = self.agents_rewards
         if "true_states" in requested_info:
             self.iteration_data["true_states"] = self.true_states
-
-        if self.current_ep == (self.max_eps - 1) and self.current_it == (self.max_its -1):
-            return None
+        if "network_graph" in requested_info:
+            self.iteration_data["network_graph"] = node_link_data(self.wrapped_cyborg.env.environment_controller.state.link_diagram)
+        if "team_agent_mapping" in requested_info:
+            self.iteration_data["team_agent_mapping"] = self.get_team_agent_mapping()
 
         self.current_it += 1
         if self.current_it == self.max_its:
             self.current_ep += 1
             self.current_it = 0
+
+        if self.current_ep >= self.max_eps:
+            return None
+
+        if self.current_ep >= self.max_eps and self.current_it > 0:
+            return None
 
         return self.iteration_data
 
@@ -216,10 +229,10 @@ if __name__ == '__main__':
     res = None
     while True:
         res = ce.next(["episode_number", "iteration_number",
-                      "agents_actions", "agents_observations"])
+                      "agents_actions", "agents_observations", "network_graph"])
         if res != None:
-            # print("\t", end="")
-            # print(res)
+            print("\t", end="")
+            print(res)
             pass
         else:
             break

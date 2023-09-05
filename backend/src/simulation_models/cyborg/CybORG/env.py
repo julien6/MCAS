@@ -5,19 +5,19 @@ from typing import Any, Union
 import gym
 from gym.utils import seeding
 
-from CybORG.Shared import Observation, Results, CybORGLogger
-from CybORG.Shared.Enums import DecoyType
-from CybORG.Shared.EnvironmentController import EnvironmentController
-from CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
-from CybORG.Simulator.Actions import DiscoverNetworkServices, DiscoverRemoteSystems, ExploitRemoteService, \
+from simulation_models.cyborg.CybORG.Shared import Observation, Results, CybORGLogger
+from simulation_models.cyborg.CybORG.Shared.Enums import DecoyType
+from simulation_models.cyborg.CybORG.Shared.EnvironmentController import EnvironmentController
+from simulation_models.cyborg.CybORG.Shared.Scenarios.ScenarioGenerator import ScenarioGenerator
+from simulation_models.cyborg.CybORG.Simulator.Actions import DiscoverNetworkServices, DiscoverRemoteSystems, ExploitRemoteService, \
     InvalidAction, \
     Sleep, PrivilegeEscalate, Impact, Remove, Restore, SeizeControl, RetakeControl, RemoveOtherSessions, FloodBandwidth
-from CybORG.Simulator.Actions.ConcreteActions.ActivateTrojan import ActivateTrojan
-from CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic, AllowTraffic
-from CybORG.Simulator.Actions.ConcreteActions.ExploitActions.ExploitAction import ExploitAction
-from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
-from CybORG.Tests.utils import CustomGenerator
-# from CybORG.render.renderer import Renderer
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ActivateTrojan import ActivateTrojan
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ControlTraffic import BlockTraffic, AllowTraffic
+from simulation_models.cyborg.CybORG.Simulator.Actions.ConcreteActions.ExploitActions.ExploitAction import ExploitAction
+from simulation_models.cyborg.CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
+from simulation_models.cyborg.CybORG.Tests.utils import CustomGenerator
+# from simulation_models.cyborg.CybORG.render.renderer import Renderer
 
 
 
@@ -91,7 +91,7 @@ class CybORG(CybORGLogger):
         ----------
         """
         if self.env == 'sim':
-            from CybORG.Simulator.SimulationController import SimulationController
+            from simulation_models.cyborg.CybORG.Simulator.SimulationController import SimulationController
             return SimulationController(self.scenario_generator, agents, self.np_random)
         raise NotImplementedError(
             f"Unsupported environment '{self.env}'. Currently supported "

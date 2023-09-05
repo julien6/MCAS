@@ -1,10 +1,10 @@
-from CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
 import random
 import math
 
 from ipaddress import IPv4Address
 
-from CybORG.Simulator.Actions import VelociraptorPoll, SSHAccess, VelociraptorPoll, KillProcessLinux, VelociraptorPoll, KillProcessLinux
+from simulation_models.cyborg.CybORG.Simulator.Actions import VelociraptorPoll, SSHAccess, VelociraptorPoll, KillProcessLinux, VelociraptorPoll, KillProcessLinux
 
 
 class CounterKillchainAgent(BaseAgent):

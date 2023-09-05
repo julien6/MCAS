@@ -1,8 +1,8 @@
 import random
 from datetime import datetime
 
-from CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
-from CybORG.Shared.Enums import OperatingSystemType, SessionType, ProcessName, Path, ProcessType, ProcessVersion, \
+from simulation_models.cyborg.CybORG.Agents.Wrappers.BaseWrapper import BaseWrapper
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType, SessionType, ProcessName, Path, ProcessType, ProcessVersion, \
     AppProtocol, FileType, ProcessState, Vulnerability, Vendor, PasswordHashType, BuiltInGroups, \
     OperatingSystemDistribution, OperatingSystemVersion, OperatingSystemKernelVersion, Architecture, \
     OperatingSystemPatch, FileVersion

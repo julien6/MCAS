@@ -1,10 +1,10 @@
 # Copyright DST Group. Licensed under the MIT license.
 
-from CybORG.Shared import Observation
-from CybORG.Shared.Enums import SessionType
+from simulation_models.cyborg.CybORG.Shared import Observation
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType
 
-from CybORG.Shared.Enums import OperatingSystemType
-from CybORG.Simulator.Actions import Action
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType
+from simulation_models.cyborg.CybORG.Simulator.Actions import Action
 
 
 class GetProcessInfo(Action):

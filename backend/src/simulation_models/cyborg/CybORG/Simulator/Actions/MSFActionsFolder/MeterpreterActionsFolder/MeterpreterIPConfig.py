@@ -2,9 +2,9 @@
 import re
 from ipaddress import IPv4Network
 
-from CybORG.Simulator.Actions.MSFActionsFolder.MeterpreterActionsFolder.MeterpreterAction import MeterpreterAction
-from CybORG.Shared.Enums import OperatingSystemType, SessionType
-from CybORG.Shared.Observation import Observation
+from simulation_models.cyborg.CybORG.Simulator.Actions.MSFActionsFolder.MeterpreterActionsFolder.MeterpreterAction import MeterpreterAction
+from simulation_models.cyborg.CybORG.Shared.Enums import OperatingSystemType, SessionType
+from simulation_models.cyborg.CybORG.Shared.Observation import Observation
 
 
 class MeterpreterIPConfig(MeterpreterAction):

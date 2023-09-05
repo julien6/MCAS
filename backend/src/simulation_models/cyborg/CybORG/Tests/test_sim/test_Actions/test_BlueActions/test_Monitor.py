@@ -2,12 +2,12 @@ import pytest
 import itertools 
 from copy import deepcopy
 
-from CybORG.Tests.test_sim.sim_fixtures import create_cyborg, blue_observation_history, SCENARIOS
-from CybORG.Agents.Utils import ObservationWrapper
-from CybORG.Agents import MonitorAgent
-from CybORG.Simulator.Actions import Monitor
-from CybORG.Shared.Enums import SessionType, OperatingSystemType, ProcessType, ProcessState, TrinaryEnum
-from CybORG.Tests.EphemeralPort import Win2008EphemeralPort, LinuxEphemeralPort
+from simulation_models.cyborg.CybORG.Tests.test_sim.sim_fixtures import create_cyborg, blue_observation_history, SCENARIOS
+from simulation_models.cyborg.CybORG.Agents.Utils import ObservationWrapper
+from simulation_models.cyborg.CybORG.Agents import MonitorAgent
+from simulation_models.cyborg.CybORG.Simulator.Actions import Monitor
+from simulation_models.cyborg.CybORG.Shared.Enums import SessionType, OperatingSystemType, ProcessType, ProcessState, TrinaryEnum
+from simulation_models.cyborg.CybORG.Tests.EphemeralPort import Win2008EphemeralPort, LinuxEphemeralPort
 
 SCENARIO = 'Scenario2'
 EXPLOIT_PARAMETERS = ['session', 'agent', 'hostname']

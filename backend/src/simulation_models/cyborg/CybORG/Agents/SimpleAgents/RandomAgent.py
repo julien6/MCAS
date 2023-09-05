@@ -4,10 +4,10 @@ from typing import Union
 from gym import Space
 from gym.vector.utils import spaces
 
-from CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
+from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import BaseAgent
 
 # agent that does random action
-from CybORG.Simulator.Actions import Sleep
+from simulation_models.cyborg.CybORG.Simulator.Actions import Sleep
 
 
 class RandomAgent(BaseAgent):

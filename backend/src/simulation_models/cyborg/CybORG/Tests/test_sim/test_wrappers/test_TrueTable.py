@@ -4,12 +4,12 @@ from ipaddress import IPv4Address, IPv4Network
 
 from prettytable import PrettyTable
 
-from CybORG import CybORG
-from CybORG.Shared.Enums import TrinaryEnum
-from CybORG.Agents.Wrappers.TrueTableWrapper import TrueTableWrapper
-from CybORG.Simulator.Actions.AbstractActions import DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, PrivilegeEscalate, Impact, Monitor
-from CybORG.Agents import B_lineAgent
-from CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
+from simulation_models.cyborg.CybORG import CybORG
+from simulation_models.cyborg.CybORG.Shared.Enums import TrinaryEnum
+from simulation_models.cyborg.CybORG.Agents.Wrappers.TrueTableWrapper import TrueTableWrapper
+from simulation_models.cyborg.CybORG.Simulator.Actions.AbstractActions import DiscoverRemoteSystems, DiscoverNetworkServices, ExploitRemoteService, PrivilegeEscalate, Impact, Monitor
+from simulation_models.cyborg.CybORG.Agents import B_lineAgent
+from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 
 
 def get_table(rows):    
