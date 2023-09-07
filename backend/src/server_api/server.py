@@ -66,10 +66,12 @@ def next_iteration():
         requested_info += ["iteration_number"]
     if request.args.get("observation_spaces", False):
         requested_info += ["observation_spaces"]
-    if request.args.get("agents_actions", False):
-        requested_info += ["agents_actions"]
+    if request.args.get("action_spaces", False):
+        requested_info += ["action_spaces"]
     if request.args.get("agents_observations", False):
         requested_info += ["agents_observations"]
+    if request.args.get("agents_actions", False):
+        requested_info += ["agents_actions"]
     if request.args.get("agents_rewards", False):
         requested_info += ["agents_rewards"]
     if request.args.get("true_states", False):
@@ -78,6 +80,12 @@ def next_iteration():
         requested_info += ["network_graph"]
     if request.args.get("team_agent_mapping", False):
         requested_info += ["team_agent_mapping"]
+    if request.args.get("pz_cyborg_actions", False):
+        requested_info += ["pz_cyborg_actions"]
+    if request.args.get("cyborg_actions", False):
+        requested_info += ["cyborg_actions"]
+    if request.args.get("cyborg_observations", False):
+        requested_info += ["cyborg_observations"]
 
     res = env.next(requested_info)
 

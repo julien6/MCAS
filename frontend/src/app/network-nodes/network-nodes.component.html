@@ -2,16 +2,18 @@
 
     <!-- TODO: for each node use the template below -->
 
-    <mat-expansion-panel expanded="false">
+    <mat-expansion-panel *ngFor="let node of this.nodesData | keyvalue" expanded="false">
         <mat-expansion-panel-header>
             <mat-panel-title>
-                Node1
+                {{ node.key }}
             </mat-panel-title>
         </mat-expansion-panel-header>
 
         <mat-accordion class="example-headers-align" multi>
 
-            <mat-expansion-panel expanded="true">
+            <app-tree [data]=node.value></app-tree>
+
+            <!-- <mat-expansion-panel expanded="true">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Properties
@@ -33,9 +35,9 @@
                     </tr>
                 </table>
 
-            </mat-expansion-panel>
+            </mat-expansion-panel> -->
 
-            <mat-expansion-panel expanded="true">
+            <mat-expansion-panel expanded="false">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         Logs

@@ -24,6 +24,7 @@ import enum
 from simulation_models.SimulationModel import SimulationModel
 from networkx.readwrite.json_graph.node_link import node_link_data
 
+
 class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, enum.Enum):
@@ -69,6 +70,7 @@ class CyborgEnvironment(SimulationModel):
         self.pz_observation_spaces = None
         self.pz_action_spaces = None
         self.cyborg_observations = None
+        self.cyborg_actions = None
         self.cyborg_action_spaces = None
 
         self.agents_actions = None
@@ -102,8 +104,34 @@ class CyborgEnvironment(SimulationModel):
         """
         true_state = self.wrapped_cyborg.env.get_agent_state("True")
         state = json.loads(json.dumps(
-            true_state, cls=EnhancedJSONEncoder, indent=4))
+            true_state, cls=EnhancedJSONEncoder))
+        if "success" in list(state.keys()):
+            del state["success"]
         return state
+
+    def get_pz_cyborg_actions(self) -> Any:
+        """Returns the mapping from int PettingZoo to Cyborg actions 
+        """
+        agent_actions = {agent: {int_pz: {k: v for k, v in action.__dict__.items() if k not in [
+            "priority", "agent"]} for int_pz, action in mapping.items()} for agent, mapping in self.wrapped_cyborg.agent_actions.items()}
+        pz_cyborg_actions = json.loads(json.dumps(
+            agent_actions, cls=EnhancedJSONEncoder))
+        return pz_cyborg_actions
+
+    def get_cyborg_actions(self) -> Any:
+        """Returns the cyborg actions
+        """
+        actions = json.loads(json.dumps({agent: {k: v for k, v in ({} if action == None else action).__dict__.items() if k not
+                                                 in ["priority", "agent"]} for agent, action in self.cyborg_actions.items()
+                                         if action != None}, cls=EnhancedJSONEncoder))
+        return actions
+
+    def get_cyborg_observations(self) -> Any:
+        """Returns the cyborg observations
+        """
+        observations = json.loads(json.dumps(
+            self.cyborg_observations, cls=EnhancedJSONEncoder))
+        return observations
 
     def next(self, requested_info: List = ["episode_number", "iteration_number", "observation_spaces", "agents_actions",
                                            "agents_observations", "agents_rewards", "true_states"]) -> Dict:
@@ -116,6 +144,9 @@ class CyborgEnvironment(SimulationModel):
             self.pz_observations = self.wrapped_cyborg.reset()
             self.pz_observation_spaces = self.wrapped_cyborg._observation_spaces
             self.pz_action_spaces = self.wrapped_cyborg.action_spaces
+
+            # Initializing actions
+            self.cyborg_actions = {agent: None for agent in self.wrapped_cyborg.active_agents}
 
             #  CybORG observations and action spaces
             self.cyborg_observations = {agent: self.wrapped_cyborg.env.get_observation(agent)
@@ -181,11 +212,11 @@ class CyborgEnvironment(SimulationModel):
             # ===================
 
             # getting the cyborg observation
-            # self.cyborg_observations = {agent: self.wrapped_cyborg.env.get_observation(agent)
-            #                             for agent in self.wrapped_cyborg.agents}
+            self.cyborg_observations = {agent: self.wrapped_cyborg.env.get_observation(agent)
+                                        for agent in self.wrapped_cyborg.agents}
             # to get the cyborg actions
-            # self.cyborg_actions = {agent: self.wrapped_cyborg.env.get_last_action(agent)
-            #                        for agent in self.wrapped_cyborg.agents}
+            self.cyborg_actions = {agent: self.wrapped_cyborg.env.get_last_action(agent)
+                                   for agent in self.wrapped_cyborg.agents}
 
         print("Iteration {}".format(str(self.current_it)))
 
@@ -193,6 +224,8 @@ class CyborgEnvironment(SimulationModel):
             self.iteration_data["episode_number"] = self.current_ep
         if "iteration_number" in requested_info:
             self.iteration_data["iteration_number"] = self.current_it
+        if "action_spaces" in requested_info:
+            self.iteration_data["action_spaces"] = self.action_spaces
         if "observation_spaces" in requested_info:
             self.iteration_data["observation_spaces"] = self.observation_spaces
         if "agents_actions" in requested_info:
@@ -204,9 +237,19 @@ class CyborgEnvironment(SimulationModel):
         if "true_states" in requested_info:
             self.iteration_data["true_states"] = self.true_states
         if "network_graph" in requested_info:
-            self.iteration_data["network_graph"] = node_link_data(self.wrapped_cyborg.env.environment_controller.state.link_diagram)
+            self.iteration_data["network_graph"] = node_link_data(
+                self.wrapped_cyborg.env.environment_controller.state.link_diagram)
         if "team_agent_mapping" in requested_info:
-            self.iteration_data["team_agent_mapping"] = self.get_team_agent_mapping()
+            self.iteration_data["team_agent_mapping"] = self.get_team_agent_mapping(
+            )
+        if "pz_cyborg_actions" in requested_info:
+            self.iteration_data["pz_cyborg_actions"] = self.get_pz_cyborg_actions(
+            )
+        if "cyborg_actions" in requested_info:
+            self.iteration_data["cyborg_actions"] = self.get_cyborg_actions()
+        if "cyborg_observations" in requested_info:
+            self.iteration_data["cyborg_observations"] = self.get_cyborg_observations(
+            )
 
         self.current_it += 1
         if self.current_it == self.max_its:
@@ -228,41 +271,10 @@ if __name__ == '__main__':
 
     res = None
     while True:
-        res = ce.next(["episode_number", "iteration_number",
-                      "agents_actions", "agents_observations", "network_graph"])
+        res = ce.next(["cyborg_actions", "cyborg_observations"])
         if res != None:
             print("\t", end="")
-            print(res)
+            pprint(res["cyborg_observations"]["blue_agent_0"])
             pass
         else:
             break
-
-# ===============================================================
-# Graphical visualizations to make at the end of an episode
-#
-#   - network topology graph showing host nodes with
-#       - agents deployed on / their session with other host nodes for red, green and blue teams
-#       - connections between host nodes (with minimal details such as process name, ip address...)
-#           - with a frame encompassing host nodes of the same subnet
-#
-#   - table with all information of host nodes with
-#       - sessions, processes, files, OS, ...
-#       - logs of event ocurring on host nodes
-#
-#   - logs for each agent in each team with
-#       - received observations (including messages)
-#       - actions made
-#
-#   - pixel visualization of the temporal observed behavior for each agent in each team
-#       - using observation and action spaces and observation and action
-#
-#   - histogram showing chosen actions frequency for each agent in each team
-#       - using stacked observations and actions at the end of an episode (or during a pause), display an action and observation histogram
-#
-#   - pie chart showing how distributed actions are for each agent in each team
-#       - using stacked observations and actions at the end of an episode (or during a pause), display an action and observation pie chart
-#
-#   - sequence diagrams showing applied actions (even itself) and received observations (show agents using sessions)
-#       - with an environment actor standing for the environment receiving action and sending back observations to agents
-#       - with only agents of the same team (especially showing exchanged messages)
-#       - with all the teams (especially showing attacks/countermeasures applied to blue, green, red teams)

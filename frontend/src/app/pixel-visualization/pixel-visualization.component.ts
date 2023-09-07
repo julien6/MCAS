@@ -1,4 +1,4 @@
-import { Input, OnInit, SimpleChanges } from '@angular/core';
+import { Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
@@ -6,13 +6,29 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
   templateUrl: './pixel-visualization.component.html',
   styleUrls: ['./pixel-visualization.component.css']
 })
-export class PixelVisualizationComponent implements AfterViewInit {
+export class PixelVisualizationComponent implements OnInit, AfterViewInit {
 
   @ViewChild('pixelCanvas', { static: true }) pixelCanvas: ElementRef<HTMLCanvasElement>;
 
   @Input() width: number;
   @Input() height: number;
-  @Input() data: any = {}
+
+  private _data: any;
+
+  @Input() set data(value: string) {
+    this._data = JSON.parse(value);
+    this.generatePicture()
+  }
+
+  public constructor() {
+  }
+
+  public ngOnInit(): void {
+  }
+
+  get data(): any {
+    return this._data;
+  }
 
   generateColor(percentage: number): number[] {
 
@@ -114,7 +130,7 @@ export class PixelVisualizationComponent implements AfterViewInit {
       const xStart = i * 4;
       const yStart = Math.floor(canvas.height / 2);
 
-      for (let observation of this.data[i.toString()].observations) {
+      for (let observation of this.data[i].observations) {
 
         const yOffset = (yStart - 1 - observation) * 4 * canvas.width;
 
@@ -126,7 +142,7 @@ export class PixelVisualizationComponent implements AfterViewInit {
         pixels[xStart + yOffset + 3] = 255;
       }
 
-      for (let action of this.data[i.toString()].actions) {
+      for (let action of this.data[i].actions) {
 
         const yOffset = (yStart + 1 + action) * 4 * canvas.width;
 
@@ -144,16 +160,6 @@ export class PixelVisualizationComponent implements AfterViewInit {
 
     this.pixelCanvas.nativeElement.style.width = "100%";
     this.pixelCanvas.nativeElement.style.height = "100%";
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    for (const propName in changes) {
-      if (changes.hasOwnProperty(propName)) {
-        if (propName == "data") {
-          this.generatePicture()
-        }
-      }
-    }
   }
 
 }

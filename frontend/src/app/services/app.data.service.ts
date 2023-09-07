@@ -10,7 +10,6 @@ export class DataService {
   private stateData$ = new BehaviorSubject<any>({});
   currentStateData$ = this.stateData$.asObservable();
 
-
   constructor() {
   }
 

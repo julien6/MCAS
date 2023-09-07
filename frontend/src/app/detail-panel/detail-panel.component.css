@@ -21,7 +21,7 @@
 }
 
 .graphical {
-  background-color: lightgray;
+  background-color: white;
   height: calc(100vh - 112px);
 }
 
@@ -36,16 +36,6 @@
 .command_output {
   position: fixed;
 
-}
-
-.show_agent_types {
-  position: fixed;
-  bottom: 10px;
-  right: 20px;
-}
-
-.show_team {
-  margin: 0 30px;
 }
 
 :host ::ng-deep json-editor,

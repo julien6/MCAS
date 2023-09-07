@@ -50,7 +50,8 @@ class PzBaseAgent(BaseAgent):
         including pettingzoo observations"""
         raise NotImplementedError
 
+
 class PzRandom(PzBaseAgent):
 
-    def get_action(self, cyborg_observation, cyborg_action_space, pz_observation: np.ndarray =None, pz_action_space: Space=None, actions_mapping=None):
+    def get_action(self, cyborg_observation, cyborg_action_space, pz_observation: np.ndarray = None, pz_action_space: Space = None, actions_mapping=None):
         return self.pz_to_cyborg_action(pz_action_space.sample(), actions_mapping)

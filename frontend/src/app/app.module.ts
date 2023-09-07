@@ -59,7 +59,10 @@ import { GlobalMatrixesComponent } from './global-matrixes/global-matrixes.compo
 import { GlobalSeqdiagramsComponent } from './global-seqdiagrams/global-seqdiagrams.component';
 import { MatTableModule } from '@angular/material/table'
 import { MarkdownModule, MarkedOptions, MarkedRenderer } from 'ngx-markdown';
-import { MatSortModule } from '@angular/material/sort'
+import { MatSortModule } from '@angular/material/sort';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatSliderModule } from '@angular/material/slider';
+import { TreeModule } from './tree/tree.module';
 
 @NgModule({
   declarations: [
@@ -89,6 +92,10 @@ import { MatSortModule } from '@angular/material/sort'
     BrowserModule,
     AppRoutingModule,
     AngJsoneditorModule,
+    MatSliderModule,
+    MatButtonModule,
+    MatTreeModule,
+    MatIconModule,
     MatFormFieldModule,
     MatSortModule,
     MatSelectModule,
@@ -99,6 +106,7 @@ import { MatSortModule } from '@angular/material/sort'
     PixelVisualizationModule,
     NgChartsModule,
     MatProgressBarModule,
+    TreeModule,
     NoopAnimationsModule,
     MatStepperModule,
     ReactiveFormsModule,

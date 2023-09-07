@@ -7,14 +7,14 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.green">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.green | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-editor [text]="agent.logs" [terminalDisplay]="true" mode="text"></app-editor>
+            <app-editor [text]="agent.value | json" [terminalDisplay]="true" mode="json"></app-editor>
         </mat-expansion-panel>
 
     </mat-expansion-panel>
@@ -26,14 +26,14 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.red">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.red | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-editor [text]="agent.logs" [terminalDisplay]="true" mode="text"></app-editor>
+            <app-editor [text]="''+agent.value | json" [terminalDisplay]="true" mode="json"></app-editor>
         </mat-expansion-panel>
 
     </mat-expansion-panel>
@@ -45,14 +45,14 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.blue">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.blue | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-editor [text]="agent.logs" [terminalDisplay]="true" mode="text"></app-editor>
+            <app-editor [text]="agent.value | json" [terminalDisplay]="true" mode="json"></app-editor>
         </mat-expansion-panel>
 
     </mat-expansion-panel>

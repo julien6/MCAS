@@ -7,15 +7,14 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.green">
+        <mat-expansion-panel *ngFor="let agent of this._data['green'] | keyvalue" class="agent-panel" expanded="false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
-
             <!-- pixel visualization -->
-            <app-pixel-visualization [width]="300" [height]="101" [data]="data"></app-pixel-visualization>
+            <app-pixel-visualization [width]="300" [height]="101" [data]="agent.value | json"></app-pixel-visualization>
 
         </mat-expansion-panel>
 
@@ -28,14 +27,16 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.red">
+        <mat-expansion-panel *ngFor="let agent of this._data['red'] | keyvalue" class="agent-panel" expanded="false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <!-- pixel visualization -->
+            <app-pixel-visualization [width]="300" [height]="101" [data]="agent.value | json"></app-pixel-visualization>
+
         </mat-expansion-panel>
 
     </mat-expansion-panel>
@@ -47,14 +48,15 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.blue">
+        <mat-expansion-panel *ngFor="let agent of this._data['blue'] | keyvalue" class="agent-panel" expanded="false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <!-- pixel visualization -->
+            <app-pixel-visualization [width]="300" [height]="101" [data]="agent.value | json"></app-pixel-visualization>
         </mat-expansion-panel>
 
     </mat-expansion-panel>
