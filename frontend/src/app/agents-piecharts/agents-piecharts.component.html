@@ -7,17 +7,17 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.green">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.green | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <!-- piechart -->
             <div style="display: block;">
-                <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
-                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                <canvas baseChart [type]="'pie'" [data]="$any(agent).value" [options]="pieChartOptions"
+                [plugins]="pieChartPlugins" [legend]="pieChartLegend">
                 </canvas>
             </div>
 
@@ -32,14 +32,20 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.red">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.red | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <!-- piechart -->
+            <div style="display: block;">
+                <canvas baseChart [type]="'pie'" [data]="$any(agent).value" [options]="pieChartOptions"
+                [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                </canvas>
+            </div>
+
         </mat-expansion-panel>
 
     </mat-expansion-panel>
@@ -51,14 +57,20 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.blue">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.blue | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <!-- piechart -->
+            <div style="display: block;">
+                <canvas baseChart [type]="'pie'" [data]="$any(agent).value" [options]="pieChartOptions"
+                [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                </canvas>
+            </div>
+
         </mat-expansion-panel>
 
     </mat-expansion-panel>

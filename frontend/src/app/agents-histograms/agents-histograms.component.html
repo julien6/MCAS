@@ -7,18 +7,17 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.green">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.green | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <!-- histogram -->
-            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+            <canvas baseChart [data]="$any(agent).value" [options]="barChartOptions" [plugins]="barChartPlugins"
                 [legend]="barChartLegend" [type]="'bar'">
             </canvas>
-
 
         </mat-expansion-panel>
 
@@ -31,14 +30,18 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.red">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.red | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <!-- histogram -->
+            <canvas baseChart [data]="$any(agent).value" [options]="barChartOptions" [plugins]="barChartPlugins"
+                [legend]="barChartLegend" [type]="'bar'">
+            </canvas>
+
         </mat-expansion-panel>
 
     </mat-expansion-panel>
@@ -50,14 +53,18 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.blue">
+        <mat-expansion-panel class="agent-panel" expanded="false" *ngFor="let agent of teams.blue | keyvalue">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    {{agent.name}}
+                    {{agent.key}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
             <!-- histogram -->
+            <canvas baseChart [data]="$any(agent).value" [options]="barChartOptions" [plugins]="barChartPlugins"
+                [legend]="barChartLegend" [type]="'bar'">
+            </canvas>
+
         </mat-expansion-panel>
 
     </mat-expansion-panel>
