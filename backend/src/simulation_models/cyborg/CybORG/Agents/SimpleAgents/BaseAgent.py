@@ -43,7 +43,7 @@ class PzBaseAgent(BaseAgent):
         ) if str(_action) == str(action) and action.get_params() == _action.get_params()})[0]
 
     def pz_to_cyborg_action(self, action: int, actions_mapping: Any) -> Action:
-        return actions_mapping[action]
+        return actions_mapping[action % len(actions_mapping.keys())]
 
     def get_action(self, cyborg_observation, cyborg_action_space, pz_observation=None, pz_action_space=None, actions_mapping=None):
         """gets an action from the agent that should be performed based on the agent's internal state and provided observation and action space
@@ -53,5 +53,18 @@ class PzBaseAgent(BaseAgent):
 
 class PzRandom(PzBaseAgent):
 
-    def get_action(self, cyborg_observation, cyborg_action_space, pz_observation: np.ndarray = None, pz_action_space: Space = None, actions_mapping=None):
-        return self.pz_to_cyborg_action(pz_action_space.sample(), actions_mapping)
+    def get_action(self, cyborg_observation, cyborg_action_space, pz_observation: np.ndarray = None, pz_action_space: Space = None, actions_mapping=None) -> int:
+
+        print(self.name, " received observation: ", pz_observation, "\n")
+
+        message = 4
+
+        action_length = len(actions_mapping.keys())
+
+        # action = self.cyborg_to_pz_action(Sleep())
+        action = pz_action_space.sample() % action_length
+
+        print(
+            f"agent {self.name} plays action {action} and sends message {message}")
+
+        return message * action_length + action

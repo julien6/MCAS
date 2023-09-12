@@ -1,5 +1,5 @@
-## The following code contains work of the United States Government and is not subject to domestic copyright protection under 17 USC § 105.
-## Additionally, we waive copyright and related rights in the utilized code worldwide through the CC0 1.0 Universal public domain dedication.
+# The following code contains work of the United States Government and is not subject to domestic copyright protection under 17 USC § 105.
+# Additionally, we waive copyright and related rights in the utilized code worldwide through the CC0 1.0 Universal public domain dedication.
 
 import gym
 
@@ -62,23 +62,28 @@ class EnvironmentController(CybORGLogger):
         self.INFO_DICT['True'] = {}
         for host in scenario.hosts:
             self.INFO_DICT['True'][host] = {'System info': 'All', 'Sessions': 'All', 'Interfaces': 'All', 'User info': 'All',
-                                      'Processes': ['All']}
-        self.init_state = self._filter_obs(self.get_true_state(self.INFO_DICT['True'])).data
+                                            'Processes': ['All']}
+        self.init_state = self._filter_obs(
+            self.get_true_state(self.INFO_DICT['True'])).data
         for agent in scenario.agents:
-            self.INFO_DICT[agent] = scenario.get_agent_info(agent).osint.get('Hosts', {})
+            self.INFO_DICT[agent] = scenario.get_agent_info(
+                agent).osint.get('Hosts', {})
             for host in self.INFO_DICT[agent].keys():
                 self.INFO_DICT[agent][host]['Sessions'] = agent
         # populate initial observations with OSINT
         for agent_name, agent in self.agent_interfaces.items():
-            self.observation[agent_name] = self._filter_obs(self.get_true_state(self.INFO_DICT[agent_name]), agent_name)
-            agent.set_init_obs(self.observation[agent_name].data, self.init_state)
+            self.observation[agent_name] = self._filter_obs(
+                self.get_true_state(self.INFO_DICT[agent_name]), agent_name)
+            agent.set_init_obs(
+                self.observation[agent_name].data, self.init_state)
         self.message_length = 16
         self.done = self.determine_done()
         # calculate reward for each team
         for team_name, team_calcs in self.team_reward_calculators.items():
             self.reward[team_name] = {}
             for reward_name, r_calc in team_calcs.items():
-                self.reward[team_name][reward_name] = self.calculate_reward(r_calc)
+                self.reward[team_name][reward_name] = self.calculate_reward(
+                    r_calc)
         self._log_debug(f"Finished init()")
 
     def reset(self, agent: str = None, np_random=None) -> Results:
@@ -106,18 +111,23 @@ class EnvironmentController(CybORGLogger):
 
         self.agent_interfaces = self._create_agents(scenario, self.agents)
         self.team = scenario.team_agents
-        self.team_assignment = {agent_name: team_name for team_name, agent_names in scenario.team_agents.items() for agent_name in agent_names}
+        self.team_assignment = {agent_name: team_name for team_name,
+                                agent_names in scenario.team_agents.items() for agent_name in agent_names}
         self.max_bandwidth = scenario.max_bandwidth
-        self.init_state = self._filter_obs(self.get_true_state(self.INFO_DICT['True'])).data
+        self.init_state = self._filter_obs(
+            self.get_true_state(self.INFO_DICT['True'])).data
         for agent_name, agent_object in self.agent_interfaces.items():
-            self.observation[agent_name] = self._filter_obs(self.get_true_state(self.INFO_DICT[agent_name]), agent_name)
-            agent_object.set_init_obs(self.observation[agent_name].data, self.init_state)
+            self.observation[agent_name] = self._filter_obs(
+                self.get_true_state(self.INFO_DICT[agent_name]), agent_name)
+            agent_object.set_init_obs(
+                self.observation[agent_name].data, self.init_state)
         self.done = self.determine_done()
         # calculate reward for each team
         for team_name, team_calcs in self.team_reward_calculators.items():
             self.reward[team_name] = {}
             for reward_name, r_calc in team_calcs.items():
-                self.reward[team_name][reward_name] = self.calculate_reward(r_calc)
+                self.reward[team_name][reward_name] = self.calculate_reward(
+                    r_calc)
         if agent is None:
             return Results(observation=self.init_state)
         else:
@@ -125,7 +135,6 @@ class EnvironmentController(CybORGLogger):
                            action_space=self.agent_interfaces[agent].action_space.get_action_space())
 
     def step(self, actions: dict = None, skip_valid_action_check=False):
-
         """Updates the environment based on the joint actions of all agents
         Save the
 
@@ -145,11 +154,13 @@ class EnvironmentController(CybORGLogger):
             actions = {}
         # fill in missing actions based on default agents and check validity of actions
         for agent_name, agent_object in self.agent_interfaces.items():
-            agent_object.messages = []
+            agent_object.messages = [0] * len(list(actions.keys()))
             if agent_name not in actions:
-                actions[agent_name] = agent_object.get_action(self.get_last_observation(agent_name))
+                actions[agent_name] = agent_object.get_action(
+                    self.get_last_observation(agent_name))
             if not skip_valid_action_check:
-                actions[agent_name] = self.replace_action_if_invalid(actions[agent_name], agent_object)
+                actions[agent_name] = self.replace_action_if_invalid(
+                    actions[agent_name], agent_object)
 
         self.action = actions
         actions = self.sort_action_order(actions)
@@ -159,12 +170,14 @@ class EnvironmentController(CybORGLogger):
 
         # execute actions in order of priority
         for agent_name, agent_action in actions.items():
-            self.observation[agent_name] = self._filter_obs(self.execute_action(agent_action), agent_name)
+            self.observation[agent_name] = self._filter_obs(
+                self.execute_action(agent_action), agent_name)
 
         # execute additional default end turn actions
         for agent_name, agent_action in self.end_turn_actions.items():
             if self.is_active(agent_name):
-                self.observation[agent_name] = self._filter_obs(self.execute_action(agent_action[0](**agent_action[1])), agent_name).combine_obs(self.get_last_observation(agent_name))
+                self.observation[agent_name] = self._filter_obs(self.execute_action(agent_action[0](
+                    **agent_action[1])), agent_name).combine_obs(self.get_last_observation(agent_name))
 
         for agent_name, observation in self.observation.items():
             if self.scenario_generator.update_each_step or len(self.get_action_space(agent_name)['session']) == 0:
@@ -180,8 +193,10 @@ class EnvironmentController(CybORGLogger):
         for team_name, team_calcs in self.team_reward_calculators.items():
             self.reward[team_name] = {}
             for reward_name, r_calc in team_calcs.items():
-                self.reward[team_name][reward_name] = self.calculate_reward(r_calc)
-            self.reward[team_name]['action_cost'] = sum([actions.get(agent, Action()).cost for agent in self.team[team_name]])
+                self.reward[team_name][reward_name] = self.calculate_reward(
+                    r_calc)
+            self.reward[team_name]['action_cost'] = sum(
+                [actions.get(agent, Action()).cost for agent in self.team[team_name]])
 
     def send_messages(self, messages: dict = None):
         """Sends messages between agents"""
@@ -189,9 +204,11 @@ class EnvironmentController(CybORGLogger):
             messages = {}
 
         for agent, message in messages.items():
-            assert self.get_message_space(agent).contains(message), f'{agent} attempting to send message {message} that is not in the message space {self.get_message_space(agent)}'
+            assert self.get_message_space(agent).contains(
+                message), f'{agent} attempting to send message {message} that is not in the message space {self.get_message_space(agent)}'
             for other_agent in self.get_connected_agents(agent):
-                self.agent_interfaces[other_agent].messages.append(message)
+                agents = list(messages.keys())
+                self.agent_interfaces[other_agent].messages[agents.index(agent)] = message
 
         for agent, observation in self.observation.items():
             if len(self.agent_interfaces[agent].messages) > 0:
@@ -322,7 +339,8 @@ class EnvironmentController(CybORGLogger):
         """
         if agent in self.agent_interfaces:
             return self.agent_interfaces[agent].action_space.get_action_space()
-        raise ValueError(f'Agent {agent} not in agent list {self.agent_interfaces.keys()}')
+        raise ValueError(
+            f'Agent {agent} not in agent list {self.agent_interfaces.keys()}')
 
     def get_observation_space(self, agent: str) -> dict:
         """
@@ -332,7 +350,8 @@ class EnvironmentController(CybORGLogger):
                 """
         if agent in self.agent_interfaces:
             return self.agent_interfaces[agent].get_observation_space()
-        raise ValueError(f'Agent {agent} not in agent list {self.agent_interfaces.values()}')
+        raise ValueError(
+            f'Agent {agent} not in agent list {self.agent_interfaces.values()}')
 
     def get_last_action(self, agent: str) -> Action:
         """
@@ -401,8 +420,8 @@ class EnvironmentController(CybORGLogger):
                 agent_info.actions,
                 allowed_subnets=agent_info.allowed_subnets,
                 scenario=scenario,
-                active = agent_info.active,
-                internal_only = agent_info.internal_only
+                active=agent_info.active,
+                internal_only=agent_info.internal_only
             )
         return agents
 
@@ -413,7 +432,8 @@ class EnvironmentController(CybORGLogger):
         """Filter obs to contain only hosts/subnets in scenario network """
         if self.scenario_generator.update_each_step:
             if agent_name is not None:
-                subnets = [self.subnet_cidr_map[s] for s in self.agent_interfaces[agent_name].allowed_subnets]
+                subnets = [self.subnet_cidr_map[s]
+                           for s in self.agent_interfaces[agent_name].allowed_subnets]
             else:
                 subnets = list(self.subnet_cidr_map.values())
 
@@ -451,7 +471,7 @@ class EnvironmentController(CybORGLogger):
 
         return action
 
-    def get_reward_breakdown(self, agent:str):
+    def get_reward_breakdown(self, agent: str):
         return self.agent_interfaces[agent].reward_calculator.host_scores
 
     def get_active_agents(self) -> list:
@@ -464,6 +484,6 @@ class EnvironmentController(CybORGLogger):
         raise NotImplementedError
 
     def get_reward(self, agent):
-        team = [team_name for team_name, agents in self.team_assignments.items() if agent in agents][0]
+        team = [team_name for team_name,
+                agents in self.team_assignments.items() if agent in agents][0]
         return self.reward[team]
-

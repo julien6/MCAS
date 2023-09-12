@@ -47,13 +47,13 @@ class CyborgEnvironment(SimulationModel):
         # path = dirname(path) + f'/Simulator/Scenarios/scenario_files/Scenario1b.yaml'
         # sg = FileReaderScenarioGenerator(path)
 
-        sg = DroneSwarmScenarioGenerator(num_drones=10)
+        sg = DroneSwarmScenarioGenerator(num_drones=8)
 
         env = CybORG(sg, 'sim')
 
         # self.wrapped_cyborg = PettingZooParallelWrapper(env)
-        # self.wrapped_cyborg = AgentCommsPettingZooParallelWrapper(env)
-        self.wrapped_cyborg = PettingZooParallelWrapper(env)
+        self.wrapped_cyborg = AgentCommsPettingZooParallelWrapper(env)
+        # self.wrapped_cyborg = PettingZooParallelWrapper(env)
         self.wrapped_cyborg.reset(42)
 
         self.max_eps = max_episode
@@ -62,7 +62,7 @@ class CyborgEnvironment(SimulationModel):
         # agents = {agent: RandomAgent() for agent in ["Blue", "Red", "Green"]}
 
         self.agents = {f"blue_agent_{agent}": PzRandom(
-            name=f"blue_agent_{agent}") for agent in range(10)}
+            name=f"blue_agent_{agent}") for agent in range(8)}
 
         self.iteration_data = {}
 
@@ -146,7 +146,8 @@ class CyborgEnvironment(SimulationModel):
             self.pz_action_spaces = self.wrapped_cyborg.action_spaces
 
             # Initializing actions
-            self.cyborg_actions = {agent: None for agent in self.wrapped_cyborg.active_agents}
+            self.cyborg_actions = {
+                agent: None for agent in self.wrapped_cyborg.active_agents}
 
             #  CybORG observations and action spaces
             self.cyborg_observations = {agent: self.wrapped_cyborg.env.get_observation(agent)
@@ -267,14 +268,14 @@ class CyborgEnvironment(SimulationModel):
 
 if __name__ == '__main__':
 
-    ce = CyborgEnvironment({}, max_episode=3, max_iteration=5)
+    ce = CyborgEnvironment({}, max_episode=1, max_iteration=3)
 
     res = None
     while True:
-        res = ce.next(["cyborg_actions", "cyborg_observations"])
+        res = ce.next(["cyborg_observations"])
         if res != None:
             print("\t", end="")
-            pprint(res["cyborg_observations"]["blue_agent_0"])
+            # pprint(res["cyborg_observations"])
             pass
         else:
             break

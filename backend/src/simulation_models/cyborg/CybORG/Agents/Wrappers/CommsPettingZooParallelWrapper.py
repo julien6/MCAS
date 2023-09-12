@@ -89,7 +89,7 @@ class AgentCommsPettingZooParallelWrapper(PettingZooParallelWrapper):
         # success + own_drone(block Ips + processes + network conns + pos) + other_drones(IPs + session_+pos)
         self._observation_spaces = {agent_name: spaces.MultiDiscrete(
             [3] + [2 for i in range(num_drones)] + [2] + [3 for i in range(num_drones)] + [101, 101] + (
-                    num_drones - 1) * [num_drones, 101, 101, 2] + num_drones*[self.action_space(agent_name).n+1]) for agent_name in self.possible_agents}
+                    num_drones - 1) * [num_drones, 101, 101, 2] + len(self.possible_agents)*[self.action_space(agent_name).n+1]) for agent_name in self.possible_agents}
         self.msg_len = num_drones
 
         self.encoding = {agent: {i: [int(x) for x in bin(i)[2:].zfill(self.env.get_message_space(agent).n)] for i in
