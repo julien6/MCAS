@@ -152,9 +152,11 @@ class EnvironmentController(CybORGLogger):
         self.step_count += 1
         if actions is None:
             actions = {}
+
+        active_agents = list(actions.keys())
         # fill in missing actions based on default agents and check validity of actions
         for agent_name, agent_object in self.agent_interfaces.items():
-            agent_object.messages = [0] * len(list(actions.keys()))
+            agent_object.messages = [0] * len(active_agents)
             if agent_name not in actions:
                 actions[agent_name] = agent_object.get_action(
                     self.get_last_observation(agent_name))
@@ -203,12 +205,14 @@ class EnvironmentController(CybORGLogger):
         if messages is None:
             messages = {}
 
+        agents = list(messages.keys())
+
         for agent, message in messages.items():
             assert self.get_message_space(agent).contains(
                 message), f'{agent} attempting to send message {message} that is not in the message space {self.get_message_space(agent)}'
             for other_agent in self.get_connected_agents(agent):
-                agents = list(messages.keys())
-                self.agent_interfaces[other_agent].messages[agents.index(agent)] = message
+                self.agent_interfaces[other_agent].messages[agents.index(
+                    agent)] = message
 
         for agent, observation in self.observation.items():
             if len(self.agent_interfaces[agent].messages) > 0:

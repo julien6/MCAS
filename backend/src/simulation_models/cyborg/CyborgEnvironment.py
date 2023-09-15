@@ -2,7 +2,8 @@ from ipaddress import IPv4Address, IPv4Network
 from typing import Any, Dict, List
 from simulation_models.cyborg.CybORG import CybORG
 from simulation_models.cyborg.CybORG.Agents.SimpleAgents.BaseAgent import PzBaseAgent, PzRandom
-from simulation_models.cyborg.CybORG.Agents.Wrappers.CommsPettingZooParallelWrapper import AgentCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Agents.Wrappers.CommsPettingZooParallelWrapper import AgentCommsPettingZooParallelWrapper, \
+    AgentFreeCommsPettingZooParallelWrapper, ActionsCommsPettingZooParallelWrapper
 from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action, Sleep
 from simulation_models.cyborg.CybORG.Simulator.Scenarios.FileReaderScenarioGenerator import FileReaderScenarioGenerator
 from simulation_models.cyborg.CybORG.Simulator.Scenarios.DroneSwarmScenarioGenerator import DroneSwarmScenarioGenerator
@@ -11,6 +12,7 @@ from simulation_models.cyborg.CybORG.Agents import B_lineAgent, BlueReactRestore
     RandomAgent, BaseAgent, RedMeanderAgent
 from os.path import dirname
 from pprint import pprint
+
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
@@ -52,8 +54,7 @@ class CyborgEnvironment(SimulationModel):
         env = CybORG(sg, 'sim')
 
         # self.wrapped_cyborg = PettingZooParallelWrapper(env)
-        self.wrapped_cyborg = AgentCommsPettingZooParallelWrapper(env)
-        # self.wrapped_cyborg = PettingZooParallelWrapper(env)
+        self.wrapped_cyborg = AgentFreeCommsPettingZooParallelWrapper(env)
         self.wrapped_cyborg.reset(42)
 
         self.max_eps = max_episode
@@ -133,6 +134,20 @@ class CyborgEnvironment(SimulationModel):
             self.cyborg_observations, cls=EnhancedJSONEncoder))
         return observations
 
+    def get_agents_cyborg_comms(self) -> Any:
+        """Returns the cyborg comms from cyborg observations
+        """
+        return {agent:
+                PzBaseAgent.get_message_from_obs(
+                    self.wrapped_cyborg.agents, cyborg_observation=self.cyborg_observations[agent])
+                for agent in self.wrapped_cyborg.agents}
+
+    def get_agents_pz_comms(self) -> Any:
+        """Returns the pz comms from pz observations
+        """
+        return {agent: {other_agent: None if message == 0 else (message - 1) for other_agent, message in PzBaseAgent.get_message_from_obs(self.wrapped_cyborg.agents, pz_observation=self.pz_observations[agent]).items()}
+                for agent in self.wrapped_cyborg.agents}
+
     def next(self, requested_info: List = ["episode_number", "iteration_number", "observation_spaces", "agents_actions",
                                            "agents_observations", "agents_rewards", "true_states"]) -> Dict:
 
@@ -185,7 +200,8 @@ class CyborgEnvironment(SimulationModel):
                                                   self.cyborg_action_spaces[agent_name],
                                                   self.pz_observations[agent_name],
                                                   self.pz_action_spaces[agent_name],
-                                                  self.wrapped_cyborg.agent_actions[agent_name])
+                                                  self.wrapped_cyborg.agent_actions[agent_name],
+                                                  self.wrapped_cyborg.agents)
                     # use regular Cyborg observation and action spaces
                     else:
                         action = agent.get_action(
@@ -230,7 +246,8 @@ class CyborgEnvironment(SimulationModel):
         if "observation_spaces" in requested_info:
             self.iteration_data["observation_spaces"] = self.observation_spaces
         if "agents_actions" in requested_info:
-            self.iteration_data["agents_actions"] = self.agents_actions
+            self.iteration_data["agents_actions"] = {agt: int(0 if act == None else act) %
+                                                     len(self.wrapped_cyborg.agent_actions[agt]) for agt, act in self.agents_actions.items()}
         if "agents_observations" in requested_info:
             self.iteration_data["agents_observations"] = self.agents_observations
         if "agents_rewards" in requested_info:
@@ -251,6 +268,11 @@ class CyborgEnvironment(SimulationModel):
         if "cyborg_observations" in requested_info:
             self.iteration_data["cyborg_observations"] = self.get_cyborg_observations(
             )
+        if "agents_cyborg_comms" in requested_info:
+            self.iteration_data["agents_cyborg_comms"] = self.get_agents_cyborg_comms(
+            )
+        if "agents_pz_comms" in requested_info:
+            self.iteration_data["agents_pz_comms"] = self.get_agents_pz_comms()
 
         self.current_it += 1
         if self.current_it == self.max_its:
@@ -268,14 +290,14 @@ class CyborgEnvironment(SimulationModel):
 
 if __name__ == '__main__':
 
-    ce = CyborgEnvironment({}, max_episode=1, max_iteration=3)
+    ce = CyborgEnvironment({}, max_episode=1, max_iteration=5)
 
     res = None
     while True:
-        res = ce.next(["cyborg_observations"])
+        res = ce.next(["agents_actions"])
         if res != None:
             print("\t", end="")
-            # pprint(res["cyborg_observations"])
+            pprint(res["agents_actions"])
             pass
         else:
             break

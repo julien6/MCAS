@@ -16,13 +16,15 @@
   float: right;
   margin: 0px;
   padding: 0px;
+  background-color: green;
   width: 70%;
-  height: calc(100vh - 112px);
+  height: calc(100vh - 64px);
 }
 
 .graphical {
   background-color: white;
-  height: calc(100vh - 112px);
+  height: calc(100vh - 64px);
+  overflow-y: auto;
 }
 
 /* Clear floats after the columns */

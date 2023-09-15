@@ -147,12 +147,13 @@ export class MenuBarComponent {
   next(episode_number: boolean = true, iteration_number: boolean = true, observation_spaces: boolean = true, agents_actions: boolean = true,
     agents_observations: boolean = true, agents_rewards: boolean = true, true_states: boolean = true, network_graph: boolean = true,
     team_agent_mapping: boolean = true, action_spaces: boolean = true, pz_cyborg_actions: boolean = true, cyborg_actions: boolean = true,
-    cyborg_observations: boolean = true) {
+    cyborg_observations: boolean = true, agents_cyborg_comms: boolean = true, agents_pz_comms: boolean = true) {
     this.serverAPIService.getRequest("simulation-next?episode_number=" + episode_number + "&iteration_number=" + iteration_number
       + "&observation_spaces=" + observation_spaces + "&agents_actions=" + agents_actions + "&agents_observations=" + agents_observations
       + "&agents_rewards=" + agents_rewards + "&true_states=" + true_states + "&network_graph=" + network_graph +
       "&team_agent_mapping=" + team_agent_mapping + "&action_spaces=" + action_spaces + "&pz_cyborg_actions=" + pz_cyborg_actions
-      + "&cyborg_actions=" + cyborg_actions + "&cyborg_observations=" + cyborg_observations).subscribe((data) => {
+      + "&cyborg_actions=" + cyborg_actions + "&cyborg_observations=" + cyborg_observations + "&agents_cyborg_comms=" + agents_cyborg_comms
+      + "&agents_pz_comms=" + agents_pz_comms).subscribe((data) => {
         this.dataService.setStateData(data)
       })
   }

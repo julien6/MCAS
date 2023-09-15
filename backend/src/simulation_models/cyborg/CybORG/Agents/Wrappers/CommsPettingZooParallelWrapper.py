@@ -1,7 +1,9 @@
+from typing import Any, List
 import numpy as np
 from gym import spaces
 
 from simulation_models.cyborg.CybORG.Agents.Wrappers.PettingZooParallelWrapper import PettingZooParallelWrapper
+from simulation_models.cyborg.CybORG.Simulator.Actions.Action import Action
 
 
 class ActionsCommsPettingZooParallelWrapper(PettingZooParallelWrapper):
@@ -12,13 +14,16 @@ class ActionsCommsPettingZooParallelWrapper(PettingZooParallelWrapper):
         self.num_drones = len(self.ip_addresses)
         self._observation_spaces = {agent_name: spaces.MultiDiscrete(
             [3] + [2 for i in range(self.num_drones)] + [2] + [3 for i in range(self.num_drones)] + [101, 101] + (
-                    self.num_drones - 1) * [self.num_drones, 101, 101, 2] + self.num_drones*[self.action_space(agent_name).n+1]) for agent_name in self.possible_agents}
+                self.num_drones - 1) * [self.num_drones, 101, 101, 2] + self.num_drones*[self.action_space(agent_name).n+1]) for agent_name in self.possible_agents}
         self.msg_len = self.num_drones
-        self.encoding = {agent: {i: [int(x) for x in bin(i)[2:].zfill(self.env.get_message_space(agent).n)] for i in range(self.action_space(agent).n)} for agent in self.env.agents}
-        self.decoding = {agent: {str(v): k for k, v in self.encoding[agent].items()} for agent in self.env.agents}
+        self.encoding = {agent: {i: [int(x) for x in bin(i)[2:].zfill(self.env.get_message_space(
+            agent).n)] for i in range(self.action_space(agent).n)} for agent in self.env.agents}
+        self.decoding = {agent: {
+            str(v): k for k, v in self.encoding[agent].items()} for agent in self.env.agents}
 
     def parse_message(self, message: list, agent_name: str):
-        new_message = [1+self.decoding[agent_name][str(i)] for i in message if str(i) in self.decoding[agent_name]]
+        new_message = [1+self.decoding[agent_name]
+                       [str(i)] for i in message if str(i) in self.decoding[agent_name]]
         while len(new_message) < self.num_drones:
             new_message.append(0)
         return new_message
@@ -35,13 +40,15 @@ class ObsCommsPettingZooParallelWrapper(PettingZooParallelWrapper):
         self.num_drones = len(self.ip_addresses)
         self._observation_spaces = {agent_name: spaces.MultiDiscrete(
             [3] + [2 for i in range(self.num_drones)] + [2] + [3 for i in range(self.num_drones)] + [101, 101] + (
-                    self.num_drones - 1) * [self.num_drones, 101, 101, 2] + [2 for _ in range(self.env.get_message_space('blue_agent_0').n)]*self.num_drones) for agent_name in self.possible_agents}
-        self.msg_len = self.num_drones * self.env.get_message_space('blue_agent_0').n
+                self.num_drones - 1) * [self.num_drones, 101, 101, 2] + [2 for _ in range(self.env.get_message_space('blue_agent_0').n)]*self.num_drones) for agent_name in self.possible_agents}
+        self.msg_len = self.num_drones * \
+            self.env.get_message_space('blue_agent_0').n
 
     def parse_message(self, message: list, agent_name: str):
         new_message = message
         while len(new_message) < self.num_drones:
-            new_message.append([0 for _ in range(self.env.get_message_space(agent_name).n)])
+            new_message.append(
+                [0 for _ in range(self.env.get_message_space(agent_name).n)])
         return np.array(new_message).flatten()
 
     def select_messages(self, action):
@@ -49,7 +56,8 @@ class ObsCommsPettingZooParallelWrapper(PettingZooParallelWrapper):
         for agent in action.keys():
             obs = self.env.get_observation(agent)
 
-            msg[agent] = [self.get_data_from_obs(obs, i) for i in range(self.env.get_message_space(agent).n)]
+            msg[agent] = [self.get_data_from_obs(obs, i) for i in range(
+                self.env.get_message_space(agent).n)]
         return action, {agent: msg[agent] for agent, act in action.items()}
 
     @staticmethod
@@ -80,28 +88,75 @@ class ObsCommsPettingZooParallelWrapper(PettingZooParallelWrapper):
 
 class AgentCommsPettingZooParallelWrapper(PettingZooParallelWrapper):
     """Allows agents to select their action"""
+
     def __init__(self, env):
         super(AgentCommsPettingZooParallelWrapper, self).__init__(env)
         num_drones = len(self.ip_addresses)
-        self.len_actions = {agent: self.action_space(agent).n for agent in self.possible_agents}
+        self.len_actions = {agent: self.action_space(
+            agent).n for agent in self.possible_agents}
         self._action_spaces = {agent: spaces.Discrete(self.len_actions[agent]*self.env.get_message_space(agent).n)
                                for agent in self.possible_agents}
         # success + own_drone(block Ips + processes + network conns + pos) + other_drones(IPs + session_+pos)
         self._observation_spaces = {agent_name: spaces.MultiDiscrete(
             [3] + [2 for i in range(num_drones)] + [2] + [3 for i in range(num_drones)] + [101, 101] + (
-                    num_drones - 1) * [num_drones, 101, 101, 2] + len(self.possible_agents)*[self.action_space(agent_name).n+1]) for agent_name in self.possible_agents}
+                num_drones - 1) * [num_drones, 101, 101, 2] + num_drones*[self.action_space(agent_name).n+1]) for agent_name in self.possible_agents}
         self.msg_len = num_drones
 
         self.encoding = {agent: {i: [int(x) for x in bin(i)[2:].zfill(self.env.get_message_space(agent).n)] for i in
                                  range(self.env.get_message_space(agent).n)} for agent in self.env.agents}
 
-        self.decoding = {agent: {str(v): k for k, v in self.encoding[agent].items()} for agent in self.env.agents}
+        self.decoding = {agent: {
+            str(v): k for k, v in self.encoding[agent].items()} for agent in self.env.agents}
 
     def parse_message(self, message: list, agent_name: str):
-        new_message = [1+self.decoding[agent_name][str(i)] for i in message if str(i) in self.decoding[agent_name]]
+        new_message = [1+self.decoding[agent_name]
+                       [str(i)] for i in message if str(i) in self.decoding[agent_name]]
         while len(new_message) < len(self.ip_addresses):
             new_message.append(0)
         return new_message
 
     def select_messages(self, action):
-        return {agent: act%self.len_actions[agent] for agent, act in action.items()}, {agent: self.encoding[agent][act//self.len_actions[agent]] for agent, act in action.items()}
+        return {agent: act % self.len_actions[agent] for agent, act in action.items()}, {agent: self.encoding[agent][act//self.len_actions[agent]] for agent, act in action.items()}
+
+
+class AgentFreeCommsPettingZooParallelWrapper(PettingZooParallelWrapper):
+    """Allows agents to send anything in message spaces"""
+
+    def __init__(self, env):
+        super(AgentFreeCommsPettingZooParallelWrapper, self).__init__(env)
+        num_drones = len(self.ip_addresses)
+        self.len_actions = {agent: self.action_space(
+            agent).n for agent in self.possible_agents}
+
+        self.env.environment_controller.message_length = 8
+
+        # self._action_spaces = {agent: spaces.Discrete(self.len_actions[agent]*self.env.get_message_space(agent).n)
+        #                        for agent in self.possible_agents}
+
+        self._action_spaces = {agent: spaces.Discrete(self.len_actions[agent]*(2**self.env.get_message_space(agent).n))
+                               for agent in self.possible_agents}
+
+        # success + own_drone(block Ips + processes + network conns + pos) + other_drones(IPs + session_+pos)
+        self._observation_spaces = {agent_name: spaces.MultiDiscrete(
+            [3] + [2 for i in range(num_drones)] + [2] + [3 for i in range(num_drones)] + [101, 101] + (
+                num_drones - 1) * [num_drones, 101, 101, 2] + len(self.possible_agents)*[self.action_space(agent_name).n+1]) for agent_name in self.possible_agents}
+        self.msg_len = num_drones
+
+        # self.encoding = {agent: {i: [int(x) for x in bin(i)[2:].zfill(self.env.get_message_space(agent).n)] for i in
+        #                          range(self.env.get_message_space(agent).n)} for agent in self.env.agents}
+
+        self.encoding = {agent: {i: [int(x) for x in bin(i)[2:].zfill(self.env.get_message_space(agent).n)] for i in
+                                 range(2**self.env.get_message_space(agent).n)} for agent in self.env.agents}
+
+        self.decoding = {agent: {
+            str(v): k for k, v in self.encoding[agent].items()} for agent in self.env.agents}
+
+    def parse_message(self, message: list, agent_name: str):
+        new_message = [0 if i == 0 else 1+self.decoding[agent_name]
+                       [str(i)] for i in message if (str(i) in self.decoding[agent_name] or i == 0)]
+        while len(new_message) < len(self.ip_addresses):
+            new_message.append(0)
+        return new_message
+
+    def select_messages(self, action):
+        return {agent: act % self.len_actions[agent] for agent, act in action.items()}, {agent: self.encoding[agent][act//self.len_actions[agent]] for agent, act in action.items()}

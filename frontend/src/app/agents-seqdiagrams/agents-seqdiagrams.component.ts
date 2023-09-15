@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import mermaid from 'mermaid';
+import { DataService } from '../services/app.data.service';
 
 @Component({
   selector: 'app-agents-seqdiagrams',
@@ -12,31 +13,11 @@ export class AgentsSeqdiagramsComponent implements OnInit {
   @ViewChild('mermaidDivRed', { static: false }) mermaidDivRed: ElementRef;
   @ViewChild('mermaidDivBlue', { static: false }) mermaidDivBlue: ElementRef;
 
-  // TODO: dynamic sequence diagram
-  secondGraphDefinition = `sequenceDiagram
-    box Purple Alice & John
-    participant A
-    participant J
-    end
-    box Another Group
-    participant B
-    participant C
-    end
-    A->>J: Hello John, how are you?
-    J->>A: Great!
-    A->>B: Hello Bob, how is Charly ?
-    B->>C: Hello Charly, how are you?
-    `;
-
-  firstGraphDefinition = `sequenceDiagram
-    Alice->>John: Hello John, how are you?
-    John-->>Alice: Great!
-    Alice-)John: See you later!
-    `;
-
-  greenSeqDef = this.firstGraphDefinition
-  redSeqDef = this.firstGraphDefinition
-  blueSeqDef = this.firstGraphDefinition
+  graphDefs: any = {
+    "blue": ["sequenceDiagram", "    A->>B: None"],
+    "red": ["sequenceDiagram", "    A->>B: None"],
+    "green": ["sequenceDiagram", "    A->>B: None"]
+  }
 
   public ngAfterViewInit(): void {
 
@@ -45,21 +26,62 @@ export class AgentsSeqdiagramsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     mermaid.initialize({
       securityLevel: 'loose'
     });
     mermaid.init();
 
-    // setTimeout(() => {
-    //   this.greenSeqDef = this.secondGraphDefinition;
-    //   this.redSeqDef = this.secondGraphDefinition;
-    //   this.blueSeqDef = this.secondGraphDefinition;
-    //   this.updateSeq()
-    // }, 10000);
+    this.dataService.currentStateData$.subscribe((data) => {
+      if (data !== null && data !== undefined) {
+        if (typeof data == 'object') {
+          if (Object.keys(data).length > 0) {
+
+            const episodeNumber = data["episode_number"]
+            const iterationNumber = data["iteration_number"]
+
+            if (episodeNumber == 0 && iterationNumber == 0) {
+              return;
+            }
+
+            const teamToAgents = data["team_agent_mapping"]
+            const agentsPzComms = data["agents_pz_comms"]
+            const activeAgents = Object.keys(agentsPzComms)
+
+            for (const team in teamToAgents) {
+
+              for (const receiverAgent of teamToAgents[team]) {
+
+                if (activeAgents.includes(receiverAgent)) {
+                  if (this.graphDefs[team.toLowerCase()].includes("    A->>B: None")) {
+                    const index = this.graphDefs[team.toLowerCase()].indexOf("    A->>B: None", 0);
+                    if (index > -1) {
+                      this.graphDefs[team.toLowerCase()].splice(index, 1);
+                    }
+                  }
+
+                  for (const senderAgent in agentsPzComms[receiverAgent]) {
+                    if ((senderAgent !== receiverAgent) && (agentsPzComms[receiverAgent][senderAgent] !== null)) {
+                      this.graphDefs[team.toLowerCase()].push("    " + senderAgent + "->>" + receiverAgent
+                        + ":" + agentsPzComms[receiverAgent][senderAgent].toString())
+                      this.graphDefs[team.toLowerCase()].push("    " + "Note right of " + senderAgent + ": Episode "
+                      + episodeNumber + " - Iteration " + iterationNumber)
+                    }
+                  }
+                }
+
+              }
+            }
+            this.updateSeq()
+          }
+        }
+      }
+
+    })
 
   }
 
-  constructor() {
+  constructor(private dataService: DataService) {
   }
 
   updateSeq() {
@@ -68,21 +90,21 @@ export class AgentsSeqdiagramsComponent implements OnInit {
     const elementRed: any = this.mermaidDivRed.nativeElement;
     const elementBlue: any = this.mermaidDivBlue.nativeElement;
 
-    mermaid.render('graphDivGreen', this.greenSeqDef, (svgCode, bindFunctionsGreen) => {
+    mermaid.render('graphDivGreen', this.graphDefs.green.join("\n"), (svgCode, bindFunctionsGreen) => {
       elementGreen.innerHTML = svgCode;
       if (bindFunctionsGreen !== undefined) {
         bindFunctionsGreen(elementGreen);
       }
     });
 
-    mermaid.render('graphDivRed', this.redSeqDef, (svgCode, bindFunctionsRed: any) => {
+    mermaid.render('graphDivRed', this.graphDefs.red.join("\n"), (svgCode, bindFunctionsRed: any) => {
       elementRed.innerHTML = svgCode;
       if (bindFunctionsRed !== undefined) {
         bindFunctionsRed(elementRed);
       }
     });
 
-    mermaid.render('graphDivBlue', this.blueSeqDef, (svgCode, bindFunctionsBlue: any) => {
+    mermaid.render('graphDivBlue', this.graphDefs.blue.join("\n"), (svgCode, bindFunctionsBlue: any) => {
       elementBlue.innerHTML = svgCode;
       if (bindFunctionsBlue !== undefined) {
         bindFunctionsBlue(elementBlue);

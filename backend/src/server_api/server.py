@@ -86,10 +86,14 @@ def next_iteration():
         requested_info += ["cyborg_actions"]
     if request.args.get("cyborg_observations", False):
         requested_info += ["cyborg_observations"]
+    if request.args.get("agents_cyborg_comms", False):
+        requested_info += ["agents_cyborg_comms"]
+    if request.args.get("agents_pz_comms", False):
+        requested_info += ["agents_pz_comms"]
 
     res = env.next(requested_info)
 
     if res == None:
-        return  Response(json.dumps({"logs": "Max iteration reached"}), status=204, mimetype='application/json')
+        return Response(json.dumps({"logs": "Max iteration reached"}), status=204, mimetype='application/json')
     else:
         return res
