@@ -1,4 +1,3 @@
-# Small-scaled company network
-A **small-scaled company network** containing Linux and Windows machines splitted into four subnets.
+A simple agent that samples action randomly from action space
 
 ![alt text](/assets/library/agents/A001/thumbnail.png)

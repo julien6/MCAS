@@ -45,6 +45,7 @@ import { ConfigShareService } from './services/config-share.service';
 import { NgFor } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { EditorModule } from './editor/editor.module';
+import { Mpld3Component } from './mpld3/mpld3.component';
 import { PixelVisualizationModule } from './pixel-visualization/pixel-visualization.module';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AgentsLogsComponent } from './agents-logs/agents-logs.component';
@@ -63,6 +64,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatSliderModule } from '@angular/material/slider';
 import { TreeModule } from './tree/tree.module';
+import { Mpld3Module } from './mpld3/mpld3.module';
 
 @NgModule({
   declarations: [
@@ -103,6 +105,7 @@ import { TreeModule } from './tree/tree.module';
     NgTerminalModule,
     MatTableModule,
     EditorModule,
+    Mpld3Module,
     PixelVisualizationModule,
     NgChartsModule,
     MatProgressBarModule,

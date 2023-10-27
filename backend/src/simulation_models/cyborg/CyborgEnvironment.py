@@ -292,12 +292,16 @@ if __name__ == '__main__':
 
     ce = CyborgEnvironment({}, max_episode=1, max_iteration=5)
 
-    res = None
-    while True:
-        res = ce.next(["agents_actions"])
-        if res != None:
-            print("\t", end="")
-            pprint(res["agents_actions"])
-            pass
-        else:
-            break
+    res = ce.next(["true_states"])
+
+    json.dump(res["true_states"], open("./st.json", "w+"))
+
+    # res = None
+    # while True:
+    #     res = ce.next(["true_states"])
+    #     if res != None:
+    #         print("\t", end="")
+    #         pprint(res["true_states"])
+    #         pass
+    #     else:
+    #         break

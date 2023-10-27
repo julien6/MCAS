@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EditorComponent } from './editor.component';
+import { Mpld3Component } from './mpld3.component';
 
 
 @NgModule({
   declarations: [
-    EditorComponent
+    Mpld3Component
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    EditorComponent
+    Mpld3Component
   ]
 })
-export class EditorModule { }
+export class Mpld3Module { }

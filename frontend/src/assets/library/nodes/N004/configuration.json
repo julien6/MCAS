@@ -1,6 +1,6 @@
 {
-    "title": "Small-scaled company network under two attacks",
-    "short_description": "A simple small-scaled company network containing Linux and Windows machines splitted into four subnets.",
+    "title": "Windows Server 2008",
+    "short_description": "Microsoft Windows is a group of several proprietary graphical operating system families developed and marketed by Microsoft.",
     "md_file": "description.md",
     "thumbnail_file": "thumbnail.png",
     "data_file": ""

@@ -1,6 +1,6 @@
 {
-    "title": "Small-scaled company network under two attacks",
-    "short_description": "A simple small-scaled company network containing Linux and Windows machines splitted into four subnets.",
+    "title": "DQN Agent",
+    "short_description": "A simple agent that samples action randomly from a decision tree",
     "md_file": "description.md",
     "thumbnail_file": "thumbnail.png",
     "data_file": ""

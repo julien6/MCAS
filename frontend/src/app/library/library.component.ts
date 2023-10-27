@@ -30,10 +30,43 @@ export class LibraryComponent {
       thumbnail_file: "thumbnail.png",
       data_file: "data.json"
     }
+
+    const confS2 = JSON.parse(JSON.stringify(config))
+    confS2["title"] = "An Adhoc drone swarm scenario"
+    confS2["short_description"] = "A scenario with random red agent activation in a drone swarm"
+
+    const confA1 = JSON.parse(JSON.stringify(config))
+    confA1["title"] = "Random agent"
+    confA1["short_description"] = "A simple agent that samples action randomly from action space"
+    
+    const confA2 = JSON.parse(JSON.stringify(config))
+    confA2["title"] = "Decision tree"
+    confA2["short_description"] = "A simple agent that samples action randomly from a decision tree"
+
+    const confA3 = JSON.parse(JSON.stringify(config))
+    confA3["title"] = "DQN Agent"
+    confA3["short_description"] = "A simple agent that samples action randomly from a decision tree"
+
+    const confN1 = JSON.parse(JSON.stringify(config))
+    confN1["title"] = "Velociraptor"
+    confN1["short_description"] = "Velociraptor is a tool for collecting host based state information"
+
+    const confN2 = JSON.parse(JSON.stringify(config))
+    confN2["title"] = "Kali Linux"
+    confN2["short_description"] = "A Debian-derived Linux distribution designed for digital forensics and penetration testing"
+
+    const confN3 = JSON.parse(JSON.stringify(config))
+    confN3["title"] = "Ubuntu 18.03"
+    confN3["short_description"] = "Ubuntu is a Linux distribution based on Debian and composed mostly of free and open-source software"
+
+    const confN4 = JSON.parse(JSON.stringify(config))
+    confN4["title"] = "Windows Server 2008"
+    confN4["short_description"] = "A group of several proprietary graphical operating system families developed and marketed by Microsoft."
+
     return {
-      Agents: { "A001": config, "A002": config, "A003": config, "A004": config },
-      Nodes: { "N001": config, "N002": config, "N003": config, "N004": config },
-      Scenarios: { "S001": config, "S002": config, "S003": config, "S004": config }
+      Agents: { "A001": confA1, "A002": confA2, "A003": confA3 },
+      Nodes: { "N001": confN1, "N002": confN2, "N003": confN3, "N004": confN4 },
+      Scenarios: { "S001": config, "S002": confS2 }
     }
   }
 

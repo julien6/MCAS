@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>{{this.elementTitle}}</h1>
-<div mat-dialog-content>
+<div style="text-align:center" mat-dialog-content>
 
-    <mat-tab-group>
+    <mat-tab-group style="text-align:left">
 
         <mat-tab label="Description">
             <markdown mermaid [mermaidOptions]="options" [src]="this.descriptionFilePath">
@@ -14,5 +14,8 @@
         </mat-tab>
 
     </mat-tab-group>
+
+
+    <button class="chooseButton" style="text-align:center" color="warn" mat-button algin="right" (click)="this.dialog.closeAll();this.fillConf()">Load</button>
 
 </div>
